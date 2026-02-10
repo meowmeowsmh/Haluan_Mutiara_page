@@ -95,7 +95,7 @@ class HaluanMLocalExpert {
                 "🤣 What do you call an oak tree that tells jokes? A stand-up tree!",
                 "🤣 Why did the oak tree break up with the maple? It was tired of all the sap!",
                 "🤣 How do oak trees stay in shape? They do trunk exercises!",
-                "🤣 What's an oak tree's favorite game is check out is hidden secret inside the game type:game!",
+                "🤣 What's an oak tree's favorite game is check out is hidden secret inside the game type: https://meowmeowsmh.github.io/Haluan-Mutiara/index.html",
                 "🤣 Why don't oak trees ever gamble? They always lose their leaves!",
                 "🤣 What did the young oak say to the old oak? 'I'm acorn-ing up just like you!'",
                 
@@ -3244,4 +3244,5 @@ function scrollToBottom() {
 console.log("✅ Haluan Mutiara Chatbot Ready with Easter Eggs!");
 console.log("🥚 Try: 'amazon mystery', 'forest secret', 'easter egg', 'unlock', 'reveal'");
 console.log("✨ Complete: 80+ timber species | All strength groups | Products | Jokes | Easter Eggs");
+
 });
