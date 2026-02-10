@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product Gallery | Haluan Mutiara</title>
+
+<!-- External Resources -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<!-- Swiper CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+<link rel="stylesheet" href="css/design.css">
+<link rel="stylesheet" href="css/chat-bot-design.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="icon" type= "Other_picture"href="Other_picture/icon_haluan_mutiara.jpeg">
+<style>
+/* DARK THEME FOR BODY - Keep black background for content */
+body {
+    background: #000000 !important;
+    color: #ffffff !important;
+    overflow-x: hidden;
+}
+
+/* ===== BROWN NAVIGATION MENU ===== */
+.nav-bar {
+    background: linear-gradient(135deg, #8b4513 0%, #a0522d 100%) !important; /* Brown gradient */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.logo {
+    color: white !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.logo i {
+    color: #f4d4a0 !important; /* Light gold icon */
+}
+
+.nav-links li a {
+    color: white !important;
+    font-weight: 500;
+}
+
+.nav-links li a:hover,
+.nav-links li a.active {
+    background: rgba(255, 255, 255, 0.2) !important;
+    color: #f4d4a0 !important;
+}
+
+/* Hamburger menu - brown theme */
+.hamburger span {
+    background-color: white !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.hamburger:hover span {
+    background-color: #f4d4a0 !important;
+}
+
+/* Mobile menu background - also brown */
+@media (max-width: 992px) {
+    .nav-links {
+        background: linear-gradient(135deg, #8b4513 0%, #a0522d 100%) !important;
+        box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
+    }
+    
+    .nav-links li a {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    }
+    
+    .nav-links li a:hover {
+        background: rgba(255, 255, 255, 0.15) !important;
+    }
+}
+
+/* ===== BLACK THEME FOR REST OF PAGE ===== */
+/* Hero Section - Black Theme */
+.gallery-hero {
+    text-align: center;
+    padding: 5rem 2rem 4rem 2rem;
+    background: linear-gradient(180deg, #0a0a0a 0%, #000000 100%) !important;
+    position: relative;
+    overflow: hidden;
+    margin-top: 0;
+}
+
+.gallery-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, #d4a574 50%, transparent 100%);
+}
+
+.gallery-subtitle {
+    font-size: 0.75rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #d4a574;
+    margin-bottom: 1rem;
+    font-weight: 500;
+}
+
+.gallery-hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin: 0 0 1.5rem 0;
+    letter-spacing: 3px;
+    background: linear-gradient(135deg, #f4d4a0 0%, #d4a574 50%, #8b6f47 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 40px rgba(212, 165, 116, 0.3);
+    color: transparent !important;
+}
+
+.gallery-description {
+    max-width: 600px;
+    margin: 0 auto 1rem auto;
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #999;
+    font-weight: 300;
+}
+
+.image-count {
+    text-align: center;
+    color: #666;
+    margin: 2rem 0 0 0;
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 400;
+    padding-bottom: 3rem;
+    position: relative;
+}
+
+.image-count::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent 0%, #d4a574 50%, transparent 100%);
+}
+
+/* ===== FIXED GALLERY GRID - NO OVERLAPPING ===== */
+.gallery-container {
+    padding: 0 1rem 3rem 1rem;
+    background: #000000;
+    overflow: hidden;
+}
+
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 15px;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* SIMPLE GRID - All cards same size, no special spans */
+.product-card {
+    background: #0a0a0a;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    height: 300px;
+    border: 1px solid #151515;
+    border-radius: 4px;
+}
+
+/* Remove all special grid spans - they cause overlapping */
+.product-card:nth-child(1),
+.product-card:nth-child(3),
+.product-card:nth-child(5),
+.product-card:nth-child(7),
+.product-card:nth-child(8),
+.product-card:nth-child(10),
+.product-card:nth-child(12),
+.product-card:nth-child(14),
+.product-card:nth-child(16) {
+    grid-column: auto;
+    grid-row: auto;
+}
+
+/* If you want some larger cards, use masonry layout instead */
+@media (min-width: 768px) {
+    .gallery {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+    
+    /* Make every 3rd and 7th card taller for visual variety WITHOUT overlapping */
+    .product-card:nth-child(3n) {
+        height: 350px;
+    }
+    
+    .product-card:nth-child(7n) {
+        height: 320px;
+    }
+}
+
+.product-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(212, 165, 116, 0.05) 0%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.product-card:hover::before {
+    opacity: 1;
+}
+
+.product-card:hover {
+    transform: translateY(-8px);
+    z-index: 10;
+    box-shadow: 
+        0 30px 80px rgba(0, 0, 0, 0.6),
+        0 0 0 1px rgba(212, 165, 116, 0.3),
+        inset 0 0 0 1px rgba(212, 165, 116, 0.1);
+    border-color: rgba(212, 165, 116, 0.4);
+}
+
+.product-card img {
+    width: 100%;
+    height: 70%;
+    object-fit: cover;
+    filter: brightness(0.85) contrast(1.15) saturate(0.9);
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.product-card:hover img {
+    filter: brightness(1) contrast(1.25) saturate(1.1);
+    transform: scale(1.05);
+}
+
+.product-card .overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, 
+        rgba(0,0,0,0.98) 0%, 
+        rgba(0,0,0,0.85) 40%,
+        rgba(0,0,0,0.4) 70%,
+        transparent 100%);
+    color: #d4a574;
+    padding: 1.5rem 1rem 1rem 1rem;
+    transform: translateY(0);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 2;
+    height: 30%;
+    display: flex;
+    align-items: flex-end;
+}
+
+.product-card:hover .overlay {
+    background: linear-gradient(to top, 
+        rgba(0,0,0,1) 0%, 
+        rgba(0,0,0,0.95) 60%,
+        rgba(0,0,0,0.6) 80%,
+        transparent 100%);
+    padding-bottom: 1.5rem;
+}
+
+.overlay::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 1rem;
+    width: 40px;
+    height: 2px;
+    background: linear-gradient(90deg, #d4a574 0%, transparent 100%);
+    opacity: 1;
+    transition: all 0.5s ease;
+}
+
+.product-card:hover .overlay::before {
+    width: 60px;
+    background: linear-gradient(90deg, #f4d4a0 0%, #d4a574 50%, transparent 100%);
+}
+
+.overlay p {
+    margin: 0.5rem 0 0 0;
+    font-size: 0.8rem;
+    line-height: 1.4;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+    color: #e6d5c0;
+    font-style: italic;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Limit to 2 lines */
+    -webkit-box-orient: vertical;
+}
+
+.product-card:hover .overlay p {
+    color: #f4d4a0;
+}
+
+/* ENHANCED MODAL */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.98);
+    backdrop-filter: blur(10px);
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    padding: 20px;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content {
+    position: relative;
+    max-width: 90vw;
+    max-height: 90vh;
+    background: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideUp {
+    from { 
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+    }
+    to { 
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.modal-content img {
+    width: auto;
+    height: auto;
+    max-width: 90vw;
+    max-height: 90vh;
+    display: block;
+    object-fit: contain;
+    background: #1a1a1a;
+    padding: 20px;
+    box-shadow: 
+        0 50px 100px rgba(0, 0, 0, 0.8),
+        0 0 0 1px rgba(212, 165, 116, 0.2);
+}
+
+.close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    color: #d4a574;
+    font-size: 2rem;
+    cursor: pointer;
+    background: rgba(0, 0, 0, 0.8);
+    border: 1px solid rgba(212, 165, 116, 0.3);
+    padding: 0;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    border-radius: 50%;
+    z-index: 2001;
+}
+
+.close:hover {
+    background: rgba(212, 165, 116, 0.2);
+    border-color: #d4a574;
+    transform: rotate(90deg);
+    color: #f4d4a0;
+}
+
+/* WhatsApp Float - Brown to match menu */
+.whatsapp-float {
+    background: #25D366 !important;
+    color: white !important;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.3);
+}
+
+.whatsapp-float:hover {
+    background: #128C7E !important;
+    transform: scale(1.1);
+    box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
+}
+
+/* Footer - Black Theme */
+footer {
+    background: #0a0a0a !important;
+    border-top: 1px solid #151515;
+    color: #aaa !important;
+    margin-top: 0;
+}
+
+footer h4, 
+footer .footer-logo {
+    color: #e6d5c0 !important;
+}
+
+footer p,
+footer .footer-contact p,
+footer .footer-copyright p {
+    color: #aaa !important;
+}
+
+footer .footer-contact i {
+    color: #d4a574 !important;
+}
+
+.newsletter-input {
+    background: #151515 !important;
+    border: 1px solid #333 !important;
+    color: #fff !important;
+}
+
+.btn-primary {
+    background: #d4a574 !important;
+    color: #000 !important;
+    border: none !important;
+}
+
+.btn-primary:hover {
+    background: #f4d4a0 !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .gallery-hero {
+        padding: 4rem 1rem 3rem 1rem;
+    }
+    
+    .gallery-hero h1 {
+        font-size: 2.5rem;
+    }
+    
+    .gallery {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 10px;
+    }
+    
+    .product-card {
+        height: 280px;
+    }
+    
+    .product-card .overlay {
+        padding: 1rem 0.75rem 0.75rem 0.75rem;
+    }
+    
+    .overlay p {
+        font-size: 0.75rem;
+        -webkit-line-clamp: 3; /* Show 3 lines on mobile */
+    }
+    
+    /* Remove special heights on mobile */
+    .product-card:nth-child(3n),
+    .product-card:nth-child(7n) {
+        height: 280px;
+    }
+}
+
+@media (max-width: 576px) {
+    .gallery-hero h1 {
+        font-size: 2rem;
+    }
+    
+    .gallery {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+    
+    .product-card {
+        height: 300px;
+    }
+    
+    .product-card img {
+        height: 65%;
+    }
+    
+    .product-card .overlay {
+        height: 35%;
+    }
+    
+    .close {
+        top: 10px;
+        right: 10px;
+        width: 35px;
+        height: 35px;
+        font-size: 1.5rem;
+    }
+}
+
+/* Loading state */
+.product-card img {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.product-card img.loaded {
+    opacity: 1;
+}
+
+/* Error state for missing images */
+.product-card.error {
+    background: #1a1a1a;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+}
+
+.product-card.error::after {
+    content: 'Image not available';
+    color: #666;
+    font-size: 0.9rem;
+    margin-top: 10px;
+}
+</style>
+</head>
+<body>
+
+<div class="content">
+
+<!-- BROWN NAVIGATION MENU -->
+<header>
+    <nav class="nav-bar">
+        <div class="logo">
+            <i class="fas fa-tree"></i> Haluan Mutiara
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="gallery.html" class="active">Gallery</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+        <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+</header>
+
+<!-- BLACK THEME CONTENT -->
+<div class="gallery-hero">
+    <div class="gallery-subtitle">Our Collection</div>
+    <h1>Gallery</h1>
+    <p class="gallery-description">
+        Each piece tells a story of craftsmanship, nature's artistry, and timeless elegance. 
+        Explore our curated selection of premium timber.
+    </p>
+    <div class="image-count">Featuring 16 Premium Selections</div>
+</div>
+
+<div class="gallery-container">
+    <section class="gallery" id="imageGallery">
+        <!-- Images will be loaded here by JavaScript -->
+    </section>
+</div>
+
+<!-- MODAL -->
+<div id="productModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <img id="modalImage" alt="Gallery Image">
+    </div>
+</div>
+
+<!-- Footer - Black Theme -->
+<footer>
+    <div class="footer-content">
+        <div class="footer-about">
+            <div class="footer-logo"><i class="fas fa-tree"></i> Haluan Mutiara</div>
+            <p>Premium hardwood supplier since 2000.</p>
+        </div>
+        <div class="footer-contact">
+            <h4>Contact</h4>
+            <p><i class="fas fa-phone"></i> (+60)12-278-6182</p>
+            <p><i class="fas fa-envelope"></i> haluanmutiara@hotmail.com</p>
+        </div>
+        <div class="footer-newsletter">
+            <h4>Get Updates</h4>
+            <input type="email" placeholder="Your email" class="newsletter-input">
+            <button class="btn btn-primary btn-small" id="subscribeBtn">Subscribe</button>
+        </div>
+    </div>
+    <div class="footer-copyright">
+        <p>&copy; 2026 Haluan Mutiara. All rights reserved.</p>
+    </div>
+</footer>
+
+<!-- WhatsApp Float -->
+<a href="https://wa.me/60122786182" class="whatsapp-float" target="_blank" aria-label="Contact us on WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+</a>
+
+</div>
+
+<!-- Modern Oak Timber Chat Interface -->
+<div class="chat-helper">
+    <!-- Oak wood floating button -->
+    <button class="chat-icon-btn" id="chatIconBtn" aria-label="Open timber chat">
+        <i class="fas fa-tree"></i>
+    </button>
+    
+    <!-- Oak-themed chat window -->
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-header">
+            <h4><i class="fas fa-seedling"></i> Timber Expert</h4>
+            <button class="close-chat" id="closeChatBtn" aria-label="Close chat">×</button>
+        </div>
+        <div class="chat-body" id="chatBody">
+            <!-- Chat messages will appear here -->
+        </div>
+        <div class="chat-input">
+            <input type="text" placeholder="Ask about wood, pricing, or MS 544..." id="chatInput" autocomplete="off">
+            <button id="sendBtn" aria-label="Send message">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+// Load all images from Image1 to Image16 from local directory
+document.addEventListener('DOMContentLoaded', function() {
+    const gallery = document.getElementById('imageGallery');
+    
+    // Define the base path to your images
+    const imagePath = 'D:/Project_Wood/Other_picture/';
+    
+    // Supported image extensions to try
+    const extensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+    
+    // Story descriptions for each image
+    const stories = [
+        "Morning light dances across ancient grains, each ring a whisper of seasons past.",
+        "Where the saw first met wood, a journey began from forest to craft.",
+        "Rough edges tell tales of strength, waiting for skilled hands to reveal beauty.",
+        "In the workshop's quiet corner, possibilities rest in every plank.",
+        "Sunlight catches the natural warmth, promising transformation ahead.",
+        "These cuts speak of precision, of measurements taken with care and patience.",
+        "Stacked and ready, each piece holds a story yet to be written.",
+        "The grain flows like rivers, nature's artistry preserved in timber.",
+        "Early morning inspections—quality checked, potential assessed, dreams planned.",
+        "Where bark once protected life, now character marks wait to shine.",
+        "Shadows play across the surface, highlighting nature's perfect imperfections.",
+        "From towering giants to humble planks, the cycle of creation continues.",
+        "These knots and whorls are fingerprints of the forest, unique and irreplaceable.",
+        "Seasoned and patient, the wood waits for its moment to become something beautiful.",
+        "In every fiber lives the memory of rain, sun, and countless quiet seasons.",
+        "The final piece in today's collection, but just the beginning of someone's vision."
+    ];
+    
+    // Create 16 image cards
+    for (let i = 1; i <= 16; i++) {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.onclick = () => openModal(i);
+        
+        const img = document.createElement('img');
+        
+        // Try to load the image with different extensions
+        img.src = `${imagePath}Image${i}.jpg`;
+        img.alt = `Wood Product ${i}`;
+        img.loading = 'lazy';
+        
+        // Add loaded class when image loads
+        img.addEventListener('load', function() {
+            this.classList.add('loaded');
+        });
+        
+        // Fallback handling for different extensions
+        img.onerror = function() {
+            let extensionIndex = 0;
+            const tryNextExtension = () => {
+                if (extensionIndex < extensions.length) {
+                    this.src = `${imagePath}Image${i}.${extensions[extensionIndex]}`;
+                    extensionIndex++;
+                } else {
+                    // Mark card as error and show placeholder
+                    card.classList.add('error');
+                    this.src = `https://via.placeholder.com/400x300/1a1a1a/666666?text=Image+${i}`;
+                    this.style.objectFit = 'contain';
+                    this.style.padding = '20px';
+                    this.style.background = '#1a1a1a';
+                    this.classList.add('loaded');
+                }
+            };
+            this.onerror = tryNextExtension;
+            tryNextExtension();
+        };
+        
+        // Create overlay with story
+        const overlay = document.createElement('div');
+        overlay.className = 'overlay';
+        const storyText = document.createElement('p');
+        storyText.textContent = stories[i - 1];
+        overlay.appendChild(storyText);
+        
+        card.appendChild(img);
+        card.appendChild(overlay);
+        gallery.appendChild(card);
+    }
+    
+    // Hamburger menu functionality
+    const hamburger = document.querySelector('.hamburger');
+    const navLinks = document.querySelector('.nav-links');
+    
+    if (hamburger && navLinks) {
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('show');
+            hamburger.classList.toggle('active');
+        });
+        
+        // Close menu when clicking links
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('show');
+                hamburger.classList.remove('active');
+            });
+        });
+    }
+    
+    // Newsletter subscription
+    const subscribeBtn = document.getElementById('subscribeBtn');
+    if (subscribeBtn) {
+        subscribeBtn.addEventListener('click', function() {
+            const emailInput = document.querySelector('.newsletter-input');
+            if (emailInput && emailInput.value) {
+                alert('Thank you for subscribing to our updates!');
+                emailInput.value = '';
+            } else {
+                alert('Please enter your email address.');
+            }
+        });
+    }
+});
+
+// Modal functions
+function openModal(imageNumber) {
+    const modal = document.getElementById('productModal');
+    const modalImage = document.getElementById('modalImage');
+    
+    const imagePath = 'D:/Project_Wood/Other_picture/';
+    
+    modalImage.src = `${imagePath}Image${imageNumber}.jpg`;
+    modalImage.alt = `Wood Product ${imageNumber}`;
+    
+    // Handle image load error in modal
+    modalImage.onerror = function() {
+        const extensions = ['jpeg', 'png', 'gif', 'webp'];
+        let extIndex = 0;
+        const tryExt = () => {
+            if (extIndex < extensions.length) {
+                this.src = `${imagePath}Image${imageNumber}.${extensions[extIndex]}`;
+                extIndex++;
+            } else {
+                // Dark theme placeholder
+                this.src = `https://via.placeholder.com/800x600/1a1a1a/d4a574?text=Image+${imageNumber}`;
+                this.style.objectFit = 'contain';
+                this.style.background = '#1a1a1a';
+                this.style.padding = '40px';
+            }
+        };
+        this.onerror = tryExt;
+        tryExt();
+    };
+    
+    modal.style.display = 'flex';
+    
+    // Prevent body scrolling when modal is open
+    document.body.style.overflow = 'hidden';
+    document.body.style.position = 'fixed';
+    document.body.style.width = '100%';
+}
+
+function closeModal() {
+    const modal = document.getElementById('productModal');
+    modal.style.display = 'none';
+    
+    // Restore body scrolling
+    document.body.style.overflow = 'auto';
+    document.body.style.position = 'static';
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+    const modal = document.getElementById('productModal');
+    if (event.target === modal) {
+        closeModal();
+    }
+}
+
+// Close modal with Escape key
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        closeModal();
+    }
+});
+</script>
+<script src="js/chat-bot.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+</body>
+</html>

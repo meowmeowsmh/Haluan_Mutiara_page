@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Haluan Mutiara | Premium Malaysian Hardwood Supplier</title>
+
+<!-- External Resources -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+<link rel="stylesheet" href="css/design.css">
+<link rel="stylesheet" href="css/chat-bot-design.css">
+<link rel="icon" type= "Other_picture"href="Other_picture/icon_haluan_mutiara.jpeg">
+<style>
+/* Video Hero Section */
+.video-hero {
+    position: relative;
+    height: 85vh;
+    min-height: 600px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+}
+
+.video-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+}
+
+.video-container video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.7);
+}
+
+.video-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(93, 64, 55, 0.85), rgba(139, 69, 19, 0.75));
+    z-index: -1;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    padding: 0 20px;
+}
+
+.hero-content h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: white;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+    animation: fadeInDown 1s ease;
+}
+
+.hero-subtitle {
+    font-size: 1.3rem;
+    color: rgba(255, 255, 255, 0.95);
+    margin-bottom: 40px;
+    line-height: 1.6;
+    animation: fadeInUp 1s ease 0.3s both;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+    animation: fadeInUp 1s ease 0.6s both;
+}
+
+.hero-stats {
+    position: absolute;
+    bottom: 40px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    animation: fadeInUp 1s ease 0.9s both;
+}
+
+.hero-stat {
+    text-align: center;
+}
+
+.hero-stat-number {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #f4e4c1;
+    margin-bottom: 5px;
+}
+
+.hero-stat-label {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.8);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.video-control {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    z-index: 10;
+}
+
+.video-control-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+}
+
+.video-control-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .video-hero {
+        min-height: 500px;
+        height: 70vh;
+    }
+    
+    .hero-content h1 {
+        font-size: 2.5rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.1rem;
+    }
+    
+    .hero-stats {
+        gap: 20px;
+        bottom: 20px;
+    }
+    
+    .hero-stat-number {
+        font-size: 1.8rem;
+    }
+    
+    .hero-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .hero-buttons .btn {
+        width: 100%;
+        max-width: 300px;
+    }
+}
+
+.video-fallback {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(93, 64, 55, 0.9), rgba(139, 69, 19, 0.85)), 
+                url('https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80');
+    background-size: cover;
+    background-position: center;
+    z-index: -2;
+}
+
+.categories-preview {
+    padding: 60px 20px;
+    background: var(--lightest);
+}
+
+.categories-preview h2 {
+    text-align: center;
+    color: var(--primary-dark);
+    margin-bottom: 40px;
+    font-size: 2.2rem;
+}
+
+.categories-minimal {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.category-tag {
+    background: white;
+    border: 2px solid var(--border);
+    padding: 12px 25px;
+    border-radius: 30px;
+    font-weight: 600;
+    color: var(--primary-dark);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    font-size: 0.95rem;
+}
+
+.category-tag:hover {
+    border-color: var(--primary);
+    background: rgba(139, 69, 19, 0.05);
+    transform: translateY(-2px);
+}
+
+.category-tag i {
+    color: var(--primary);
+}
+
+.all-products-showcase {
+    padding: 60px 20px;
+    background: #f8f4f0;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.section-subheading {
+    color: var(--primary);
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.section-header h2 {
+    color: var(--primary-dark);
+    font-size: 2.2rem;
+    margin-bottom: 15px;
+}
+
+.section-header p {
+    color: var(--text-light);
+    max-width: 600px;
+    margin: 0 auto;
+    font-size: 1rem;
+}
+
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.product-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(93, 64, 55, 0.08);
+    transition: all 0.3s ease;
+    height: 380px;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #e9dfd6;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(93, 64, 55, 0.12);
+    border-color: var(--primary-light);
+}
+
+.product-img {
+    height: 180px;
+    background: linear-gradient(135deg, #f5f1eb 0%, #ede6dc 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.product-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.product-card:hover .product-img img {
+    transform: scale(1.05);
+}
+
+.product-content {
+    padding: 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-card h3 {
+    color: var(--primary-dark);
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    font-weight: 600;
+    text-align: left;
+}
+
+.product-card p {
+    color: var(--text-light);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 15px;
+    flex: 1;
+}
+
+.product-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 15px;
+    border-top: 1px solid #eeeae4;
+    margin-top: auto;
+}
+
+.product-price {
+    color: var(--primary);
+    font-weight: 700;
+    font-size: 1.2rem;
+}
+
+.product-link {
+    color: var(--primary);
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.product-link:hover {
+    color: var(--primary-light);
+}
+
+.cta-simple {
+    padding: 70px 20px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    text-align: center;
+    color: white;
+}
+
+.cta-simple h2 {
+    color: white;
+    font-size: 2.2rem;
+    margin-bottom: 20px;
+}
+
+.cta-simple p {
+    color: rgba(255, 255, 255, 0.9);
+    max-width: 600px;
+    margin: 0 auto 30px;
+    font-size: 1.1rem;
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.loading-placeholder {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid var(--border);
+    border-top: 4px solid var(--primary);
+    border-radius: 50%;
+    margin: 0 auto 20px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@media (max-width: 768px) {
+    .hero-content h1 {
+        font-size: 2.2rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+    
+    .categories-minimal {
+        gap: 10px;
+    }
+    
+    .category-tag {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+    
+    .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
+    }
+    
+    .product-card {
+        height: 360px;
+    }
+    
+    .cta-simple h2 {
+        font-size: 1.8rem;
+    }
+    
+    .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .products-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .hero-content h1 {
+        font-size: 1.8rem;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="content">
+  <header>
+    <nav class="nav-bar">
+      <div class="logo"><i class="fas fa-tree"></i> Haluan Mutiara</div>
+      <ul class="nav-links">
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+      <div class="hamburger"><span></span><span></span><span></span></div>
+    </nav>
+  </header>
+
+<main>
+    <!-- Video Hero Section -->
+    <section class="video-hero">
+        <div class="video-container">
+            <video id="heroVideo" autoplay muted loop playsinline poster="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80">
+                <!-- YOUR PIXABAY VIDEO: Main source -->
+                <source src="video/cut_wood.mp4" type="video/mp4">
+                
+                <!-- Backup videos -->
+                <source src="https://assets.mixkit.co/videos/preview/mixkit-saw-cutting-wood-in-a-sawmill-39731-large.mp4" type="video/mp4">
+                <source src="https://assets.mixkit.co/videos/preview/mixkit-man-planing-a-wooden-board-39729-large.mp4" type="video/mp4">
+                <source src="https://assets.mixkit.co/videos/preview/mixkit-carpenter-sanding-a-wooden-board-39730-large.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+        
+        <div class="video-fallback" id="videoFallback"></div>
+        
+        <div class="video-overlay"></div>
+        
+        <div class="hero-content">
+            <h1>Premium Malaysian Hardwood</h1>
+            <p class="hero-subtitle">
+                Quality timber solutions for builders, architects, and craftsmen since 2000
+            </p>
+            <div class="hero-buttons">
+                <a href="#products" class="btn btn-primary btn-large">
+                    <i class="fas fa-box-open"></i> View Products
+                </a>
+                <a href="contact.html" class="btn btn-secondary btn-large">
+                    <i class="fas fa-quote-right"></i> Get Quote
+                </a>
+            </div>
+        </div>
+        
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <div class="hero-stat-number">24+</div>
+                <div class="hero-stat-label">Products</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-number">23+</div>
+                <div class="hero-stat-label">Years</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-number">7</div>
+                <div class="hero-stat-label">Categories</div>
+            </div>
+        </div>
+        
+        <div class="video-control">
+            <button class="video-control-btn" id="videoPlayBtn" aria-label="Mute/Unmute video">
+                <i class="fas fa-volume-up" id="videoIcon"></i>
+            </button>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="categories-preview">
+        <h2>What We Offer</h2>
+        <div class="categories-minimal">
+            <div class="category-tag">
+                <i class="fas fa-border-style"></i> Skirting Boards
+            </div>
+            <div class="category-tag">
+                <i class="fas fa-window-maximize"></i> Window Frames
+            </div>
+            <div class="category-tag">
+                <i class="fas fa-hand-rock"></i> Handrails
+            </div>
+            <div class="category-tag">
+                <i class="fas fa-border-all"></i> Flooring
+            </div>
+            <div class="category-tag">
+                <i class="fas fa-vector-square"></i> Mouldings
+            </div>
+            <div class="category-tag">
+                <i class="fas fa-grip-lines"></i> Ceiling Beams
+            </div>
+            <div class="category-tag">
+                <i class="fas fa-box"></i> Custom Products
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Showcase -->
+    <section class="all-products-showcase" id="products">
+        <div class="section-header">
+            <div class="section-subheading">Our Collection</div>
+            <h2>Premium Timber Products</h2>
+            <p>24 quality wood products for your construction and design needs</p>
+        </div>
+        
+        <div class="products-grid" id="all-products-grid">
+            <div class="loading-placeholder">
+                <div class="loading-spinner"></div>
+                <p>Loading products...</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-simple">
+        <h2>Need Timber Solutions?</h2>
+        <p>Get expert advice and competitive pricing for your project</p>
+        <div class="cta-buttons">
+            <a href="tel:+60122786182" class="btn btn-primary">
+                <i class="fas fa-phone"></i> Call Now
+            </a>
+            <a href="https://wa.me/60122786182" class="btn btn-success" target="_blank">
+                <i class="fab fa-whatsapp"></i> WhatsApp
+            </a>
+            <a href="contact.html" class="btn btn-secondary">
+                <i class="fas fa-envelope"></i> Email Us
+            </a>
+        </div>
+    </section>
+</main>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-about">
+        <div class="footer-logo"><i class="fas fa-tree"></i> Haluan Mutiara</div>
+        <p>Premium hardwood supplier since 2000</p>
+      </div>
+      <div class="footer-contact">
+        <h4>Contact</h4>
+        <p><i class="fas fa-phone"></i> (+60)12-278-6182</p>
+        <p><i class="fas fa-envelope"></i> haluanmutiara@hotmail.com</p>
+      </div>
+      <div class="footer-newsletter">
+        <h4>Get Updates</h4>
+        <input type="email" placeholder="Your email" class="newsletter-input">
+        <button class="btn btn-primary btn-small" id="subscribeBtn">Subscribe</button>
+      </div>
+    </div>
+    <div class="footer-copyright">
+      <!-- PIXABAY ATTRIBUTION ADDED HERE -->
+      <p>Background video by <a href="https://pixabay.com/users/duniadaw-22205818/?utm_source=link-attribution&utm_medium=referral&utm_campaign=video&utm_content=2149718842" target="_blank" rel="noopener">DuniaDaw</a> from <a href="https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=video&utm_content=2149718842" target="_blank" rel="noopener">Pixabay</a></p>
+      <p>&copy; 2026 Haluan Mutiara. All rights reserved.</p>
+    </div>
+  </footer>
+</div>
+
+<!-- WhatsApp Float Button -->
+<a href="https://wa.me/60122786182" class="whatsapp-float" target="_blank">
+  <i class="fab fa-whatsapp"></i>
+</a>
+
+<!-- Product Modal -->
+<div class="product-modal" id="product-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title-wrapper">
+        <h2 id="modal-product-name">Product Name</h2>
+        <span class="modal-category" id="modal-category">Category</span>
+      </div>
+      <button class="close-modal" id="close-modal">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-layout">
+        <div class="modal-image-container">
+          <img id="modal-image" src="" alt="Product Image">
+        </div>
+        <div class="modal-details">
+          <h3 id="modal-description">Product Description</h3>
+          <div class="details-grid" id="modal-specs"></div>
+          <div class="modal-actions">
+            <button class="modal-btn primary" id="whatsapp-btn">
+              <i class="fab fa-whatsapp"></i> Inquire on WhatsApp
+            </button>
+            <button class="modal-btn secondary" id="close-modal-btn">
+              <i class="fas fa-times"></i> Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Chat Interface -->
+<div class="chat-helper">
+    <button class="chat-icon-btn" id="chatIconBtn" aria-label="Open timber chat">
+        <i class="fas fa-tree"></i>
+    </button>
+    
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-header">
+            <h4><i class="fas fa-seedling"></i> Timber Expert</h4>
+            <button class="close-chat" id="closeChatBtn" aria-label="Close chat">×</button>
+        </div>
+        <div class="chat-body" id="chatBody">
+            <!-- Chat messages will appear here -->
+        </div>
+        <div class="chat-input">
+            <input type="text" placeholder="Ask about wood, pricing, or MS 544..." id="chatInput" autocomplete="off">
+            <button id="sendBtn" aria-label="Send message">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- External Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="js/index.js"></script>
+<script src="js/chat-bot.js"></script>
+
+<script>
+// Video Controls and Initialization
+document.addEventListener('DOMContentLoaded', function() {
+    const video = document.getElementById('heroVideo');
+    const playBtn = document.getElementById('videoPlayBtn');
+    const videoIcon = document.getElementById('videoIcon');
+    const videoFallback = document.getElementById('videoFallback');
+    
+    // Optimize video playback
+    video.playbackRate = 0.9;
+    
+    // Handle successful video load
+    video.addEventListener('loadeddata', function() {
+        console.log('Video loaded successfully');
+        videoFallback.style.display = 'none';
+    });
+    
+    // Handle video loading errors
+    video.addEventListener('error', function(e) {
+        console.log('Video loading error, trying next source...');
+        
+        // Try to load next available video source
+        const sources = video.querySelectorAll('source');
+        let currentSrc = video.currentSrc || video.src;
+        let nextSource = null;
+        
+        for (let i = 0; i < sources.length; i++) {
+            if (sources[i].src === currentSrc && i < sources.length - 1) {
+                nextSource = sources[i + 1];
+                break;
+            }
+        }
+        
+        if (nextSource) {
+            video.src = nextSource.src;
+            video.load();
+            video.play();
+        } else {
+            console.log('All video sources failed, showing fallback image');
+            videoFallback.style.display = 'block';
+            video.style.display = 'none';
+        }
+    });
+    
+    // Mute/Unmute toggle button
+    if (playBtn) {
+        playBtn.addEventListener('click', function() {
+            if (video.muted) {
+                video.muted = false;
+                videoIcon.className = 'fas fa-volume-up';
+                playBtn.setAttribute('aria-label', 'Mute video');
+            } else {
+                video.muted = true;
+                videoIcon.className = 'fas fa-volume-mute';
+                playBtn.setAttribute('aria-label', 'Unmute video');
+            }
+        });
+    }
+    
+    // Ensure smooth video looping
+    video.addEventListener('ended', function() {
+        video.currentTime = 0;
+        video.play();
+    });
+    
+    // Pause video when not visible to save resources
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                video.play();
+            } else {
+                video.pause();
+            }
+        });
+    }, { threshold: 0.5 });
+    
+    observer.observe(video);
+    
+    // Newsletter subscription
+    const subscribeBtn = document.getElementById('subscribeBtn');
+    if (subscribeBtn) {
+        subscribeBtn.addEventListener('click', function() {
+            const emailInput = document.querySelector('.newsletter-input');
+            if (emailInput && emailInput.value) {
+                emailInput.value = '';
+                alert('Thanks for subscribing to Haluan Mutiara updates!');
+            } else {
+                alert('Please enter your email address.');
+            }
+        });
+    }
+    
+    // Mobile navigation toggle
+    const hamburger = document.querySelector('.hamburger');
+    const navLinks = document.querySelector('.nav-links');
+    
+    if (hamburger && navLinks) {
+        hamburger.addEventListener('click', function() {
+            navLinks.classList.toggle('show');
+            hamburger.classList.toggle('active');
+        });
+        
+        // Close menu when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!hamburger.contains(event.target) && !navLinks.contains(event.target)) {
+                navLinks.classList.remove('show');
+                hamburger.classList.remove('active');
+            }
+        });
+    }
+});
+</script>
+
+</body>
+</html>

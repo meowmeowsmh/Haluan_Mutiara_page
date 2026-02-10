@@ -1,0 +1,510 @@
+/* ================================================ */
+/* HALUAN M TIMBER CHATBOT - UNIFIED WITH DESIGN.CSS */
+/* ================================================ */
+
+/* Use same CSS variable structure as design.css */
+.chat-helper {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    z-index: 9998;
+}
+
+.chat-icon-btn {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    border: none;
+    color: white;
+    font-size: 28px;
+    cursor: pointer;
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-base);
+    position: relative;
+    overflow: hidden;
+}
+
+.chat-icon-btn:hover {
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: var(--shadow-xl);
+    background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-dark) 100%);
+}
+
+.chat-icon-btn:active {
+    transform: translateY(-2px) scale(1.02);
+}
+
+/* Pulse animation - using design.css colors */
+@keyframes pulse {
+    0%, 100% {
+        box-shadow: var(--shadow-lg), 0 0 0 0 rgba(139, 69, 19, 0.5);
+    }
+    50% {
+        box-shadow: var(--shadow-lg), 0 0 0 12px rgba(139, 69, 19, 0);
+    }
+}
+
+.chat-icon-btn.pulse {
+    animation: pulse 2s infinite;
+}
+
+/* ================================================ */
+/* CHAT WINDOW - MATCHING DESIGN.CSS STYLING       */
+/* ================================================ */
+
+.chat-window {
+    position: fixed;
+    bottom: 100px;
+    left: 30px;
+    width: 380px;
+    height: 500px;
+    background: white;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-xl);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+    visibility: hidden;
+    pointer-events: none;
+    transition: all var(--transition-base);
+    z-index: 9997;
+    border: 1px solid var(--border);
+}
+
+.chat-window.active {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    visibility: visible;
+    pointer-events: all;
+}
+
+/* ================================================ */
+/* CHAT HEADER - MATCHING NAVBAR STYLING           */
+/* ================================================ */
+
+.chat-header {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+    padding: var(--space-md) var(--space-lg);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.chat-header h4 {
+    margin: 0;
+    font-size: var(--font-size-md);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.chat-header h4 i {
+    font-size: var(--font-size-lg);
+    color: white;
+}
+
+.close-chat {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-base);
+}
+
+.close-chat:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: rotate(90deg);
+}
+
+/* ================================================ */
+/* CHAT BODY - MATCHING DESIGN.CSS CARD STYLING    */
+/* ================================================ */
+
+.chat-body {
+    flex: 1;
+    padding: var(--space-md);
+    overflow-y: auto;
+    background: var(--lightest);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    scroll-behavior: smooth;
+}
+
+/* Scrollbar matching design.css */
+.chat-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.chat-body::-webkit-scrollbar-track {
+    background: var(--lighter);
+}
+
+.chat-body::-webkit-scrollbar-thumb {
+    background: var(--primary-light);
+    border-radius: var(--radius-sm);
+}
+
+.chat-body::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-dark);
+}
+
+/* ================================================ */
+/* MESSAGES - USING DESIGN.CSS PATTERNS            */
+/* ================================================ */
+
+.message {
+    max-width: 80%;
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-lg);
+    font-size: var(--font-size-sm);
+    line-height: 1.6;
+    word-wrap: break-word;
+    animation: slideIn 0.3s ease;
+    position: relative;
+    border: 1px solid var(--border);
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Bot Messages - like product cards */
+.bot-message {
+    align-self: flex-start;
+    background: white;
+    color: var(--text);
+    box-shadow: var(--shadow-sm);
+}
+
+.bot-message strong {
+    color: var(--primary);
+}
+
+/* User Messages - like primary buttons */
+.user-message {
+    align-self: flex-end;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    color: white;
+    box-shadow: var(--shadow-sm);
+    border: none;
+}
+
+/* ================================================ */
+/* TYPING INDICATOR - MATCHING DESIGN.CSS          */
+/* ================================================ */
+
+.typing {
+    display: flex;
+    gap: 6px;
+    padding: var(--space-sm) var(--space-md);
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    width: fit-content;
+    align-self: flex-start;
+    box-shadow: var(--shadow-sm);
+}
+
+.typing span {
+    width: 8px;
+    height: 8px;
+    background: var(--primary);
+    border-radius: 50%;
+    animation: bounce 1.4s infinite ease-in-out;
+}
+
+@keyframes bounce {
+    0%, 60%, 100% {
+        transform: translateY(0);
+        opacity: 0.6;
+    }
+    30% {
+        transform: translateY(-10px);
+        opacity: 1;
+    }
+}
+
+/* ================================================ */
+/* CHAT INPUT - MATCHING FORM INPUTS               */
+/* ================================================ */
+
+.chat-input {
+    padding: var(--space-md);
+    border-top: 1px solid var(--border);
+    background: white;
+    display: flex;
+    gap: var(--space-sm);
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.chat-input input {
+    flex: 1;
+    padding: var(--space-sm) var(--space-md);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-round);
+    font-size: var(--font-size-sm);
+    background: var(--lighter);
+    color: var(--text);
+    outline: none;
+    transition: all var(--transition-base);
+    font-family: var(--font-main);
+}
+
+.chat-input input:focus {
+    border-color: var(--primary);
+    background: white;
+    box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.1);
+}
+
+.chat-input input::placeholder {
+    color: var(--text-light);
+    opacity: 0.6;
+}
+
+.chat-input button {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    border: none;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-base);
+    font-size: 18px;
+    box-shadow: var(--shadow-sm);
+}
+
+.chat-input button:hover {
+    transform: scale(1.05);
+    box-shadow: var(--shadow-md);
+}
+
+.chat-input button:active {
+    transform: scale(0.95);
+}
+
+/* ================================================ */
+/* WELCOME MESSAGE & QUICK REPLIES                 */
+/* ================================================ */
+
+.welcome-message {
+    background: var(--lighter);
+    border-left: 4px solid var(--primary);
+    padding: var(--space-md);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-sm);
+    box-shadow: var(--shadow-sm);
+}
+
+.welcome-message h5 {
+    color: var(--primary-dark);
+    margin: 0 0 var(--space-xs) 0;
+    font-size: var(--font-size-md);
+    font-weight: 600;
+}
+
+.welcome-message p {
+    color: var(--text-light);
+    margin: 6px 0;
+    font-size: var(--font-size-sm);
+    line-height: 1.5;
+}
+
+.quick-replies {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: var(--space-sm);
+}
+
+.quick-reply-btn {
+    background: white;
+    border: 1px solid var(--border);
+    color: var(--primary);
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-round);
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    box-shadow: var(--shadow-sm);
+    font-family: var(--font-main);
+}
+
+.quick-reply-btn:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* ================================================ */
+/* STATUS BADGES - USING DESIGN.CSS COLORS         */
+/* ================================================ */
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: var(--radius-round);
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-badge.online {
+    background: rgba(46, 125, 50, 0.1);
+    color: var(--success);
+}
+
+.status-badge.offline {
+    background: rgba(158, 158, 158, 0.1);
+    color: var(--text-light);
+}
+
+/* ================================================ */
+/* RESPONSIVE DESIGN - MATCHING DESIGN.CSS BREAKPOINTS */
+/* ================================================ */
+
+@media (max-width: 992px) {
+    .chat-helper {
+        bottom: 25px;
+        left: 25px;
+    }
+    
+    .chat-icon-btn {
+        width: 56px;
+        height: 56px;
+        font-size: 24px;
+    }
+    
+    .chat-window {
+        width: 350px;
+        height: 450px;
+        left: 25px;
+        bottom: 90px;
+    }
+}
+
+@media (max-width: 768px) {
+    .chat-helper {
+        bottom: 20px;
+        left: 20px;
+    }
+    
+    .chat-icon-btn {
+        width: 52px;
+        height: 52px;
+        font-size: 22px;
+    }
+    
+    .chat-window {
+        width: calc(100vw - 40px);
+        height: 400px;
+        left: 20px;
+        bottom: 80px;
+        border-radius: var(--radius-md);
+    }
+    
+    .chat-body {
+        padding: var(--space-sm);
+    }
+    
+    .message {
+        max-width: 85%;
+        padding: 10px 14px;
+        font-size: 13px;
+    }
+    
+    .chat-input {
+        padding: var(--space-sm);
+    }
+    
+    .chat-input button {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 576px) {
+    .chat-helper {
+        bottom: 15px;
+        left: 15px;
+    }
+    
+    .chat-window {
+        width: calc(100vw - 30px);
+        height: 350px;
+        left: 15px;
+        bottom: 70px;
+    }
+}
+
+/* ================================================ */
+/* Z-INDEX FIXES - ALIGN WITH DESIGN.CSS           */
+/* ================================================ */
+
+/* Already defined in design.css but ensure consistency */
+.chat-helper {
+    z-index: 9998;
+}
+
+.chat-window {
+    z-index: 9997;
+}
+
+/* Ensure modal is above chat */
+.product-modal,
+.modal-overlay,
+.modal-container {
+    z-index: 10001 !important;
+}
+
+/* Chat button should be below modal but above most content */
+.chat-icon-btn {
+    z-index: 9998;
+}
+
+.chat-window.active {
+    z-index: 9997;
+}
+
+/* Print styles - hide chat */
+@media print {
+    .chat-helper,
+    .chat-window {
+        display: none;
+    }
+}

@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About | Haluan Mutiara - Timber Craft Since 2000</title>
+
+<!-- External Resources -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<!-- Swiper CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+<link rel="stylesheet" href="css/design.css">
+<link rel="stylesheet" href="css/chat-bot-design.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="icon" type= "Other_picture"href="Other_picture/icon_haluan_mutiara.jpeg">
+<style>
+/* CSS Variables for Wood Theme */
+:root {
+    --primary-dark: #5d4037;
+    --primary: #8b4513;
+    --primary-light: #a0522d;
+    --light: #f5f1e8;
+    --lightest: #faf8f3;
+    --text: #333333;
+    --text-light: #666666;
+    --border: #d4c4b5;
+}
+
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+    color: var(--text);
+    background: var(--lightest);
+}
+
+.content {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+/* Hero Section - Fixed Background */
+.wood-hero {
+    padding: 120px 20px;
+    text-align: center;
+    background: 
+        linear-gradient(rgba(93, 64, 55, 0.85), rgba(139, 69, 19, 0.9)),
+        url('Images/Main_stuff.png') no-repeat center center/cover;
+    color: white;
+    position: relative;
+    min-height: 600px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Fallback if image doesn't load */
+.wood-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, #5d4037 0%, #8b4513 100%);
+    z-index: -1;
+}
+
+.wood-hero h1 {
+    font-size: 3.5rem;
+    margin-bottom: 25px;
+    color: white;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+    position: relative;
+    z-index: 2;
+    max-width: 900px;
+}
+
+.wood-hero p {
+    font-size: 1.3rem;
+    max-width: 800px;
+    margin: 0 auto 30px;
+    color: rgba(255, 255, 255, 0.95);
+    line-height: 1.7;
+    position: relative;
+    z-index: 2;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Section Titles */
+.section-title {
+    text-align: center;
+    margin-bottom: 60px;
+    padding: 0 20px;
+}
+
+.section-title h2 {
+    font-size: 2.8rem;
+    color: var(--primary-dark);
+    margin-bottom: 15px;
+    position: relative;
+    display: inline-block;
+}
+
+.section-title h2::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 4px;
+    background: var(--primary);
+    border-radius: 2px;
+}
+
+.section-subtitle {
+    font-size: 1.2rem;
+    color: var(--text-light);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Timber Section */
+.timber-section {
+    padding: 100px 20px;
+    background: var(--lightest);
+}
+
+.wood-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Wood Cards */
+.wood-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 6px 25px rgba(93, 64, 55, 0.1);
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.wood-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 35px rgba(93, 64, 55, 0.15);
+    border-color: var(--primary);
+}
+
+.wood-type-image {
+    height: 250px;
+    overflow: hidden;
+    position: relative;
+}
+
+.wood-type-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.8s ease;
+}
+
+.wood-card:hover .wood-type-image img {
+    transform: scale(1.05);
+}
+
+.wood-content {
+    padding: 35px;
+}
+
+.wood-content h3 {
+    color: var(--primary-dark);
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.wood-content h3 i {
+    color: var(--primary);
+}
+
+.wood-content p {
+    color: var(--text-light);
+    line-height: 1.7;
+    margin-bottom: 15px;
+}
+
+/* Wood Properties */
+.wood-property {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px dashed var(--border);
+    font-size: 0.95rem;
+}
+
+.wood-property:last-child {
+    border-bottom: none;
+}
+
+.property-label {
+    color: var(--primary-dark);
+    font-weight: 500;
+}
+
+.property-value {
+    color: var(--text);
+    font-weight: 600;
+}
+
+/* Process Section */
+.process-section {
+    padding: 100px 20px;
+    background: var(--light);
+}
+
+.process-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.process-step {
+    text-align: center;
+    padding: 50px 30px 40px;
+    background: white;
+    border-radius: 12px;
+    position: relative;
+    box-shadow: 0 4px 20px rgba(93, 64, 55, 0.1);
+    border-top: 4px solid var(--primary);
+}
+
+.step-number {
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 50px;
+    background: var(--primary);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.3rem;
+    border: 4px solid white;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.step-icon {
+    font-size: 2.8rem;
+    color: var(--primary);
+    margin-bottom: 25px;
+}
+
+.process-step h3 {
+    color: var(--primary-dark);
+    margin-bottom: 15px;
+    font-size: 1.4rem;
+}
+
+.process-step p {
+    color: var(--text-light);
+    line-height: 1.7;
+}
+
+/* CTA Section */
+.craftsman-cta {
+    padding: 120px 20px;
+    text-align: center;
+    background: 
+        linear-gradient(rgba(93, 64, 55, 0.9), rgba(139, 69, 19, 0.95)),
+        url('https://images.unsplash.com/photo-1589923186741-b7d59d6b2c4c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80')
+        no-repeat center center/cover;
+    color: white;
+}
+
+.craftsman-cta h2 {
+    font-size: 2.8rem;
+    margin-bottom: 25px;
+    color: white;
+}
+
+.craftsman-cta p {
+    font-size: 1.2rem;
+    max-width: 700px;
+    margin: 0 auto 50px;
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.7;
+}
+
+/* Wood Button */
+.wood-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 15px;
+    background: white;
+    color: var(--primary-dark);
+    padding: 18px 45px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    border: 2px solid white;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.wood-btn:hover {
+    background: transparent;
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+}
+
+.wood-btn i {
+    font-size: 1.3rem;
+}
+
+/* Footer */
+footer {
+    background: var(--primary-dark);
+    color: white;
+    padding: 60px 20px 30px;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 40px;
+    margin-bottom: 40px;
+}
+
+.footer-about .footer-logo {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.footer-about .footer-logo i {
+    color: #d4a574;
+}
+
+.footer-links h4,
+.footer-contact h4,
+.footer-hours h4 {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    color: #d4a574;
+}
+
+.footer-links a {
+    display: block;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    margin-bottom: 10px;
+    transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+    color: white;
+}
+
+.footer-contact p,
+.footer-hours p {
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.footer-copyright {
+    text-align: center;
+    padding-top: 30px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9rem;
+}
+
+
+
+
+/* Responsive */
+@media (max-width: 768px) {
+    .wood-hero {
+        padding: 80px 20px;
+        min-height: 500px;
+    }
+    
+    .wood-hero h1 {
+        font-size: 2.5rem;
+    }
+    
+    .wood-hero p {
+        font-size: 1.1rem;
+    }
+    
+    .section-title h2 {
+        font-size: 2.2rem;
+    }
+    
+    .wood-grid,
+    .process-steps {
+        grid-template-columns: 1fr;
+    }
+    
+    .craftsman-cta h2 {
+        font-size: 2.2rem;
+    }
+    
+    .footer-content {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .wood-hero h1 {
+        font-size: 2rem;
+    }
+    
+    .wood-btn {
+        padding: 15px 30px;
+        font-size: 1rem;
+    }
+    
+    .whatsapp-float {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+        bottom: 20px;
+        right: 20px;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="content">
+
+<!-- Navigation -->
+<header>
+    <nav class="nav-bar">
+        <div class="logo">
+            <i class="fas fa-tree"></i> Haluan Mutiara
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html" class="active">About</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+        <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+</header>
+
+<main>
+    <!-- Hero Section -->
+    <section class="wood-hero">
+        <h1>Crafting Excellence in Timber Since 2000</h1>
+        <p>From forest to finished project, we understand wood like few others. Every grain tells a story, every board carries a promise of quality that has defined our work for over two decades.</p>
+    </section>
+
+    <!-- Our Story -->
+    <section class="timber-section">
+        <div class="section-title">
+            <h2>Our Timber Journey</h2>
+            <p class="section-subtitle">Built on a foundation of respect for wood and craftsmanship</p>
+        </div>
+
+        <div class="wood-grid">
+            <div class="wood-card">
+                <div class="wood-type-image">
+                    <img src="Images/Forest.jpg" alt="Mature tree in Malaysian forest" onerror="this.src='https://images.unsplash.com/photo-1448375240586-882707db888b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'">
+                </div>
+                <div class="wood-content">
+                    <h3><i class="fas fa-seedling"></i> From the Forest</h3>
+                    <p>It begins in the Malaysian forests, where we select only mature, healthy trees from sustainably managed plantations. Our partnerships with local communities ensure responsible harvesting that respects the ecosystem.</p>
+                    <p>Each species is chosen for its unique characteristics - Merbau for its density, Chengal for its strength, Balau for its resilience against the elements.</p>
+                </div>
+            </div>
+
+            <div class="wood-card">
+                <div class="wood-type-image">
+                    <img src="Images/wood-factory.jpg" alt="Stacked timber boards at sawmill" onerror="this.src='https://images.unsplash.com/photo-1562774053-701939374585?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'">
+                </div>
+                <div class="wood-content">
+                    <h3><i class="fas fa-tools"></i> The Art of Processing</h3>
+                    <p>Raw timber needs careful handling. Our on-site sawmill transforms logs into precisely cut boards, each graded by experienced eyes that can read grain patterns like a language.</p>
+                    <p>Proper kiln-drying is crucial - controlling moisture content to prevent warping, ensuring stability that builders can trust for decades to come.</p>
+                </div>
+            </div>
+
+            <div class="wood-card">
+    <div class="wood-type-image">
+        <img src="Images/Craftman.jpg" alt="Timber tree viewed from below" 
+             onerror="this.src='https://images.pexels.com/photos/8489860/pexels-photo-8489860.jpeg?auto=compress&cs=tinysrgb&w=800'">
+    </div>
+    <div class="wood-content">
+        <h3><i class="fas fa-hands"></i> Craftsman's Touch</h3>
+        <p>This is where wood becomes material. Every piece is hand-inspected, graded, and prepared for its intended purpose - whether it's structural timber for construction or select boards for fine furniture.</p>
+        <p>We don't just sell wood; we provide solutions. Our expertise helps clients choose the right species, grade, and cut for their specific needs.</p>
+    </div>
+</div>
+    </section>
+
+    <!-- Wood Types -->
+    <section class="process-section">
+        <div class="section-title">
+            <h2>Our Signature Woods</h2>
+            <p class="section-subtitle">Premium Malaysian hardwoods, each with its own character and purpose</p>
+        </div>
+
+        <div class="wood-grid">
+            <div class="wood-card">
+                <div class="wood-type-image">
+                    <img src="Images/Merbau.jpg" alt="Merbau Wood" onerror="this.src='https://images.unsplash.com/photo-1567496898669-ee935f003f30?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'">
+                </div>
+                <div class="wood-content">
+                    <h3><i class="fas fa-mountain"></i> Merbau</h3>
+                    <p>Rich reddish-brown with interlocking grain. Dense and durable, perfect for flooring and decking.</p>
+                    
+                    <div class="wood-property">
+                        <span class="property-label">Density</span>
+                        <span class="property-value">Very High</span>
+                    </div>
+                    <div class="wood-property">
+                        <span class="property-label">Best For</span>
+                        <span class="property-value">Flooring, Decking</span>
+                    </div>
+                    <div class="wood-property">
+                        <span class="property-label">Color</span>
+                        <span class="property-value">Reddish-Brown</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="wood-card">
+                <div class="wood-type-image">
+                    <img src="Images/Chengal.webp" alt="Chengal Wood" onerror="this.src='https://images.unsplash.com/photo-1592921870789-04563d55041c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'">
+                </div>
+                <div class="wood-content">
+                    <h3><i class="fas fa-shield-alt"></i> Chengal</h3>
+                    <p>Golden-brown with straight grain. Extremely hard and durable, ideal for structural work.</p>
+                    
+                    <div class="wood-property">
+                        <span class="property-label">Density</span>
+                        <span class="property-value">Extremely High</span>
+                    </div>
+                    <div class="wood-property">
+                        <span class="property-label">Best For</span>
+                        <span class="property-value">Structural Timber</span>
+                    </div>
+                    <div class="wood-property">
+                        <span class="property-label">Color</span>
+                        <span class="property-value">Golden-Brown</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="wood-card">
+                <div class="wood-type-image">
+                    <img src="Images/Balau.jpeg" alt="Balau Wood" onerror="this.src='https://images.unsplash.com/photo-1560448204-603b3fc33ddc?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'">
+                </div>
+                <div class="wood-content">
+                    <h3><i class="fas fa-umbrella"></i> Balau</h3>
+                    <p>Yellowish-brown with fine texture. Naturally resistant to weather and insects, excellent for exterior use.</p>
+                    
+                    <div class="wood-property">
+                        <span class="property-label">Density</span>
+                        <span class="property-value">High</span>
+                    </div>
+                    <div class="wood-property">
+                        <span class="property-label">Best For</span>
+                        <span class="property-value">Exterior Applications</span>
+                    </div>
+                    <div class="wood-property">
+                        <span class="property-label">Color</span>
+                        <span class="property-value">Yellowish-Brown</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Process -->
+    <section class="process-section">
+        <div class="section-title">
+            <h2>From Log to Lumber</h2>
+            <p class="section-subtitle">Our meticulous process ensures quality in every piece</p>
+        </div>
+
+        <div class="process-steps">
+            <div class="process-step">
+                <div class="step-number">1</div>
+                <div class="step-icon">
+                    <i class="fas fa-tree"></i>
+                </div>
+                <h3>Selective Harvesting</h3>
+                <p>Choosing mature trees from sustainable sources, ensuring minimal environmental impact.</p>
+            </div>
+
+            <div class="process-step">
+                <div class="step-number">2</div>
+                <div class="step-icon">
+                    <i class="fas fa-cut"></i>
+                </div>
+                <h3>Precision Milling</h3>
+                <p>Transforming logs into boards with exact dimensions, respecting the natural grain patterns.</p>
+            </div>
+
+            <div class="process-step">
+                <div class="step-number">3</div>
+                <div class="step-icon">
+                    <i class="fas fa-thermometer-half"></i>
+                </div>
+                <h3>Controlled Drying</h3>
+                <p>Gradual kiln-drying to achieve optimal moisture content, preventing warping and ensuring stability.</p>
+            </div>
+
+            <div class="process-step">
+                <div class="step-number">4</div>
+                <div class="step-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h3>Quality Grading</h3>
+                <p>Hand-inspection of every piece, grading by quality and suitability for specific applications.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="craftsman-cta">
+        <h2>Built With Integrity, Crafted With Care</h2>
+        <p>For over 20 years, we've supplied timber that professionals trust. Whether you're building furniture, constructing a home, or working on a commercial project, we have the wood and expertise you need.</p>
+        
+        <a href="contact.html" class="wood-btn">
+            <i class="fas fa-comments"></i> Discuss Your Timber Needs
+        </a>
+    </section>
+
+</main>
+
+<!-- Footer -->
+<footer>
+    <div class="footer-content">
+        <div class="footer-about">
+            <div class="footer-logo">
+                <i class="fas fa-tree"></i> Haluan Mutiara
+            </div>
+            <p>Timber specialists since 2000. Quality hardwood for those who build with care.</p>
+        </div>
+        
+        <div class="footer-links">
+            <h4>Navigate</h4>
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="gallery.html">Gallery</a>
+            <a href="contact.html">Contact</a>
+        </div>
+        
+        <div class="footer-contact">
+            <h4>Workshop</h4>
+            <p><i class="fas fa-map-marker-alt"></i> Timberland Road</p>
+            <p><i class="fas fa-phone"></i> (+60)12-278-6182</p>
+            <p><i class="fas fa-envelope"></i> haluanmutiara@hotmail.com</p>
+        </div>
+        
+        <div class="footer-hours">
+            <h4>Sawmill Hours</h4>
+            <p>Mon-Fri: 7am-5pm</p>
+            <p>Sat: 8am-12pm</p>
+        </div>
+    </div>
+    
+    <div class="footer-copyright">
+        <p>&copy; <span class="current-year">2026</span> Haluan Mutiara Timber Works</p>
+        <p>Sustainable hardwood from Malaysian forests since 2000</p>
+    </div>
+</footer>
+
+<!-- WhatsApp Float -->
+<a href="https://wa.me/60122786182" class="whatsapp-float" target="_blank" aria-label="Contact us on WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+</a>
+
+</div>
+
+<!-- Modern Oak Timber Chat Interface -->
+<div class="chat-helper">
+    <!-- Oak wood floating button -->
+    <button class="chat-icon-btn" id="chatIconBtn" aria-label="Open timber chat">
+        <i class="fas fa-tree"></i>
+    </button>
+    
+    <!-- Oak-themed chat window -->
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-header">
+            <h4><i class="fas fa-seedling"></i> Timber Expert</h4>
+            <button class="close-chat" id="closeChatBtn" aria-label="Close chat">×</button>
+        </div>
+        <div class="chat-body" id="chatBody">
+            <!-- Chat messages will appear here -->
+        </div>
+        <div class="chat-input">
+            <input type="text" placeholder="Ask about wood, pricing, or MS 544..." id="chatInput" autocomplete="off">
+            <button id="sendBtn" aria-label="Send message">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+// Image fallback handler
+document.addEventListener('DOMContentLoaded', function() {
+    // Set current year in footer
+    document.querySelector('.current-year').textContent = new Date().getFullYear();
+    
+    // Check if background image loads
+    const hero = document.querySelector('.wood-hero');
+    const testImg = new Image();
+    
+    // Try multiple paths for background image
+    const bgPaths = [
+        'Images/Main_stuff.png',
+        './Images/Main_stuff.png',
+        '../Images/Main_stuff.png',
+        'Main_stuff.png'
+    ];
+    
+    function tryBackgroundImage(index = 0) {
+        if (index >= bgPaths.length) return;
+        
+        testImg.src = bgPaths[index];
+        testImg.onload = function() {
+            console.log('✅ Background image loaded from:', bgPaths[index]);
+            hero.style.backgroundImage = `linear-gradient(rgba(93, 64, 55, 0.85), rgba(139, 69, 19, 0.9)), url('${bgPaths[index]}')`;
+        };
+        testImg.onerror = function() {
+            console.log('❌ Background image not found at:', bgPaths[index]);
+            tryBackgroundImage(index + 1);
+        };
+    }
+    
+    tryBackgroundImage();
+    
+    // Mobile menu toggle
+    const hamburger = document.querySelector('.hamburger');
+    const navLinks = document.querySelector('.nav-links');
+    
+    if (hamburger) {
+        hamburger.addEventListener('click', function() {
+            navLinks.classList.toggle('active');
+            hamburger.classList.toggle('active');
+        });
+    }
+    
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', function(event) {
+        if (!hamburger.contains(event.target) && !navLinks.contains(event.target)) {
+            navLinks.classList.remove('active');
+            hamburger.classList.remove('active');
+        }
+    });
+});
+</script>
+<script src="js/chat-bot.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+</body>
+</html>

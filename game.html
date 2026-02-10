@@ -1,0 +1,3103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WOODLAND WARRIORS - Balanced Survival</title>
+	<link rel="icon" type= "Other_picture"href="Other_picture/icon_haluan_mutiara.jpeg">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #1a2b1a, #2d4a2d, #1e3a1e);
+            color: #f4e4c1;
+            min-height: 100vh;
+            overflow-x: hidden;
+            user-select: none;
+        }
+        
+        #gameContainer {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            padding-bottom: 250px;
+        }
+        
+        #header {
+            text-align: center;
+            padding: 25px;
+            background: linear-gradient(145deg, #3d2412, #2c1810);
+            border-radius: 20px;
+            margin-bottom: 20px;
+            border: 4px solid #8b6834;
+            box-shadow: 0 0 40px rgba(139, 104, 52, 0.5);
+        }
+        
+        h1 {
+            color: #d4a574;
+            font-size: 48px;
+            text-shadow: 0 0 20px #8b6834;
+            margin-bottom: 10px;
+            letter-spacing: 4px;
+        }
+        
+        .subtitle {
+            color: #a67c52;
+            font-size: 18px;
+            font-style: italic;
+        }
+        
+        #statsBar {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 15px;
+            margin: 25px 0;
+        }
+        
+        .stat-card {
+            background: linear-gradient(145deg, #5d3a1a, #3d2412);
+            border: 3px solid #8b6834;
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.5);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: #d4a574;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+        }
+        
+        .stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #f4d03f;
+            text-shadow: 0 0 15px #f4d03f;
+        }
+        
+        .stat-label {
+            color: #a67c52;
+            font-size: 13px;
+            margin-top: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        #mainGame {
+            display: grid;
+            grid-template-columns: 2.5fr 1fr;
+            gap: 25px;
+            margin-bottom: 20px;
+        }
+        
+        #battleArea {
+            background: linear-gradient(145deg, #2d4a2d, #1a2b1a);
+            border: 4px solid #4a7c2e;
+            border-radius: 20px;
+            height: 600px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 0 60px rgba(74, 124, 46, 0.3);
+            cursor: crosshair;
+        }
+        
+        #player {
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            background: radial-gradient(circle, #8b6834, #5d3a1a);
+            border-radius: 50%;
+            border: 4px solid #d4a574;
+            left: 400px;
+            top: 300px;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 35px #8b6834;
+            z-index: 10;
+            transition: transform 0.1s;
+        }
+        
+        #player::after {
+            content: '🪓';
+            font-size: 35px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .weapon-visual {
+            position: absolute;
+            width: 50px;
+            height: 25px;
+            background: linear-gradient(90deg, #8b4513, #5d3a1a);
+            top: 50%;
+            right: -30px;
+            border-radius: 5px;
+            transform-origin: left center;
+            z-index: 9;
+            border: 2px solid #654321;
+        }
+        
+        .enemy {
+            position: absolute;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 0 20px;
+            pointer-events: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            z-index: 20;
+        }
+        
+        .enemy.termite {
+            background: radial-gradient(circle, #c9b48f, #8b7355);
+            box-shadow: 0 0 15px #c9b48f;
+            animation: termiteWiggle 1s infinite;
+        }
+        
+        .enemy.beetle {
+            background: radial-gradient(circle, #2f1f0f, #1a120a);
+            box-shadow: 0 0 20px #2f1f0f;
+            animation: beetleWalk 1.5s infinite;
+        }
+        
+        .enemy.woodpecker {
+            background: radial-gradient(circle, #8b0000, #5d0000);
+            box-shadow: 0 0 25px #8b0000;
+            animation: woodpeckerPeck 0.5s infinite;
+        }
+        
+        .enemy.treant {
+            background: radial-gradient(circle, #228b22, #006400);
+            box-shadow: 0 0 30px #228b22;
+            animation: treantSway 2s infinite;
+        }
+        
+        .enemy.fungus {
+            background: radial-gradient(circle, #9370db, #6a5acd);
+            box-shadow: 0 0 30px #9370db;
+            animation: fungusPulse 1.5s infinite;
+        }
+        
+        .enemy.fire-elemental {
+            background: radial-gradient(circle, #ff4500, #ff6347);
+            box-shadow: 0 0 40px #ff4500;
+            animation: flameBurn 0.8s infinite;
+        }
+        
+        .enemy.ancient-oak {
+            background: radial-gradient(circle, #654321, #3d2812);
+            box-shadow: 0 0 50px #654321;
+            animation: oakGrow 3s infinite;
+            border: 5px solid #8b6834;
+        }
+        
+        .enemy.ice-golem {
+            background: radial-gradient(circle, #4682b4, #1e90ff);
+            box-shadow: 0 0 40px #4682b4;
+            animation: icePulse 2s infinite;
+            border: 4px solid #87ceeb;
+        }
+        
+        .enemy.boss {
+            border: 5px solid #ff0000;
+            animation: bossPulse 1s infinite, bossFloat 2s ease-in-out infinite;
+        }
+        
+        .enemy.miniboss {
+            border: 4px solid #ffaa00;
+            animation: minibossPulse 1.2s infinite;
+        }
+        
+        .enemy.elite {
+            border: 3px solid #ff4444;
+            animation: elitePulse 1s infinite;
+        }
+        
+        @keyframes termiteWiggle {
+            0%, 100% { transform: rotate(-2deg); }
+            50% { transform: rotate(2deg); }
+        }
+        
+        @keyframes beetleWalk {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        @keyframes woodpeckerPeck {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+        
+        @keyframes treantSway {
+            0%, 100% { transform: rotate(-1deg); }
+            50% { transform: rotate(1deg); }
+        }
+        
+        @keyframes fungusPulse {
+            0%, 100% { transform: scale(1); opacity: 0.9; }
+            50% { transform: scale(1.08); opacity: 1; }
+        }
+        
+        @keyframes flameBurn {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            25% { transform: scale(1.1) rotate(2deg); }
+            75% { transform: scale(0.95) rotate(-2deg); }
+        }
+        
+        @keyframes icePulse {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+        }
+        
+        @keyframes oakGrow {
+            0%, 100% { transform: scale(1.2); }
+            50% { transform: scale(1.25); }
+        }
+        
+        @keyframes bossPulse {
+            0%, 100% { transform: scale(1.3); }
+            50% { transform: scale(1.4); }
+        }
+        
+        @keyframes bossFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        @keyframes minibossPulse {
+            0%, 100% { transform: scale(1.15); }
+            50% { transform: scale(1.2); }
+        }
+        
+        @keyframes elitePulse {
+            0%, 100% { transform: scale(1.1); }
+            50% { transform: scale(1.15); }
+        }
+        
+        .enemy-hp {
+            position: absolute;
+            bottom: -25px;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: rgba(0,0,0,0.8);
+            border: 2px solid #8b6834;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .enemy-hp-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff88, #00aa55);
+            width: 100%;
+            transition: width 0.3s;
+        }
+        
+        .enemy-level {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.9);
+            padding: 3px 8px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #f4d03f;
+            border: 2px solid #8b6834;
+            white-space: nowrap;
+        }
+        
+        .projectile {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 15;
+        }
+        
+        .projectile.wood-shard {
+            background: radial-gradient(circle, #d4a574, #8b6834);
+            box-shadow: 0 0 10px #8b6834;
+        }
+        
+        .projectile.axe-throw {
+            background: radial-gradient(circle, #8b4513, #654321);
+            box-shadow: 0 0 15px #8b4513;
+            animation: axeSpin 0.5s linear infinite;
+        }
+        
+        .projectile.sawblade {
+            background: radial-gradient(circle, #c0c0c0, #808080);
+            box-shadow: 0 0 20px #c0c0c0;
+            animation: sawSpin 0.3s linear infinite;
+        }
+        
+        .projectile.nature-bolt {
+            background: radial-gradient(circle, #00ff00, #008800);
+            box-shadow: 0 0 25px #00ff00;
+            animation: naturePulse 0.5s infinite;
+        }
+        
+        .projectile.fire-ball {
+            background: radial-gradient(circle, #ff4500, #ff0000);
+            box-shadow: 0 0 30px #ff4500;
+            animation: flameBurn 0.3s infinite;
+        }
+        
+        .projectile.lightning {
+            background: radial-gradient(circle, #9370db, #663399);
+            box-shadow: 0 0 35px #9370db;
+            animation: lightningFlash 0.2s infinite;
+        }
+        
+        .projectile.plasma {
+            background: radial-gradient(circle, #ff00ff, #9900cc);
+            box-shadow: 0 0 40px #ff00ff;
+            animation: plasmaPulse 0.4s infinite;
+        }
+        
+        .projectile.turret-bullet {
+            background: radial-gradient(circle, #ffff00, #ffaa00);
+            box-shadow: 0 0 15px #ffff00;
+        }
+        
+        @keyframes axeSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes sawSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(-720deg); }
+        }
+        
+        @keyframes naturePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+        }
+        
+        @keyframes lightningFlash {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        
+        @keyframes plasmaPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 40px #ff00ff; }
+            50% { transform: scale(1.2); box-shadow: 0 0 60px #ff00ff; }
+        }
+        
+        #controlPanel {
+            background: linear-gradient(145deg, #3d2412, #2c1810);
+            border: 4px solid #8b6834;
+            border-radius: 20px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+        }
+        
+        .panel-title {
+            color: #d4a574;
+            font-size: 22px;
+            margin-bottom: 10px;
+            text-align: center;
+            border-bottom: 3px solid #8b6834;
+            padding-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .action-btn {
+            padding: 18px;
+            background: linear-gradient(145deg, #8b6834, #6b5028);
+            border: none;
+            border-radius: 12px;
+            color: #f4e4c1;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            border: 3px solid #a67c52;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+        }
+        
+        .action-btn:hover:not(:disabled) {
+            background: linear-gradient(145deg, #a67c52, #8b6834);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+        }
+        
+        .action-btn:active:not(:disabled) {
+            transform: translateY(0);
+        }
+        
+        .action-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        
+        .action-btn.green {
+            background: linear-gradient(145deg, #228b22, #006400);
+            border-color: #32cd32;
+        }
+        
+        .action-btn.green:hover:not(:disabled) {
+            background: linear-gradient(145deg, #32cd32, #228b22);
+        }
+        
+        .action-btn.red {
+            background: linear-gradient(145deg, #8b0000, #5d0000);
+            border-color: #ff4444;
+        }
+        
+        .action-btn.red:hover:not(:disabled) {
+            background: linear-gradient(145deg, #ff4444, #8b0000);
+        }
+        
+        .action-btn.purple {
+            background: linear-gradient(145deg, #663399, #4b0082);
+            border-color: #9370db;
+        }
+        
+        .action-btn.purple:hover:not(:disabled) {
+            background: linear-gradient(145deg, #9370db, #663399);
+        }
+        
+        .action-btn.blue {
+            background: linear-gradient(145deg, #1e3a8a, #1e40af);
+            border-color: #3b82f6;
+        }
+        
+        .action-btn.blue:hover:not(:disabled) {
+            background: linear-gradient(145deg, #3b82f6, #1e40af);
+        }
+        
+        #upgradesSection {
+            background: linear-gradient(145deg, #3d2412, #2c1810);
+            border: 4px solid #8b6834;
+            border-radius: 20px;
+            padding: 25px;
+            margin-top: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+            position: relative;
+            z-index: 100;
+        }
+        
+        .upgrades-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 18px;
+            margin-top: 20px;
+            position: relative;
+            z-index: 101;
+        }
+        
+        .upgrade-card {
+            background: linear-gradient(145deg, #5d3a1a, #4a2c14);
+            border: 3px solid #8b6834;
+            border-radius: 12px;
+            padding: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            position: relative;
+            z-index: 102;
+        }
+        
+        .upgrade-card:hover:not(.locked) {
+            border-color: #d4a574;
+            transform: translateY(-5px);
+            background: linear-gradient(145deg, #6b4a2a, #5d3a1a);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+        }
+        
+        .upgrade-card.locked {
+            opacity: 0.5;
+            cursor: not-allowed;
+            border-color: #555;
+        }
+        
+        .upgrade-title {
+            color: #f4d03f;
+            font-size: 17px;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        
+        .upgrade-desc {
+            color: #a67c52;
+            font-size: 13px;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+        
+        .upgrade-cost {
+            color: #ffaa00;
+            font-weight: bold;
+            font-size: 15px;
+        }
+        
+        .upgrade-level {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.8);
+            color: #00ff88;
+            font-size: 12px;
+            padding: 3px 6px;
+            border-radius: 10px;
+            border: 1px solid #8b6834;
+        }
+        
+        .damage-text {
+            position: absolute;
+            font-weight: bold;
+            font-size: 24px;
+            pointer-events: none;
+            z-index: 100;
+            text-shadow: 0 0 8px black, 2px 2px 4px black;
+            animation: floatUp 1.2s forwards;
+        }
+        
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-80px) scale(1.4); opacity: 0; }
+        }
+        
+        #notifications {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 350px;
+            z-index: 1000;
+        }
+        
+        .notification {
+            background: linear-gradient(145deg, #3d2412, #2c1810);
+            border-left: 6px solid;
+            padding: 18px;
+            margin-bottom: 12px;
+            border-radius: 10px;
+            animation: slideInRight 0.4s;
+            border-color: #8b6834;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.7);
+            font-size: 14px;
+        }
+        
+        .notification.red { border-color: #ff4444; }
+        .notification.blue { border-color: #0088ff; }
+        .notification.gold { border-color: #ffaa00; }
+        .notification.green { border-color: #00ff88; }
+        .notification.orange { border-color: #ff8800; }
+        .notification.purple { border-color: #9370db; }
+        
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .weapon-display {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: linear-gradient(145deg, #3d2412, #2c1810);
+            border: 4px solid #8b6834;
+            border-radius: 15px;
+            padding: 20px;
+            z-index: 50;
+            min-width: 250px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.7);
+            max-height: 200px;
+        }
+        
+        #movementControls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(145deg, #3d2412, #2c1810);
+            border: 4px solid #8b6834;
+            border-radius: 15px;
+            padding: 20px;
+            z-index: 50;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.7);
+            max-height: 200px;
+        }
+        
+        .move-btn {
+            width: 55px;
+            height: 55px;
+            margin: 5px;
+            background: linear-gradient(145deg, #5d3a1a, #4a2c14);
+            border: 3px solid #8b6834;
+            border-radius: 12px;
+            color: #f4e4c1;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+        }
+        
+        .move-btn:hover {
+            background: linear-gradient(145deg, #6b4a2a, #5d3a1a);
+            transform: scale(1.1);
+            border-color: #d4a574;
+        }
+        
+        .move-btn:active {
+            transform: scale(0.95);
+        }
+        
+        #wasdInfo {
+            margin-top: 12px;
+            font-size: 12px;
+            color: #a67c52;
+        }
+        
+        #waveProgress {
+            position: fixed;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 300px;
+            background: rgba(0,0,0,0.8);
+            border: 3px solid #8b6834;
+            border-radius: 10px;
+            padding: 10px;
+            z-index: 100;
+            text-align: center;
+        }
+        
+        .wave-progress-bar {
+            width: 100%;
+            height: 20px;
+            background: rgba(0,0,0,0.5);
+            border-radius: 10px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+        
+        .wave-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4a7c2e, #6db33f);
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        #gameOverScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            display: none;
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .game-over-content {
+            background: linear-gradient(145deg, #5d3a1a, #3d2412);
+            border: 6px solid #ff4444;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 0 50px rgba(255,0,0,0.8);
+            animation: gameOverPulse 2s infinite;
+        }
+        
+        @keyframes gameOverPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+        
+        .game-over-title {
+            font-size: 48px;
+            color: #ff4444;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px #ff0000;
+        }
+        
+        .game-over-stats {
+            background: rgba(0,0,0,0.5);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px solid #8b6834;
+        }
+        
+        .game-over-stat {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            font-size: 18px;
+            color: #f4e4c1;
+        }
+        
+        .game-over-stat-value {
+            color: #ffaa00;
+            font-weight: bold;
+        }
+        
+        .restart-btn {
+            padding: 15px 40px;
+            background: linear-gradient(145deg, #ff4444, #8b0000);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s;
+            border: 3px solid #ff0000;
+        }
+        
+        .restart-btn:hover {
+            background: linear-gradient(145deg, #ff6666, #ff0000);
+            transform: scale(1.05);
+        }
+        
+        .upgrade-max {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: #ff0000;
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        
+        .combo-counter {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(145deg, #3d2412, #2c1810);
+            border: 4px solid #ffaa00;
+            border-radius: 15px;
+            padding: 15px;
+            color: #ffaa00;
+            font-weight: bold;
+            font-size: 24px;
+            z-index: 100;
+            display: none;
+            box-shadow: 0 0 30px rgba(255, 170, 0, 0.5);
+        }
+        
+        #bossWarning {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.95);
+            border: 6px solid #ffaa00;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            z-index: 9999;
+            display: none;
+            box-shadow: 0 0 60px rgba(255, 170, 0, 0.9);
+            animation: warningPulse 0.5s infinite;
+            min-width: 400px;
+        }
+        
+        .boss-warning-text {
+            font-size: 48px;
+            color: #ffaa00;
+            font-weight: bold;
+            text-shadow: 0 0 20px #ff0000;
+            margin-bottom: 20px;
+        }
+        
+        @keyframes warningPulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.05); }
+        }
+        
+        #victoryScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            display: none;
+            z-index: 99999;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .victory-content {
+            background: linear-gradient(145deg, #5d3a1a, #3d2412);
+            border: 6px solid #ffaa00;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 0 50px rgba(255, 170, 0, 0.8);
+            animation: victoryPulse 2s infinite;
+        }
+        
+        @keyframes victoryPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+        
+        .victory-title {
+            font-size: 48px;
+            color: #ffaa00;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px #ff0000;
+        }
+        
+        .victory-stats {
+            background: rgba(0,0,0,0.5);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px solid #8b6834;
+        }
+        
+        .victory-stat {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            font-size: 18px;
+            color: #f4e4c1;
+        }
+        
+        .victory-stat-value {
+            color: #ffaa00;
+            font-weight: bold;
+        }
+        
+        .victory-restart-btn {
+            padding: 15px 40px;
+            background: linear-gradient(145deg, #ffaa00, #ff8800);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s;
+            border: 3px solid #ffcc00;
+        }
+        
+        .victory-restart-btn:hover {
+            background: linear-gradient(145deg, #ffcc00, #ffaa00);
+            transform: scale(1.05);
+        }
+        
+        /* Turret Styles */
+        .turret {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle, #8b4513, #654321);
+            border-radius: 50%;
+            border: 3px solid #d4a574;
+            z-index: 5;
+            box-shadow: 0 0 20px #ffaa00;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        
+        .turret-level {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.9);
+            color: #ffaa00;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: bold;
+            border: 1px solid #8b6834;
+        }
+        
+        .turret-beam {
+            position: absolute;
+            height: 3px;
+            background: linear-gradient(90deg, #ffaa00, transparent);
+            transform-origin: left center;
+            z-index: 4;
+            pointer-events: none;
+        }
+        
+        .wood-difficulty-indicator {
+            position: fixed;
+            top: 180px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            border: 2px solid #8b6834;
+            border-radius: 8px;
+            padding: 8px 15px;
+            font-size: 12px;
+            color: #ffaa00;
+            z-index: 100;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="gameContainer">
+        <div class="combo-counter" id="comboCounter">COMBO: <span id="comboValue">0</span>x</div>
+        
+        <div id="waveProgress">
+            <div>Wave <span id="currentWave">1</span> / 100</div>
+            <div class="wave-progress-bar">
+                <div class="wave-progress-fill" id="waveProgressFill"></div>
+            </div>
+            <div>Enemies left: <span id="enemiesLeft">0</span></div>
+            <div style="font-size: 12px; color: #ffaa00; margin-top: 5px;">Turrets: <span id="turretCount">0</span></div>
+        </div>
+        
+        <div class="wood-difficulty-indicator">
+            ⚠️ Early Game: Wood is scarce! Survive to Wave 10 for better rewards.
+        </div>
+        
+        <div id="bossWarning">
+            <div class="boss-warning-text" id="bossWarningText">⚠️ BOSS WAVE ⚠️</div>
+            <div style="font-size: 24px; color: #ffaa00;" id="bossWarningSubtext">ANCIENT OAK APPROACHES!</div>
+        </div>
+        
+        <div id="victoryScreen">
+            <div class="victory-content">
+                <div class="victory-title">🏆 VICTORY! 🏆</div>
+                <div style="font-size: 24px; color: #f4e4c1; margin-bottom: 30px;">
+                    You conquered all 100 waves!
+                </div>
+                <div class="victory-stats">
+                    <div class="victory-stat">
+                        <span>Final Wave:</span>
+                        <span class="victory-stat-value" id="victoryWave">100</span>
+                    </div>
+                    <div class="victory-stat">
+                        <span>Total Kills:</span>
+                        <span class="victory-stat-value" id="victoryKills">0</span>
+                    </div>
+                    <div class="victory-stat">
+                        <span>Max Combo:</span>
+                        <span class="victory-stat-value" id="victoryCombo">0</span>
+                    </div>
+                    <div class="victory-stat">
+                        <span>Final Level:</span>
+                        <span class="victory-stat-value" id="victoryLevel">1</span>
+                    </div>
+                    <div class="victory-stat">
+                        <span>Wood Collected:</span>
+                        <span class="victory-stat-value" id="victoryWood">0</span>
+                    </div>
+                    <div class="victory-stat">
+                        <span>Bosses Defeated:</span>
+                        <span class="victory-stat-value" id="victoryBosses">0</span>
+                    </div>
+                    <div class="victory-stat">
+                        <span>Turrets Built:</span>
+                        <span class="victory-stat-value" id="victoryTurrets">0</span>
+                    </div>
+                </div>
+                <button class="victory-restart-btn" onclick="restartGame()">🔄 PLAY AGAIN</button>
+            </div>
+        </div>
+        
+        <div id="gameOverScreen">
+            <div class="game-over-content">
+                <div class="game-over-title">💀 GAME OVER 💀</div>
+                <div class="game-over-stats">
+                    <div class="game-over-stat">
+                        <span>Wave Reached:</span>
+                        <span class="game-over-stat-value" id="gameOverWave">1</span>
+                    </div>
+                    <div class="game-over-stat">
+                        <span>Enemies Slain:</span>
+                        <span class="game-over-stat-value" id="gameOverKills">0</span>
+                    </div>
+                    <div class="game-over-stat">
+                        <span>Max Combo:</span>
+                        <span class="game-over-stat-value" id="gameOverCombo">0</span>
+                    </div>
+                    <div class="game-over-stat">
+                        <span>Highest Level:</span>
+                        <span class="game-over-stat-value" id="gameOverLevel">1</span>
+                    </div>
+                    <div class="game-over-stat">
+                        <span>Wood Collected:</span>
+                        <span class="game-over-stat-value" id="gameOverWood">0</span>
+                    </div>
+                    <div class="game-over-stat">
+                        <span>Bosses Defeated:</span>
+                        <span class="game-over-stat-value" id="gameOverBosses">0</span>
+                    </div>
+                    <div class="game-over-stat">
+                        <span>Turrets Built:</span>
+                        <span class="game-over-stat-value" id="gameOverTurrets">0</span>
+                    </div>
+                </div>
+                <button class="restart-btn" onclick="restartGame()">🔄 RESTART GAME</button>
+            </div>
+        </div>
+        
+        <div class="weapon-display">
+            <div class="panel-title">🪓 WEAPON</div>
+            <p style="color: #ffaa00; margin: 5px 0;">Tier: <span id="weaponTier">1</span>/8</p>
+            <p style="color: #00ff88; margin: 5px 0;">Type: <span id="weaponType">Wood Axe</span></p>
+            <p style="color: #ff4444; margin: 5px 0;">Damage: <span id="weaponDamage">20-35</span></p>
+            <p style="color: #0088ff; margin: 5px 0;">Rate: <span id="fireRate">0.6s</span></p>
+            <p style="color: #9370db; margin: 5px 0;">Special: <span id="weaponSpecial">None</span></p>
+        </div>
+        
+        <div id="movementControls">
+            <div class="panel-title">🎮 MOVE</div>
+            <div>
+                <button class="move-btn" onclick="movePlayer('up')">↑</button><br>
+                <button class="move-btn" onclick="movePlayer('left')">←</button>
+                <button class="move-btn" onclick="movePlayer('down')">↓</button>
+                <button class="move-btn" onclick="movePlayer('right')">→</button>
+            </div>
+            <div id="wasdInfo">WASD to move<br>SPACE to attack<br>Q for Ultimate</div>
+        </div>
+        
+        <div id="header">
+            <h1>🌲 WOODLAND WARRIORS 🌲</h1>
+            <p class="subtitle">Survival Mode • Scarce Early Resources • Medium Spawn Rate</p>
+        </div>
+        
+        <div id="statsBar">
+            <div class="stat-card">
+                <div class="stat-value" id="hp">200</div>
+                <div class="stat-label">Health</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="wood">10</div>
+                <div class="stat-label">Wood</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="level">1</div>
+                <div class="stat-label">Level</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="kills">0</div>
+                <div class="stat-label">Kills</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="wave">1</div>
+                <div class="stat-label">Wave</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="dps">0</div>
+                <div class="stat-label">Turret DPS</div>
+            </div>
+        </div>
+        
+        <div id="mainGame">
+            <div id="battleArea">
+                <div id="player">
+                    <div class="weapon-visual"></div>
+                </div>
+            </div>
+            
+            <div id="controlPanel">
+                <div class="panel-title">⚔️ COMBAT</div>
+                <button class="action-btn green" onclick="manualAttack()">
+                    🪓 CHOP ATTACK<br>
+                    <small>Deal <span id="attackDamage">20-35</span> damage</small>
+                </button>
+                <button class="action-btn" onclick="fireWeapon()">
+                    🎯 AUTO-AIM SHOT<br>
+                    <small>Targets nearest enemy</small>
+                </button>
+                <button class="action-btn red" onclick="specialAttack()" id="specialBtn">
+                    💥 ULTIMATE ABILITY<br>
+                    <small id="specialStatus">Ready!</small>
+                </button>
+                <button class="action-btn purple" onclick="healPlayer()">
+                    ❤️ HEAL (+50 HP)<br>
+                    <small>Costs 75 wood</small>
+                </button>
+                <button class="action-btn blue" onclick="placeTurret()" id="turretBtn">
+                    🏗️ BUILD TURRET<br>
+                    <small>Costs 5000 wood</small>
+                </button>
+            </div>
+        </div>
+        
+        <div id="upgradesSection">
+            <div class="panel-title">🛠️ UPGRADES & TURRETS</div>
+            <div class="upgrades-grid" id="upgradesGrid"></div>
+        </div>
+    </div>
+    
+    <div id="notifications"></div>
+
+    <script>
+        // GAME STATE - HARDER EARLY GAME
+        const game = {
+            hp: 200,
+            maxHp: 200,
+            wood: 10, // REDUCED from 50 to 10
+            level: 1,
+            kills: 0,
+            wave: 1,
+            maxWaves: 100,
+            bossesDefeated: 0,
+            totalTurrets: 0,
+            turretsBuilt: 0,
+            
+            playerX: 400,
+            playerY: 300,
+            speed: 6,
+            keys: {},
+            
+            weaponTier: 1,
+            weaponType: 'woodaxe',
+            weaponDamage: { min: 20, max: 35 },
+            fireRate: 600,
+            lastShot: 0,
+            specialCooldown: 0,
+            
+            clickDamage: 20, // Reduced from 25
+            dps: 0,
+            critChance: 0.03, // Reduced from 0.05
+            critMultiplier: 2.0,
+            
+            combo: 0,
+            comboTimer: 0,
+            maxCombo: 0,
+            
+            // Turret system
+            turrets: [],
+            turretDamage: 50,
+            turretRange: 200,
+            turretFireRate: 60,
+            turretUpgradeLevel: 0,
+            maxTurrets: 10,
+            
+            upgrades: {
+                damage: { level: 0, maxLevel: 25, baseCost: 75, costMultiplier: 1.6 },
+                speed: { level: 0, maxLevel: 20, baseCost: 60, costMultiplier: 1.5 },
+                health: { level: 0, maxLevel: 25, baseCost: 80, costMultiplier: 1.6 },
+                crit: { level: 0, maxLevel: 20, baseCost: 100, costMultiplier: 1.7 },
+                turret: { level: 0, maxLevel: 15, baseCost: 150, costMultiplier: 2.2, effect: '+10% turret damage & range' }
+            },
+            
+            enemies: [],
+            projectiles: [],
+            particles: [],
+            
+            enemySpawnTimer: 0,
+            autoAttackTimer: 0,
+            waveTimer: 0,
+            waveEnemiesSpawned: 0,
+            waveEnemiesTotal: 6, // Reduced from 8
+            
+            bossActive: false,
+            miniBossActive: false,
+            eliteSpawned: false,
+            gameActive: true,
+            isGameOver: false,
+            
+            // Wave generator with MEDIUM SPAWN RATES and SCARCE EARLY WOOD
+            getWaveConfig: function(waveNumber) {
+                const isBossWave = waveNumber % 10 === 0;
+                const isMiniBossWave = waveNumber % 5 === 0 && !isBossWave;
+                const hasElites = waveNumber >= 15 && !isBossWave && !isMiniBossWave;
+                
+                if (isBossWave) {
+                    return {
+                        totalEnemies: 1,
+                        spawnRate: 0,
+                        enemyTypes: ['ancient-oak'],
+                        woodMultiplier: this.getWoodMultiplier(waveNumber),
+                        message: `BOSS WAVE ${waveNumber}! ANCIENT OAK APPROACHES!`,
+                        isBoss: true
+                    };
+                }
+                
+                if (isMiniBossWave) {
+                    return {
+                        totalEnemies: 2 + Math.floor(waveNumber / 5),
+                        spawnRate: 150,
+                        enemyTypes: ['fire-elemental', 'treant'],
+                        woodMultiplier: this.getWoodMultiplier(waveNumber),
+                        message: `🔥 Mini-Boss Wave ${waveNumber}!`,
+                        isMiniBoss: true
+                    };
+                }
+                
+                // Progressive difficulty with MEDIUM SPAWN RATES
+                const baseEnemies = Math.floor(5 + waveNumber * 0.8);
+                const spawnRate = this.getSpawnRate(waveNumber);
+                
+                // Slower enemy unlock
+                let availableEnemies = ['termite', 'beetle'];
+                if (waveNumber >= 4) availableEnemies.push('woodpecker');
+                if (waveNumber >= 8) availableEnemies.push('treant');
+                if (waveNumber >= 12) availableEnemies.push('fungus');
+                if (waveNumber >= 18) availableEnemies.push('fire-elemental');
+                if (waveNumber >= 25) availableEnemies.push('ice-golem');
+                
+                // Add elite enemies (appear later)
+                if (hasElites) {
+                    availableEnemies.push('elite-beetle', 'elite-woodpecker');
+                }
+                
+                return {
+                    totalEnemies: baseEnemies,
+                    spawnRate: spawnRate,
+                    enemyTypes: availableEnemies,
+                    woodMultiplier: this.getWoodMultiplier(waveNumber),
+                    message: this.getWaveMessage(waveNumber),
+                    hasElites: hasElites
+                };
+            },
+            
+            // Function to get wood multiplier (SCARCE in early game)
+            getWoodMultiplier: function(waveNumber) {
+                if (waveNumber <= 3) return 0.3;
+                if (waveNumber <= 6) return 0.5;
+                if (waveNumber <= 10) return 0.8;
+                if (waveNumber <= 20) return 1.2;
+                if (waveNumber <= 40) return 1.8;
+                if (waveNumber <= 60) return 2.5;
+                if (waveNumber <= 80) return 3.5;
+                return 5.0;
+            },
+            
+            // Function to get spawn rate (MEDIUM pace)
+            getSpawnRate: function(waveNumber) {
+                if (waveNumber <= 5) return 180;
+                if (waveNumber <= 10) return 160;
+                if (waveNumber <= 20) return 140;
+                if (waveNumber <= 30) return 120;
+                if (waveNumber <= 50) return 100;
+                if (waveNumber <= 70) return 80;
+                if (waveNumber <= 90) return 60;
+                return 50;
+            },
+            
+            // Function to get wave message based on difficulty
+            getWaveMessage: function(waveNumber) {
+                if (waveNumber <= 3) return `Wave ${waveNumber} - Survive with limited resources!`;
+                if (waveNumber <= 6) return `Wave ${waveNumber} - Wood is scarce, be careful!`;
+                if (waveNumber <= 10) return `Wave ${waveNumber} - Getting slightly easier...`;
+                if (waveNumber <= 15) return `Wave ${waveNumber} - Medium difficulty`;
+                if (waveNumber <= 25) return `Wave ${waveNumber} - Challenge increasing!`;
+                if (waveNumber <= 40) return `Wave ${waveNumber} - You're getting strong!`;
+                if (waveNumber <= 60) return `Wave ${waveNumber} - Expert level!`;
+                if (waveNumber <= 80) return `Wave ${waveNumber} - Master level!`;
+                return `Wave ${waveNumber} - LEGENDARY DIFFICULTY!`;
+            }
+        };
+
+        const weapons = {
+            woodaxe: {
+                name: 'Wooden Axe',
+                damage: { min: 20, max: 35 },
+                fireRate: 600,
+                projectile: 'wood-shard',
+                size: 8,
+                color: '#8b6834',
+                special: 'Basic chop',
+                tier: 1
+            },
+            ironaxe: {
+                name: 'Iron Axe',
+                damage: { min: 40, max: 60 },
+                fireRate: 500,
+                projectile: 'axe-throw',
+                size: 12,
+                color: '#808080',
+                special: 'Spinning throw',
+                pierce: 2,
+                tier: 2
+            },
+            sawblade: {
+                name: 'Sawblade Launcher',
+                damage: { min: 70, max: 100 },
+                fireRate: 400,
+                projectile: 'sawblade',
+                size: 15,
+                color: '#c0c0c0',
+                special: 'Ricochet',
+                bounce: 3,
+                tier: 3
+            },
+            naturebolt: {
+                name: 'Nature Staff',
+                damage: { min: 100, max: 150 },
+                fireRate: 300,
+                projectile: 'nature-bolt',
+                size: 18,
+                color: '#00ff00',
+                special: 'Life drain',
+                heal: 0.15,
+                tier: 4
+            },
+            ancientbow: {
+                name: 'Ancient Treebark Bow',
+                damage: { min: 150, max: 220 },
+                fireRate: 250,
+                projectile: 'nature-bolt',
+                size: 20,
+                color: '#32cd32',
+                special: 'Multi-shot',
+                multishot: 4,
+                pierce: 3,
+                tier: 5
+            },
+            dragonaxe: {
+                name: 'Dragonbone Axe',
+                damage: { min: 200, max: 300 },
+                fireRate: 200,
+                projectile: 'fire-ball',
+                size: 22,
+                color: '#ff4500',
+                special: 'Fire explosion',
+                aoe: true,
+                tier: 6
+            },
+            thundercaller: {
+                name: 'Thunder Caller',
+                damage: { min: 300, max: 450 },
+                fireRate: 150,
+                projectile: 'lightning',
+                size: 25,
+                color: '#9370db',
+                special: 'Chain lightning',
+                chain: 5,
+                tier: 7
+            },
+            godslayer: {
+                name: 'Godslayer',
+                damage: { min: 500, max: 750 },
+                fireRate: 100,
+                projectile: 'plasma',
+                size: 30,
+                color: '#ff00ff',
+                special: 'Omni-shot',
+                homing: true,
+                tier: 8
+            }
+        };
+
+        // Enemies with balanced stats for early game scarcity
+        const enemyTypes = {
+            termite: { 
+                icon: '🐜', 
+                baseHp: 25,
+                baseDamage: 1,
+                speed: 2.0,
+                wood: 2,
+                behavior: 'swarm',
+                isElite: false
+            },
+            beetle: { 
+                icon: '🪲', 
+                baseHp: 40,
+                baseDamage: 2,
+                speed: 1.4,
+                wood: 3,
+                behavior: 'tank',
+                isElite: false
+            },
+            'elite-beetle': {
+                icon: '🪲',
+                baseHp: 90,
+                baseDamage: 5,
+                speed: 1.6,
+                wood: 15,
+                behavior: 'tank',
+                isElite: true
+            },
+            woodpecker: { 
+                icon: '🐦', 
+                baseHp: 35,
+                baseDamage: 3,
+                speed: 2.8,
+                wood: 4,
+                behavior: 'flyer',
+                isElite: false
+            },
+            'elite-woodpecker': {
+                icon: '🐦',
+                baseHp: 75,
+                baseDamage: 7,
+                speed: 3.2,
+                wood: 18,
+                behavior: 'flyer',
+                isElite: true
+            },
+            treant: { 
+                icon: '🌳', 
+                baseHp: 80,
+                baseDamage: 5,
+                speed: 0.8,
+                wood: 10,
+                behavior: 'heavy',
+                isElite: false
+            },
+            fungus: { 
+                icon: '🍄', 
+                baseHp: 65,
+                baseDamage: 6,
+                speed: 1.1,
+                wood: 8,
+                behavior: 'poisoner',
+                isElite: false
+            },
+            'fire-elemental': {
+                icon: '🔥',
+                baseHp: 120,
+                baseDamage: 8,
+                speed: 1.5,
+                wood: 20,
+                behavior: 'ranged',
+                special: 'Shoots fireballs',
+                isElite: false
+            },
+            'ice-golem': {
+                icon: '❄️',
+                baseHp: 150,
+                baseDamage: 7,
+                speed: 0.7,
+                wood: 25,
+                behavior: 'tank',
+                special: 'Slows nearby enemies',
+                isElite: false
+            },
+            'ancient-oak': {
+                icon: '🌲',
+                baseHp: 350,
+                baseDamage: 12,
+                speed: 0.5,
+                wood: 100,
+                behavior: 'boss',
+                special: 'Summons minions',
+                phases: 3,
+                isElite: false
+            }
+        };
+
+        function init() {
+            loadProgress();
+            setupUpgrades();
+            setupEventListeners();
+            updateUI();
+            updateWeaponDisplay();
+            updateTurretButton();
+            
+            const waveConfig = game.getWaveConfig(game.wave);
+            showNotification(waveConfig.message, 'blue');
+            showNotification('⚠️ EARLY GAME: Wood is scarce! Survive to Wave 10 for better rewards.', 'orange');
+            
+            startWave(game.wave);
+            startGameLoop();
+            
+            // Auto-save every 30 seconds
+            setInterval(saveProgress, 30000);
+        }
+
+        function startWave(waveNumber) {
+            const waveConfig = game.getWaveConfig(waveNumber);
+            game.waveEnemiesTotal = waveConfig.totalEnemies;
+            game.waveEnemiesSpawned = 0;
+            game.waveTimer = 0;
+            game.enemySpawnTimer = 0;
+            game.bossActive = waveConfig.isBoss;
+            game.miniBossActive = waveConfig.isMiniBoss;
+            game.eliteSpawned = false;
+            
+            // Update wood difficulty indicator
+            updateWoodDifficultyIndicator(waveNumber);
+            
+            if (waveConfig.isBoss) {
+                const bossLevel = Math.floor(waveNumber / 10);
+                setTimeout(() => {
+                    showBossWarning(waveNumber, bossLevel);
+                    setTimeout(() => {
+                        spawnBoss(waveNumber, bossLevel);
+                    }, 2000);
+                }, 1000);
+            } else if (waveConfig.isMiniBoss) {
+                showNotification(`🔥 Mini-Boss Wave ${waveNumber}!`, 'orange');
+            }
+            
+            showNotification(waveConfig.message, waveConfig.isBoss ? 'red' : waveConfig.isMiniBoss ? 'orange' : 'blue');
+            updateWaveDisplay();
+        }
+
+        function updateWoodDifficultyIndicator(waveNumber) {
+            const indicator = document.querySelector('.wood-difficulty-indicator');
+            if (waveNumber <= 3) {
+                indicator.innerHTML = '⚠️ EARLY GAME: Wood is VERY scarce! Just survive!';
+                indicator.style.color = '#ff4444';
+            } else if (waveNumber <= 6) {
+                indicator.innerHTML = '⚠️ Wood is still scarce. Be careful with spending!';
+                indicator.style.color = '#ff8800';
+            } else if (waveNumber <= 10) {
+                indicator.innerHTML = '⚠️ Wood getting better. Consider first upgrades.';
+                indicator.style.color = '#ffaa00';
+            } else if (waveNumber <= 20) {
+                indicator.innerHTML = '✓ Wood flow is normal. Plan your upgrades!';
+                indicator.style.color = '#00ff88';
+            } else if (waveNumber <= 40) {
+                indicator.innerHTML = '✓ Good wood income. Build your defenses!';
+                indicator.style.color = '#00ff88';
+            } else {
+                indicator.innerHTML = '✓ Excellent wood economy. Prepare for endgame!';
+                indicator.style.color = '#00ff88';
+            }
+        }
+
+        function startGameLoop() {
+            setInterval(() => {
+                if (!game.gameActive || game.isGameOver) return;
+                
+                handleMovement();
+                
+                const waveConfig = game.getWaveConfig(game.wave);
+                
+                if (!game.bossActive || game.enemies.length === 0) {
+                    game.enemySpawnTimer++;
+                    if (game.enemySpawnTimer >= waveConfig.spawnRate && 
+                        game.waveEnemiesSpawned < game.waveEnemiesTotal) {
+                        spawnEnemy(waveConfig);
+                        game.enemySpawnTimer = 0;
+                        game.waveEnemiesSpawned++;
+                        updateWaveDisplay();
+                    }
+                    
+                    // Spawn elites after 60% of wave
+                    if (waveConfig.hasElites && !game.eliteSpawned && 
+                        game.waveEnemiesSpawned >= game.waveEnemiesTotal * 0.6) {
+                        spawnEliteEnemies(waveConfig);
+                        game.eliteSpawned = true;
+                    }
+                }
+                
+                // Turret firing
+                game.turrets.forEach((turret, index) => {
+                    turret.cooldown--;
+                    if (turret.cooldown <= 0 && game.enemies.length > 0) {
+                        const target = findClosestEnemyToTurret(turret);
+                        if (target && calculateDistance(turret.x, turret.y, 
+                            target.x + target.size/2, target.y + target.size/2) <= turret.range) {
+                            turretFire(turret, target);
+                            turret.cooldown = turret.fireRate;
+                        }
+                    }
+                });
+                
+                if (game.waveEnemiesSpawned >= game.waveEnemiesTotal && 
+                    game.enemies.length === 0) {
+                    
+                    if (game.wave < game.maxWaves) {
+                        // Wave completed - give bonus based on wave difficulty
+                        const waveBonus = Math.floor(game.wave * game.getWoodMultiplier(game.wave));
+                        game.wood += waveBonus;
+                        if (waveBonus > 0) {
+                            showNotification(`Wave ${game.wave} completed! +${waveBonus} wood!`, 'green');
+                        }
+                        
+                        game.wave++;
+                        startWave(game.wave);
+                        levelUp();
+                    } else if (game.wave === game.maxWaves) {
+                        // VICTORY AFTER 100 WAVES!
+                        showVictoryScreen();
+                        game.gameActive = false;
+                    }
+                }
+                
+                moveProjectiles();
+                updateParticles();
+                moveEnemies();
+                
+                if (game.combo > 0) {
+                    game.comboTimer++;
+                    if (game.comboTimer >= 180) {
+                        game.combo = 0;
+                        game.comboTimer = 0;
+                        document.getElementById('comboCounter').style.display = 'none';
+                    } else if (game.combo >= 5) {
+                        document.getElementById('comboCounter').style.display = 'block';
+                        document.getElementById('comboValue').textContent = game.combo;
+                    }
+                }
+                
+                if (game.specialCooldown > 0) {
+                    game.specialCooldown--;
+                    const seconds = Math.ceil(game.specialCooldown / 60);
+                    document.getElementById('specialStatus').textContent = `${seconds}s cooldown`;
+                    document.getElementById('specialBtn').disabled = true;
+                } else {
+                    document.getElementById('specialStatus').textContent = 'Ready!';
+                    document.getElementById('specialBtn').disabled = false;
+                }
+                
+                updateUI();
+                updateTurretButton();
+            }, 1000/60);
+        }
+
+        function handleMovement() {
+            const moveSpeed = game.speed;
+            const player = document.getElementById('player');
+            
+            if (game.keys['w'] || game.keys['arrowup']) {
+                game.playerY = Math.max(35, game.playerY - moveSpeed);
+            }
+            if (game.keys['s'] || game.keys['arrowdown']) {
+                game.playerY = Math.min(565, game.playerY + moveSpeed);
+            }
+            if (game.keys['a'] || game.keys['arrowleft']) {
+                game.playerX = Math.max(35, game.playerX - moveSpeed);
+            }
+            if (game.keys['d'] || game.keys['arrowright']) {
+                game.playerX = Math.min(765, game.playerX + moveSpeed);
+            }
+            
+            player.style.left = (game.playerX - 35) + 'px';
+            player.style.top = (game.playerY - 35) + 'px';
+        }
+
+        function moveEnemies() {
+            game.enemies.forEach(enemy => {
+                const dx = game.playerX - (enemy.x + enemy.size/2);
+                const dy = game.playerY - (enemy.y + enemy.size/2);
+                const distance = Math.sqrt(dx*dx + dy*dy);
+                
+                if (distance > 0 && distance < 800) {
+                    enemy.x += (dx / distance) * enemy.stats.speed;
+                    enemy.y += (dy / distance) * enemy.stats.speed;
+                    
+                    enemy.element.style.left = enemy.x + 'px';
+                    enemy.element.style.top = enemy.y + 'px';
+                }
+                
+                // Check collision with player
+                const collisionDist = Math.sqrt(
+                    Math.pow(game.playerX - (enemy.x + enemy.size/2), 2) +
+                    Math.pow(game.playerY - (enemy.y + enemy.size/2), 2)
+                );
+                
+                if (collisionDist < 35 + enemy.size/2) {
+                    if (!enemy.lastHit || Date.now() - enemy.lastHit > 800) {
+                        const damage = enemy.isBoss ? enemy.stats.damage * 3 : 
+                                     enemy.isElite ? enemy.stats.damage * 2 : enemy.stats.damage;
+                        game.hp -= damage;
+                        enemy.lastHit = Date.now();
+                        
+                        const player = document.getElementById('player');
+                        player.style.borderColor = '#ff4444';
+                        setTimeout(() => {
+                            player.style.borderColor = '#d4a574';
+                        }, 200);
+                        
+                        showDamage(game.playerX, game.playerY, `-${damage}`, '#ff4444');
+                        
+                        if (game.hp <= 0) {
+                            game.hp = 0;
+                            updateUI();
+                            gameOver();
+                        }
+                    }
+                }
+                
+                if (enemy.isBoss) {
+                    enemy.minionSpawnTimer++;
+                    if (enemy.minionSpawnTimer >= 250) {
+                        spawnMinionForBoss(enemy);
+                        enemy.minionSpawnTimer = 0;
+                    }
+                }
+            });
+        }
+
+        function spawnEnemy(waveConfig) {
+            const battleArea = document.getElementById('battleArea');
+            
+            const enemyType = waveConfig.enemyTypes[
+                Math.floor(Math.random() * waveConfig.enemyTypes.length)
+            ];
+            
+            const baseEnemy = enemyTypes[enemyType];
+            if (!baseEnemy) return;
+            
+            const isElite = enemyType.includes('elite');
+            const enemy = document.createElement('div');
+            enemy.className = `enemy ${enemyType.replace('elite-', '')} ${waveConfig.isMiniBoss ? 'miniboss' : ''} ${isElite ? 'elite' : ''}`;
+            enemy.innerHTML = baseEnemy.icon;
+            
+            // Balanced wave multiplier
+            const waveMultiplier = 1 + (game.wave - 1) * 0.08;
+            const eliteMultiplier = isElite ? 1.8 : 1.0;
+            const miniBossMultiplier = waveConfig.isMiniBoss ? 2.0 : 1.0;
+            
+            const stats = {
+                maxHp: Math.floor(baseEnemy.baseHp * waveMultiplier * eliteMultiplier * miniBossMultiplier),
+                damage: Math.floor(baseEnemy.baseDamage * waveMultiplier * eliteMultiplier * miniBossMultiplier),
+                speed: baseEnemy.speed * (isElite ? 1.1 : 1),
+                wood: Math.floor(baseEnemy.wood * waveConfig.woodMultiplier * (isElite ? 1.5 : 1)),
+                behavior: baseEnemy.behavior,
+                special: baseEnemy.special,
+                isElite: isElite
+            };
+            
+            const size = waveConfig.isMiniBoss ? 75 : isElite ? 60 : 45;
+            let x, y;
+            
+            const side = Math.floor(Math.random() * 4);
+            switch(side) {
+                case 0: x = Math.random() * 800; y = -size; break;
+                case 1: x = 800 + size; y = Math.random() * 600; break;
+                case 2: x = Math.random() * 800; y = 600 + size; break;
+                case 3: x = -size; y = Math.random() * 600; break;
+            }
+            
+            enemy.style.width = size + 'px';
+            enemy.style.height = size + 'px';
+            enemy.style.left = x + 'px';
+            enemy.style.top = y + 'px';
+            
+            const hpBar = document.createElement('div');
+            hpBar.className = 'enemy-hp';
+            const hpBarInner = document.createElement('div');
+            hpBarInner.className = 'enemy-hp-bar';
+            hpBar.appendChild(hpBarInner);
+            enemy.appendChild(hpBar);
+            
+            const levelDiv = document.createElement('div');
+            levelDiv.className = 'enemy-level';
+            if (isElite) {
+                levelDiv.textContent = `🔥 ELITE W${game.wave}`;
+                levelDiv.style.color = '#ff4444';
+            } else if (waveConfig.isMiniBoss) {
+                levelDiv.textContent = `⚔️ Mini-Boss W${game.wave}`;
+            } else {
+                levelDiv.textContent = `W${game.wave}`;
+            }
+            enemy.appendChild(levelDiv);
+            
+            battleArea.appendChild(enemy);
+            
+            const enemyData = {
+                element: enemy,
+                hpBar: hpBarInner,
+                x: x,
+                y: y,
+                stats: stats,
+                type: enemyType,
+                currentHp: stats.maxHp,
+                size: size,
+                lastHit: 0,
+                isMiniBoss: waveConfig.isMiniBoss,
+                isElite: isElite
+            };
+            
+            game.enemies.push(enemyData);
+            
+            enemy.addEventListener('click', function(e) {
+                e.stopPropagation();
+                manualAttack(enemyData);
+            });
+        }
+
+        function spawnEliteEnemies(waveConfig) {
+            const eliteCount = Math.min(2, Math.floor(game.waveEnemiesTotal * 0.25));
+            
+            for (let i = 0; i < eliteCount; i++) {
+                setTimeout(() => {
+                    waveConfig.enemyTypes = ['elite-beetle', 'elite-woodpecker'];
+                    spawnEnemy(waveConfig);
+                    game.waveEnemiesSpawned++;
+                    updateWaveDisplay();
+                }, i * 500);
+            }
+            
+            showNotification('🔥 Elite enemies have appeared!', 'orange');
+        }
+
+        function spawnMinionForBoss(boss) {
+            const minionTypes = ['termite', 'beetle', 'woodpecker'];
+            const type = minionTypes[Math.floor(Math.random() * minionTypes.length)];
+            const baseEnemy = enemyTypes[type];
+            
+            if (!baseEnemy) return;
+            
+            const battleArea = document.getElementById('battleArea');
+            const enemy = document.createElement('div');
+            enemy.className = `enemy ${type}`;
+            enemy.innerHTML = baseEnemy.icon;
+            
+            const stats = {
+                maxHp: Math.floor(baseEnemy.baseHp * 0.5),
+                damage: Math.floor(baseEnemy.baseDamage * 0.5),
+                speed: baseEnemy.speed,
+                wood: Math.floor(baseEnemy.wood * 0.3),
+                behavior: baseEnemy.behavior
+            };
+            
+            const size = 35;
+            const angle = Math.random() * Math.PI * 2;
+            const distance = 100;
+            const x = boss.x + Math.cos(angle) * distance;
+            const y = boss.y + Math.sin(angle) * distance;
+            
+            enemy.style.width = size + 'px';
+            enemy.style.height = size + 'px';
+            enemy.style.left = x + 'px';
+            enemy.style.top = y + 'px';
+            
+            const hpBar = document.createElement('div');
+            hpBar.className = 'enemy-hp';
+            const hpBarInner = document.createElement('div');
+            hpBarInner.className = 'enemy-hp-bar';
+            hpBar.appendChild(hpBarInner);
+            enemy.appendChild(hpBar);
+            
+            battleArea.appendChild(enemy);
+            
+            const enemyData = {
+                element: enemy,
+                hpBar: hpBarInner,
+                x: x,
+                y: y,
+                stats: stats,
+                type: type,
+                currentHp: stats.maxHp,
+                size: size,
+                lastHit: 0,
+                isMinion: true
+            };
+            
+            game.enemies.push(enemyData);
+            
+            enemy.addEventListener('click', function(e) {
+                e.stopPropagation();
+                manualAttack(enemyData);
+            });
+        }
+
+        function spawnBoss(waveNumber, bossLevel) {
+            const battleArea = document.getElementById('battleArea');
+            const bossType = 'ancient-oak';
+            const bossTemplate = enemyTypes[bossType];
+            
+            const boss = document.createElement('div');
+            boss.className = `enemy ${bossType} boss`;
+            boss.innerHTML = bossTemplate.icon;
+            
+            const bossMultiplier = 1 + bossLevel * 0.7;
+            const stats = {
+                maxHp: Math.floor(bossTemplate.baseHp * bossMultiplier),
+                damage: Math.floor(bossTemplate.baseDamage * bossMultiplier),
+                speed: bossTemplate.speed * (1 - bossLevel * 0.05),
+                wood: Math.floor(bossTemplate.wood * bossMultiplier),
+                behavior: 'boss',
+                special: bossTemplate.special
+            };
+            
+            const size = 130 + (bossLevel * 20);
+            boss.style.width = size + 'px';
+            boss.style.height = size + 'px';
+            boss.style.left = '350px';
+            boss.style.top = '50px';
+            
+            const hpBar = document.createElement('div');
+            hpBar.className = 'enemy-hp';
+            const hpBarInner = document.createElement('div');
+            hpBarInner.className = 'enemy-hp-bar';
+            hpBar.appendChild(hpBarInner);
+            boss.appendChild(hpBar);
+            
+            const levelDiv = document.createElement('div');
+            levelDiv.className = 'enemy-level';
+            levelDiv.textContent = `👑 BOSS ${bossLevel} W${waveNumber}`;
+            levelDiv.style.color = '#ff4444';
+            levelDiv.style.fontSize = '14px';
+            boss.appendChild(levelDiv);
+            
+            battleArea.appendChild(boss);
+            
+            const bossData = {
+                element: boss,
+                hpBar: hpBarInner,
+                x: 350,
+                y: 50,
+                stats: stats,
+                type: bossType,
+                currentHp: stats.maxHp,
+                isBoss: true,
+                size: size,
+                minionSpawnTimer: 0,
+                lastHit: 0,
+                bossLevel: bossLevel
+            };
+            
+            game.enemies.push(bossData);
+            game.waveEnemiesSpawned = 1;
+            
+            boss.addEventListener('click', function(e) {
+                e.stopPropagation();
+                manualAttack(bossData);
+            });
+            
+            showNotification(`👑 BOSS LEVEL ${bossLevel} APPEARED!`, 'red');
+            updateWaveDisplay();
+        }
+
+        function showBossWarning(waveNumber, bossLevel) {
+            const warning = document.getElementById('bossWarning');
+            const warningText = document.getElementById('bossWarningText');
+            const subtext = document.getElementById('bossWarningSubtext');
+            
+            warningText.textContent = `⚠️ BOSS WAVE ${waveNumber} ⚠️`;
+            subtext.textContent = `ANCIENT OAK LEVEL ${bossLevel}!`;
+            
+            warning.style.display = 'block';
+            
+            setTimeout(() => {
+                warning.style.display = 'none';
+            }, 2500);
+        }
+
+        function manualAttack(targetEnemy = null) {
+            if (game.isGameOver) return;
+            
+            const weapon = weapons[game.weaponType];
+            let damage = Math.floor(Math.random() * (weapon.damage.max - weapon.damage.min + 1)) + weapon.damage.min;
+            
+            damage += game.clickDamage;
+            
+            if (Math.random() < game.critChance) {
+                damage = Math.floor(damage * game.critMultiplier);
+                showDamage(game.playerX, game.playerY - 40, 'CRITICAL!', '#ffaa00');
+            }
+            
+            if (targetEnemy) {
+                damageEnemy(targetEnemy, damage);
+                createProjectile(game.playerX, game.playerY, 
+                    targetEnemy.x + targetEnemy.size/2, 
+                    targetEnemy.y + targetEnemy.size/2, weapon);
+            } else if (game.enemies.length > 0) {
+                const closest = findClosestEnemy();
+                if (closest) {
+                    damageEnemy(closest, damage);
+                    createProjectile(game.playerX, game.playerY,
+                        closest.x + closest.size/2,
+                        closest.y + closest.size/2, weapon);
+                }
+            }
+        }
+
+        function fireWeapon() {
+            if (game.isGameOver) return;
+            
+            const now = Date.now();
+            if (now - game.lastShot < weapons[game.weaponType].fireRate) return;
+            
+            if (game.enemies.length === 0) {
+                showNotification('No enemies!', 'blue');
+                return;
+            }
+            
+            game.lastShot = now;
+            const weapon = weapons[game.weaponType];
+            const closest = findClosestEnemy();
+            
+            if (!closest) return;
+            
+            let damage = Math.floor(Math.random() * (weapon.damage.max - weapon.damage.min + 1)) + weapon.damage.min;
+            
+            if (Math.random() < game.critChance) {
+                damage = Math.floor(damage * game.critMultiplier);
+            }
+            
+            if (weapon.multishot) {
+                for (let i = 0; i < weapon.multishot; i++) {
+                    setTimeout(() => {
+                        const target = game.enemies[Math.floor(Math.random() * game.enemies.length)];
+                        if (target) {
+                            createProjectile(game.playerX, game.playerY,
+                                target.x + target.size/2,
+                                target.y + target.size/2, weapon);
+                            damageEnemy(target, damage);
+                        }
+                    }, i * 100);
+                }
+            } else {
+                createProjectile(game.playerX, game.playerY,
+                    closest.x + closest.size/2,
+                    closest.y + closest.size/2, weapon);
+                damageEnemy(closest, damage);
+            }
+        }
+
+        function createProjectile(fromX, fromY, toX, toY, weapon) {
+            const battleArea = document.getElementById('battleArea');
+            const projectile = document.createElement('div');
+            projectile.className = `projectile ${weapon.projectile}`;
+            
+            projectile.style.width = weapon.size + 'px';
+            projectile.style.height = weapon.size + 'px';
+            projectile.style.left = fromX + 'px';
+            projectile.style.top = fromY + 'px';
+            
+            battleArea.appendChild(projectile);
+            
+            const dx = toX - fromX;
+            const dy = toY - fromY;
+            const distance = Math.sqrt(dx*dx + dy*dy);
+            const speed = 25;
+            
+            const projData = {
+                element: projectile,
+                x: fromX,
+                y: fromY,
+                vx: (dx / distance) * speed,
+                vy: (dy / distance) * speed,
+                life: 100,
+                weapon: weapon
+            };
+            
+            game.projectiles.push(projData);
+            
+            return projData;
+        }
+
+        function moveProjectiles() {
+            for (let i = game.projectiles.length - 1; i >= 0; i--) {
+                const proj = game.projectiles[i];
+                proj.x += proj.vx;
+                proj.y += proj.vy;
+                proj.life--;
+                
+                proj.element.style.left = proj.x + 'px';
+                proj.element.style.top = proj.y + 'px';
+                
+                // Check collision with enemies
+                for (let j = 0; j < game.enemies.length; j++) {
+                    const enemy = game.enemies[j];
+                    const dx = proj.x - (enemy.x + enemy.size/2);
+                    const dy = proj.y - (enemy.y + enemy.size/2);
+                    const distance = Math.sqrt(dx*dx + dy*dy);
+                    
+                    if (distance < enemy.size/2 + (proj.weapon ? proj.weapon.size/2 : 5)) {
+                        let damage = proj.damage || 
+                            (Math.floor(Math.random() * (proj.weapon.damage.max - proj.weapon.damage.min + 1)) + proj.weapon.damage.min);
+                        
+                        if (Math.random() < game.critChance) {
+                            damage = Math.floor(damage * game.critMultiplier);
+                        }
+                        
+                        damageEnemy(enemy, damage);
+                        createExplosion(proj.x, proj.y, proj.weapon ? proj.weapon.color : '#ffaa00');
+                        proj.element.remove();
+                        game.projectiles.splice(i, 1);
+                        break;
+                    }
+                }
+                
+                if (proj.life <= 0 || proj.x < -50 || proj.x > 850 || proj.y < -50 || proj.y > 650) {
+                    proj.element.remove();
+                    game.projectiles.splice(i, 1);
+                }
+            }
+        }
+
+        function createExplosion(x, y, color = '#ff4444') {
+            for (let i = 0; i < 10; i++) {
+                const particle = document.createElement('div');
+                particle.style.cssText = `
+                    position: absolute;
+                    width: 6px;
+                    height: 6px;
+                    background: ${color};
+                    border-radius: 50%;
+                    left: ${x}px;
+                    top: ${y}px;
+                    pointer-events: none;
+                    z-index: 7;
+                `;
+                
+                document.getElementById('battleArea').appendChild(particle);
+                
+                const angle = (i / 10) * Math.PI * 2;
+                const speed = 2 + Math.random() * 4;
+                
+                game.particles.push({
+                    element: particle,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed,
+                    life: 20
+                });
+            }
+        }
+
+        function updateParticles() {
+            for (let i = game.particles.length - 1; i >= 0; i--) {
+                const particle = game.particles[i];
+                const current = particle.element.style;
+                const x = parseFloat(current.left) + particle.vx;
+                const y = parseFloat(current.top) + particle.vy;
+                
+                particle.element.style.left = x + 'px';
+                particle.element.style.top = y + 'px';
+                particle.element.style.opacity = particle.life / 20;
+                
+                particle.life--;
+                
+                if (particle.life <= 0) {
+                    particle.element.remove();
+                    game.particles.splice(i, 1);
+                }
+            }
+        }
+
+        function damageEnemy(enemy, damage) {
+            enemy.currentHp -= damage;
+            
+            const hpPercent = Math.max(0, (enemy.currentHp / enemy.stats.maxHp) * 100);
+            enemy.hpBar.style.width = hpPercent + '%';
+            
+            const damageColor = enemy.isBoss ? '#ff0000' : 
+                              enemy.isElite ? '#ff8800' : 
+                              enemy.isMiniBoss ? '#ffaa00' : '#ff4444';
+            showDamage(enemy.x + enemy.size/2, enemy.y, damage, damageColor);
+            
+            game.combo++;
+            game.comboTimer = 0;
+            if (game.combo > game.maxCombo) game.maxCombo = game.combo;
+            
+            if (enemy.currentHp <= 0) {
+                killEnemy(enemy);
+            }
+        }
+
+        function killEnemy(enemy) {
+            enemy.element.remove();
+            game.enemies = game.enemies.filter(e => e !== enemy);
+            game.kills++;
+            
+            const currentWave = game.getWaveConfig(game.wave);
+            let woodReward = enemy.stats.wood * (1 + game.combo * 0.05);
+            
+            if (enemy.isBoss) {
+                woodReward *= 2.5;
+                game.bossesDefeated++;
+                game.bossActive = false;
+                showNotification('🏆 BOSS DEFEATED!', 'gold');
+            } else if (enemy.isElite) {
+                woodReward *= 1.8;
+                showNotification('💎 Elite Defeated!', 'purple');
+            } else if (enemy.isMiniBoss) {
+                woodReward *= 2.0;
+                showNotification('🎯 Mini-Boss Defeated!', 'orange');
+            }
+            
+            game.wood += Math.floor(woodReward);
+            
+            const woodColor = enemy.isBoss ? '#ffaa00' : 
+                             enemy.isElite ? '#9370db' : 
+                             enemy.isMiniBoss ? '#ff8800' : '#8b6834';
+            showDamage(enemy.x + enemy.size/2, enemy.y + 30, `+${Math.floor(woodReward)} 🪵`, woodColor);
+            createExplosion(enemy.x + enemy.size/2, enemy.y + enemy.size/2, woodColor);
+            
+            updateWaveDisplay();
+            updateUI();
+            updateTurretButton();
+        }
+
+        function showDamage(x, y, text, color) {
+            const dmg = document.createElement('div');
+            dmg.className = 'damage-text';
+            dmg.textContent = text;
+            dmg.style.left = x + 'px';
+            dmg.style.top = y + 'px';
+            dmg.style.color = color;
+            
+            document.getElementById('battleArea').appendChild(dmg);
+            
+            setTimeout(() => dmg.remove(), 1200);
+        }
+
+        function showNotification(message, type = 'green') {
+            const notif = document.createElement('div');
+            notif.className = `notification ${type}`;
+            notif.textContent = message;
+            
+            document.getElementById('notifications').appendChild(notif);
+            
+            setTimeout(() => {
+                notif.style.opacity = '0';
+                setTimeout(() => notif.remove(), 300);
+            }, 2000);
+        }
+
+        function findClosestEnemy() {
+            let closest = null;
+            let minDist = Infinity;
+            
+            game.enemies.forEach(enemy => {
+                const dx = enemy.x + enemy.size/2 - game.playerX;
+                const dy = enemy.y + enemy.size/2 - game.playerY;
+                const dist = Math.sqrt(dx*dx + dy*dy);
+                
+                if (dist < minDist) {
+                    minDist = dist;
+                    closest = enemy;
+                }
+            });
+            
+            return closest;
+        }
+
+        function calculateDistance(x1, y1, x2, y2) {
+            return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+        }
+
+        function findClosestEnemyToTurret(turret) {
+            let closest = null;
+            let minDist = Infinity;
+            
+            game.enemies.forEach(enemy => {
+                const dx = enemy.x + enemy.size/2 - turret.x;
+                const dy = enemy.y + enemy.size/2 - turret.y;
+                const dist = Math.sqrt(dx*dx + dy*dy);
+                
+                if (dist < minDist) {
+                    minDist = dist;
+                    closest = enemy;
+                }
+            });
+            
+            return closest;
+        }
+
+        function turretFire(turret, target) {
+            const beam = document.createElement('div');
+            beam.className = 'turret-beam';
+            const dx = target.x + target.size/2 - turret.x;
+            const dy = target.y + target.size/2 - turret.y;
+            const distance = Math.sqrt(dx*dx + dy*dy);
+            const angle = Math.atan2(dy, dx);
+            
+            beam.style.cssText = `
+                left: ${turret.x}px;
+                top: ${turret.y}px;
+                width: ${distance}px;
+                transform: rotate(${angle}rad);
+            `;
+            
+            document.getElementById('battleArea').appendChild(beam);
+            setTimeout(() => beam.remove(), 100);
+            
+            createTurretProjectile(turret.x, turret.y, 
+                target.x + target.size/2, 
+                target.y + target.size/2, turret.damage);
+            
+            damageEnemy(target, turret.damage);
+        }
+
+        function createTurretProjectile(fromX, fromY, toX, toY, damage) {
+            const battleArea = document.getElementById('battleArea');
+            const projectile = document.createElement('div');
+            projectile.className = 'projectile turret-bullet';
+            
+            projectile.style.width = '10px';
+            projectile.style.height = '10px';
+            projectile.style.left = fromX + 'px';
+            projectile.style.top = fromY + 'px';
+            
+            battleArea.appendChild(projectile);
+            
+            const dx = toX - fromX;
+            const dy = toY - fromY;
+            const distance = Math.sqrt(dx*dx + dy*dy);
+            const speed = 20;
+            
+            const projData = {
+                element: projectile,
+                x: fromX,
+                y: fromY,
+                vx: (dx / distance) * speed,
+                vy: (dy / distance) * speed,
+                life: 100,
+                damage: damage
+            };
+            
+            game.projectiles.push(projData);
+            
+            return projData;
+        }
+
+        function placeTurret() {
+            if (game.wood < 5000) {
+                showNotification(`Need 5000 wood to build turret! You have ${game.wood}`, 'red');
+                return;
+            }
+            
+            if (game.turrets.length >= game.maxTurrets) {
+                showNotification(`Maximum ${game.maxTurrets} turrets reached!`, 'red');
+                return;
+            }
+            
+            if (game.wave < 15) {
+                const confirmBuild = confirm(`Building a turret costs 5000 wood (you have ${game.wood}).\n\nEarly game warning: This will use most of your wood!\nAre you sure you want to build a turret now?`);
+                if (!confirmBuild) return;
+            }
+            
+            game.wood -= 5000;
+            game.turretsBuilt++;
+            game.totalTurrets++;
+            
+            const turretX = 100 + Math.random() * 600;
+            const turretY = 100 + Math.random() * 400;
+            
+            const battleArea = document.getElementById('battleArea');
+            const turret = document.createElement('div');
+            turret.className = 'turret';
+            turret.innerHTML = '⚙️';
+            turret.style.left = turretX + 'px';
+            turret.style.top = turretY + 'px';
+            
+            const levelDiv = document.createElement('div');
+            levelDiv.className = 'turret-level';
+            levelDiv.textContent = `Lv.${game.turretUpgradeLevel + 1}`;
+            turret.appendChild(levelDiv);
+            
+            battleArea.appendChild(turret);
+            
+            const turretData = {
+                element: turret,
+                levelDiv: levelDiv,
+                x: turretX,
+                y: turretY,
+                damage: game.turretDamage * (1 + game.turretUpgradeLevel * 0.5),
+                range: game.turretRange * (1 + game.turretUpgradeLevel * 0.3),
+                fireRate: game.turretFireRate / (1 + game.turretUpgradeLevel * 0.2),
+                cooldown: 0,
+                level: game.turretUpgradeLevel + 1
+            };
+            
+            game.turrets.push(turretData);
+            
+            showNotification(`🏗️ Turret built! (${game.turrets.length}/${game.maxTurrets})`, 'blue');
+            updateUI();
+            updateTurretButton();
+            
+            createExplosion(turretX, turretY, '#ffaa00');
+        }
+
+        function updateTurretButton() {
+            const btn = document.getElementById('turretBtn');
+            const canAfford = game.wood >= 5000;
+            const hasSpace = game.turrets.length < game.maxTurrets;
+            
+            btn.disabled = !canAfford || !hasSpace;
+            
+            if (!canAfford) {
+                btn.innerHTML = `🏗️ BUILD TURRET<br><small>Need 5000 wood (${game.wood}/5000)</small>`;
+            } else if (!hasSpace) {
+                btn.innerHTML = `🏗️ BUILD TURRET<br><small>Max turrets reached (${game.turrets.length}/${game.maxTurrets})</small>`;
+            } else {
+                btn.innerHTML = `🏗️ BUILD TURRET<br><small>Costs 5000 wood</small>`;
+            }
+        }
+
+        function specialAttack() {
+            if (game.isGameOver || game.specialCooldown > 0) {
+                if (game.specialCooldown > 0) {
+                    showNotification('Ultimate on cooldown!', 'red');
+                }
+                return;
+            }
+            
+            game.specialCooldown = 600;
+            
+            const weapon = weapons[game.weaponType];
+            
+            switch(game.weaponType) {
+                case 'woodaxe':
+                    showNotification('🌪️ WHIRLWIND!', 'gold');
+                    for (let i = 0; i < 360; i += 30) {
+                        const angle = i * Math.PI / 180;
+                        const distance = 150;
+                        const targetX = game.playerX + Math.cos(angle) * distance;
+                        const targetY = game.playerY + Math.sin(angle) * distance;
+                        
+                        createProjectile(game.playerX, game.playerY, targetX, targetY, weapon);
+                    }
+                    
+                    game.enemies.forEach(enemy => {
+                        const dx = enemy.x + enemy.size/2 - game.playerX;
+                        const dy = enemy.y + enemy.size/2 - game.playerY;
+                        const distance = Math.sqrt(dx*dx + dy*dy);
+                        
+                        if (distance < 200) {
+                            damageEnemy(enemy, 100);
+                        }
+                    });
+                    break;
+                    
+                case 'ironaxe':
+                    showNotification('⚔️ TRIPLE THROW!', 'gold');
+                    for (let i = 0; i < 3; i++) {
+                        setTimeout(() => {
+                            game.enemies.forEach(enemy => {
+                                const proj = createProjectile(game.playerX, game.playerY,
+                                    enemy.x + enemy.size/2,
+                                    enemy.y + enemy.size/2, weapon);
+                                if (i === 0) damageEnemy(enemy, 150);
+                            });
+                        }, i * 200);
+                    }
+                    break;
+                    
+                case 'sawblade':
+                    showNotification('🌀 SAW STORM!', 'gold');
+                    for (let i = 0; i < 8; i++) {
+                        setTimeout(() => {
+                            const angle = (i / 8) * Math.PI * 2;
+                            for (let j = 0; j < 360; j += 45) {
+                                const a = (j * Math.PI / 180) + angle;
+                                const r = 100 + (i * 50);
+                                createProjectile(
+                                    game.playerX + Math.cos(a) * r,
+                                    game.playerY + Math.sin(a) * r,
+                                    game.playerX + Math.cos(a) * (r + 200),
+                                    game.playerY + Math.sin(a) * (r + 200),
+                                    weapon
+                                );
+                            }
+                        }, i * 100);
+                    }
+                    break;
+                    
+                case 'naturebolt':
+                    showNotification('💚 NATURE\'S WRATH!', 'gold');
+                    let totalHeal = 0;
+                    game.enemies.forEach(enemy => {
+                        const damage = 200;
+                        damageEnemy(enemy, damage);
+                        totalHeal += damage * 0.25;
+                        
+                        const beam = document.createElement('div');
+                        beam.style.cssText = `
+                            position: absolute;
+                            width: 4px;
+                            height: ${Math.sqrt(
+                                Math.pow(enemy.x - game.playerX, 2) + 
+                                Math.pow(enemy.y - game.playerY, 2)
+                            )}px;
+                            background: linear-gradient(to bottom, #00ff00, transparent);
+                            left: ${game.playerX}px;
+                            top: ${game.playerY}px;
+                            transform-origin: top;
+                            transform: rotate(${Math.atan2(
+                                enemy.y - game.playerY,
+                                enemy.x - game.playerX
+                            ) * 180 / Math.PI + 90}deg);
+                            z-index: 6;
+                            pointer-events: none;
+                        `;
+                        document.getElementById('battleArea').appendChild(beam);
+                        setTimeout(() => beam.remove(), 500);
+                    });
+                    
+                    game.hp = Math.min(game.maxHp, game.hp + Math.floor(totalHeal));
+                    showDamage(game.playerX, game.playerY - 50, `+${Math.floor(totalHeal)} HP`, '#00ff00');
+                    break;
+                    
+                case 'ancientbow':
+                    showNotification('🏹 ARROW RAIN!', 'gold');
+                    for (let i = 0; i < 50; i++) {
+                        setTimeout(() => {
+                            const randomX = Math.random() * 800;
+                            const randomY = Math.random() * 600;
+                            
+                            createProjectile(randomX, -50, randomX, randomY + 100, weapon);
+                            
+                            game.enemies.forEach(enemy => {
+                                const dx = enemy.x + enemy.size/2 - randomX;
+                                const dy = enemy.y + enemy.size/2 - randomY;
+                                const distance = Math.sqrt(dx*dx + dy*dy);
+                                
+                                if (distance < 60) {
+                                    damageEnemy(enemy, 200);
+                                }
+                            });
+                        }, i * 50);
+                    }
+                    break;
+                    
+                case 'dragonaxe':
+                    showNotification('🐉 DRAGON FIRE!', 'gold');
+                    for (let i = 0; i < 20; i++) {
+                        setTimeout(() => {
+                            const angle = (Math.random() * Math.PI * 2);
+                            const distance = 100;
+                            const targetX = game.playerX + Math.cos(angle) * 300;
+                            const targetY = game.playerY + Math.sin(angle) * 300;
+                            
+                            const proj = createProjectile(
+                                game.playerX + Math.cos(angle) * distance,
+                                game.playerY + Math.sin(angle) * distance,
+                                targetX, targetY, weapon
+                            );
+                            
+                            setTimeout(() => {
+                                game.enemies.forEach(enemy => {
+                                    const dx = enemy.x + enemy.size/2 - proj.x;
+                                    const dy = enemy.y + enemy.size/2 - proj.y;
+                                    const distance = Math.sqrt(dx*dx + dy*dy);
+                                    
+                                    if (distance < 100) {
+                                        damageEnemy(enemy, 300);
+                                    }
+                                });
+                                createExplosion(proj.x, proj.y, '#ff4500');
+                                if (proj.element) proj.element.remove();
+                            }, 300);
+                        }, i * 100);
+                    }
+                    break;
+                    
+                case 'thundercaller':
+                    showNotification('⚡ THUNDER STORM!', 'gold');
+                    for (let i = 0; i < 10; i++) {
+                        setTimeout(() => {
+                            const target = game.enemies[Math.floor(Math.random() * game.enemies.length)];
+                            if (target) {
+                                createProjectile(game.playerX, game.playerY,
+                                    target.x + target.size/2,
+                                    target.y + target.size/2, weapon);
+                                
+                                let currentTarget = target;
+                                for (let chain = 0; chain < 5; chain++) {
+                                    if (currentTarget) {
+                                        damageEnemy(currentTarget, 250);
+                                        const nearby = game.enemies.filter(e => 
+                                            e !== currentTarget && 
+                                            Math.sqrt(
+                                                Math.pow(e.x - currentTarget.x, 2) + 
+                                                Math.pow(e.y - currentTarget.y, 2)
+                                            ) < 100
+                                        );
+                                        currentTarget = nearby[0];
+                                    }
+                                }
+                            }
+                        }, i * 150);
+                    }
+                    break;
+                    
+                case 'godslayer':
+                    showNotification('👑 GOD SLAYER!', 'gold');
+                    for (let i = 0; i < 100; i++) {
+                        setTimeout(() => {
+                            const target = game.enemies[Math.floor(Math.random() * game.enemies.length)];
+                            if (target) {
+                                const proj = createProjectile(
+                                    Math.random() * 800, -50,
+                                    target.x + target.size/2,
+                                    target.y + target.size/2, weapon
+                                );
+                                proj.vx = (target.x + target.size/2 - proj.x) * 0.1;
+                                proj.vy = (target.y + target.size/2 - proj.y) * 0.1;
+                                damageEnemy(target, 500);
+                            }
+                        }, i * 30);
+                    }
+                    break;
+            }
+        }
+
+        function healPlayer() {
+            if (game.wood < 75) {
+                showNotification('Not enough wood! Need 75, have ' + game.wood, 'red');
+                return;
+            }
+            
+            if (game.hp >= game.maxHp) {
+                showNotification('Already at full health!', 'blue');
+                return;
+            }
+            
+            if (game.wave < 10 && game.wood < 150) {
+                const confirmHeal = confirm(`Healing costs 75 wood (you have ${game.wood}).\n\nEarly game: This is expensive! Continue?`);
+                if (!confirmHeal) return;
+            }
+            
+            game.wood -= 75;
+            game.hp = Math.min(game.maxHp, game.hp + 50);
+            showDamage(game.playerX, game.playerY - 40, '+50 HP', '#00ff00');
+            showNotification('Healed for 50 HP!', 'green');
+            updateUI();
+            updateTurretButton();
+        }
+
+        function levelUp() {
+            game.level++;
+            game.hp = game.maxHp;
+            game.maxHp += 40;
+            game.clickDamage += 12;
+            
+            // Weapon progression
+            const weaponProgression = [
+                { level: 5, weapon: 'ironaxe' },
+                { level: 12, weapon: 'sawblade' },
+                { level: 20, weapon: 'naturebolt' },
+                { level: 35, weapon: 'ancientbow' },
+                { level: 50, weapon: 'dragonaxe' },
+                { level: 70, weapon: 'thundercaller' },
+                { level: 90, weapon: 'godslayer' }
+            ];
+            
+            weaponProgression.forEach(prog => {
+                if (game.level === prog.level && game.weaponType !== prog.weapon) {
+                    upgradeWeapon(prog.weapon);
+                }
+            });
+            
+            createExplosion(game.playerX, game.playerY, '#f4d03f');
+            showNotification(`🎉 LEVEL ${game.level}!`, 'gold');
+            updateWeaponDisplay();
+        }
+
+        function upgradeWeapon(newType) {
+            game.weaponType = newType;
+            game.weaponTier = weapons[newType].tier;
+            showNotification(`⚔️ Weapon upgraded to ${weapons[newType].name}!`, 'gold');
+        }
+
+        function updateUI() {
+            document.getElementById('hp').textContent = game.hp;
+            document.getElementById('wood').textContent = game.wood;
+            document.getElementById('level').textContent = game.level;
+            document.getElementById('kills').textContent = game.kills;
+            document.getElementById('wave').textContent = game.wave;
+            
+            // Calculate turret DPS
+            const turretDPS = game.turrets.reduce((total, turret) => {
+                return total + (turret.damage * (60 / turret.fireRate));
+            }, 0);
+            document.getElementById('dps').textContent = Math.floor(turretDPS);
+            document.getElementById('turretCount').textContent = game.turrets.length;
+        }
+
+        function updateWaveDisplay() {
+            const currentWave = game.getWaveConfig(game.wave);
+            const progressPercent = (game.waveEnemiesSpawned / game.waveEnemiesTotal) * 100;
+            
+            document.getElementById('currentWave').textContent = game.wave;
+            document.getElementById('waveProgressFill').style.width = `${progressPercent}%`;
+            
+            const enemiesAlive = game.enemies.length;
+            const enemiesKilled = game.waveEnemiesSpawned - enemiesAlive;
+            document.getElementById('enemiesLeft').textContent = game.waveEnemiesTotal - enemiesKilled;
+        }
+
+        function updateWeaponDisplay() {
+            const weapon = weapons[game.weaponType];
+            document.getElementById('weaponTier').textContent = game.weaponTier;
+            document.getElementById('weaponType').textContent = weapon.name;
+            document.getElementById('weaponDamage').textContent = 
+                `${weapon.damage.min}-${weapon.damage.max}`;
+            document.getElementById('fireRate').textContent = `${weapon.fireRate/1000}s`;
+            document.getElementById('weaponSpecial').textContent = weapon.special;
+            document.getElementById('attackDamage').textContent = 
+                `${weapon.damage.min}-${weapon.damage.max}`;
+        }
+
+        function setupUpgrades() {
+            const upgradesGrid = document.getElementById('upgradesGrid');
+            upgradesGrid.innerHTML = '';
+            
+            const upgrades = [
+                {
+                    id: 'damage',
+                    name: 'Sharpen Blade',
+                    desc: '+12 damage per level',
+                    getCost: () => Math.floor(game.upgrades.damage.baseCost * Math.pow(game.upgrades.damage.costMultiplier, game.upgrades.damage.level)),
+                    effect: () => {
+                        game.clickDamage += 12;
+                        Object.keys(weapons).forEach(w => {
+                            weapons[w].damage.min += 6;
+                            weapons[w].damage.max += 10;
+                        });
+                        updateWeaponDisplay();
+                    },
+                    maxLevel: game.upgrades.damage.maxLevel
+                },
+                {
+                    id: 'speed',
+                    name: 'Swift Steps',
+                    desc: '+1.5 speed per level',
+                    getCost: () => Math.floor(game.upgrades.speed.baseCost * Math.pow(game.upgrades.speed.costMultiplier, game.upgrades.speed.level)),
+                    effect: () => game.speed += 1.5,
+                    maxLevel: game.upgrades.speed.maxLevel
+                },
+                {
+                    id: 'health',
+                    name: 'Fortify',
+                    desc: '+40 max HP per level',
+                    getCost: () => Math.floor(game.upgrades.health.baseCost * Math.pow(game.upgrades.health.costMultiplier, game.upgrades.health.level)),
+                    effect: () => {
+                        game.maxHp += 40;
+                        game.hp += 40;
+                    },
+                    maxLevel: game.upgrades.health.maxLevel
+                },
+                {
+                    id: 'crit',
+                    name: 'Precision',
+                    desc: '+3% crit chance per level',
+                    getCost: () => Math.floor(game.upgrades.crit.baseCost * Math.pow(game.upgrades.crit.costMultiplier, game.upgrades.crit.level)),
+                    effect: () => game.critChance += 0.03,
+                    maxLevel: game.upgrades.crit.maxLevel
+                },
+                {
+                    id: 'turret',
+                    name: 'Turret Upgrade',
+                    desc: '+40% turret damage & +25% range per level',
+                    getCost: () => Math.floor(game.upgrades.turret.baseCost * Math.pow(game.upgrades.turret.costMultiplier, game.upgrades.turret.level)),
+                    effect: () => {
+                        game.turretUpgradeLevel++;
+                        game.turrets.forEach(turret => {
+                            turret.damage *= 1.4;
+                            turret.range *= 1.25;
+                            turret.fireRate /= 1.15;
+                            turret.level = game.turretUpgradeLevel + 1;
+                            turret.levelDiv.textContent = `Lv.${turret.level}`;
+                        });
+                        game.turretDamage *= 1.4;
+                        game.turretRange *= 1.25;
+                        game.turretFireRate /= 1.15;
+                    },
+                    maxLevel: game.upgrades.turret.maxLevel
+                }
+            ];
+            
+            upgrades.forEach(upg => {
+                const card = document.createElement('div');
+                card.className = 'upgrade-card';
+                card.style.position = 'relative';
+                
+                const level = game.upgrades[upg.id].level;
+                const maxLevel = upg.maxLevel;
+                const cost = upg.getCost();
+                const canAfford = game.wood >= cost;
+                const isMaxed = level >= maxLevel;
+                
+                if (isMaxed) {
+                    card.classList.add('locked');
+                }
+                
+                card.innerHTML = `
+                    ${isMaxed ? '<div class="upgrade-max">MAX</div>' : ''}
+                    <div class="upgrade-level">Lv.${level}/${maxLevel}</div>
+                    <div class="upgrade-title">${upg.name}</div>
+                    <div class="upgrade-desc">${upg.desc}</div>
+                    <div class="upgrade-cost">💰 ${cost} wood</div>
+                `;
+                
+                if (!isMaxed) {
+                    card.style.cursor = 'pointer';
+                    card.onclick = function() {
+                        if (game.wood >= cost) {
+                            if (game.wave < 10 && cost > 100) {
+                                const confirmUpgrade = confirm(`This upgrade costs ${cost} wood (you have ${game.wood}).\n\nEarly game: This is expensive! Continue?`);
+                                if (!confirmUpgrade) return;
+                            }
+                            
+                            game.wood -= cost;
+                            game.upgrades[upg.id].level++;
+                            upg.effect();
+                            showNotification(`${upg.name} upgraded to level ${game.upgrades[upg.id].level}!`, 'green');
+                            setupUpgrades();
+                            updateUI();
+                        } else {
+                            showNotification(`Need ${cost} wood, have ${game.wood}`, 'red');
+                        }
+                    };
+                } else {
+                    card.style.cursor = 'default';
+                }
+                
+                upgradesGrid.appendChild(card);
+            });
+        }
+
+        function setupEventListeners() {
+            document.addEventListener('keydown', (e) => {
+                const key = e.key.toLowerCase();
+                game.keys[key] = true;
+                
+                if (key === ' ' || key === 'spacebar') {
+                    fireWeapon();
+                    e.preventDefault();
+                }
+                
+                if (key === 'q') {
+                    specialAttack();
+                }
+                
+                // Debug: Give resources
+                if (key === 'f' && e.shiftKey) {
+                    game.wood += 10000;
+                    showNotification('DEBUG: +10000 wood!', 'gold');
+                    updateUI();
+                    setupUpgrades();
+                    updateTurretButton();
+                }
+                
+                // Debug: Skip wave
+                if (key === 'n' && e.shiftKey) {
+                    game.enemies.forEach(enemy => enemy.element.remove());
+                    game.enemies = [];
+                    showNotification('DEBUG: Wave cleared!', 'gold');
+                }
+                
+                // Debug: Build free turret
+                if (key === 't' && e.shiftKey) {
+                    game.wood += 5000;
+                    placeTurret();
+                    game.wood -= 5000;
+                }
+            });
+            
+            document.addEventListener('keyup', (e) => {
+                const key = e.key.toLowerCase();
+                game.keys[key] = false;
+            });
+            
+            document.getElementById('battleArea').addEventListener('click', (e) => {
+                if (!e.target.classList.contains('enemy')) {
+                    fireWeapon();
+                }
+            });
+        }
+
+        function showVictoryScreen() {
+            document.getElementById('victoryWave').textContent = game.wave;
+            document.getElementById('victoryKills').textContent = game.kills;
+            document.getElementById('victoryCombo').textContent = game.maxCombo;
+            document.getElementById('victoryLevel').textContent = game.level;
+            document.getElementById('victoryWood').textContent = game.wood;
+            document.getElementById('victoryBosses').textContent = game.bossesDefeated;
+            document.getElementById('victoryTurrets').textContent = game.turretsBuilt;
+            
+            document.getElementById('victoryScreen').style.display = 'flex';
+            
+            showNotification('🎉 CONGRATULATIONS! You survived all 100 waves!', 'gold');
+            saveProgress();
+        }
+
+        function gameOver() {
+            if (game.isGameOver) return;
+            
+            game.isGameOver = true;
+            game.gameActive = false;
+            
+            document.getElementById('gameOverWave').textContent = game.wave;
+            document.getElementById('gameOverKills').textContent = game.kills;
+            document.getElementById('gameOverCombo').textContent = game.maxCombo;
+            document.getElementById('gameOverLevel').textContent = game.level;
+            document.getElementById('gameOverWood').textContent = game.wood;
+            document.getElementById('gameOverBosses').textContent = game.bossesDefeated;
+            document.getElementById('gameOverTurrets').textContent = game.turretsBuilt;
+            
+            document.getElementById('gameOverScreen').style.display = 'flex';
+            
+            game.enemies.forEach(enemy => {
+                enemy.element.style.animation = 'none';
+            });
+            
+            saveProgress();
+            showNotification('Game Over! Check your stats.', 'red');
+        }
+
+        function saveProgress() {
+            try {
+                const progress = {
+                    wave: game.wave,
+                    level: game.level,
+                    wood: game.wood,
+                    kills: game.kills,
+                    weaponType: game.weaponType,
+                    upgrades: game.upgrades,
+                    bossesDefeated: game.bossesDefeated,
+                    maxCombo: game.maxCombo,
+                    turretsBuilt: game.turretsBuilt,
+                    turretUpgradeLevel: game.turretUpgradeLevel
+                };
+                localStorage.setItem('woodlandWarriorsBalanced', JSON.stringify(progress));
+            } catch (e) {
+                console.log('Could not save progress:', e);
+            }
+        }
+
+        function loadProgress() {
+            try {
+                const saved = localStorage.getItem('woodlandWarriorsBalanced');
+                if (saved) {
+                    const progress = JSON.parse(saved);
+                    game.wave = progress.wave || 1;
+                    game.level = progress.level || 1;
+                    game.wood = progress.wood || 10;
+                    game.kills = progress.kills || 0;
+                    game.weaponType = progress.weaponType || 'woodaxe';
+                    game.bossesDefeated = progress.bossesDefeated || 0;
+                    game.maxCombo = progress.maxCombo || 0;
+                    game.turretsBuilt = progress.turretsBuilt || 0;
+                    game.turretUpgradeLevel = progress.turretUpgradeLevel || 0;
+                    
+                    if (progress.upgrades) {
+                        Object.keys(progress.upgrades).forEach(key => {
+                            if (game.upgrades[key]) {
+                                game.upgrades[key].level = progress.upgrades[key].level || 0;
+                            }
+                        });
+                    }
+                    
+                    game.weaponTier = weapons[game.weaponType] ? weapons[game.weaponType].tier : 1;
+                    
+                    showNotification('Progress loaded from Wave ' + (game.wave - 1) + '!', 'green');
+                }
+            } catch (e) {
+                console.log('Could not load progress:', e);
+            }
+        }
+
+        function restartGame() {
+            // Clear all game elements
+            game.turrets.forEach(turret => turret.element.remove());
+            game.turrets = [];
+            
+            game.enemies.forEach(enemy => enemy.element.remove());
+            game.enemies = [];
+            
+            game.projectiles.forEach(proj => proj.element.remove());
+            game.projectiles = [];
+            
+            game.particles.forEach(part => part.element.remove());
+            game.particles = [];
+            
+            // Reset game state with HARDER EARLY GAME
+            Object.assign(game, {
+                hp: 200,
+                maxHp: 200,
+                wood: 10,
+                level: 1,
+                kills: 0,
+                wave: 1,
+                bossesDefeated: 0,
+                totalTurrets: 0,
+                turretsBuilt: 0,
+                playerX: 400,
+                playerY: 300,
+                speed: 6,
+                weaponTier: 1,
+                weaponType: 'woodaxe',
+                clickDamage: 20,
+                critChance: 0.03,
+                critMultiplier: 2.0,
+                combo: 0,
+                maxCombo: 0,
+                turrets: [],
+                turretDamage: 50,
+                turretRange: 200,
+                turretFireRate: 60,
+                turretUpgradeLevel: 0,
+                bossActive: false,
+                miniBossActive: false,
+                eliteSpawned: false,
+                gameActive: true,
+                isGameOver: false
+            });
+            
+            // Reset upgrades
+            for (let upgrade in game.upgrades) {
+                game.upgrades[upgrade].level = 0;
+            }
+            
+            // Hide screens
+            document.getElementById('gameOverScreen').style.display = 'none';
+            document.getElementById('victoryScreen').style.display = 'none';
+            
+            // Reset player position
+            const player = document.getElementById('player');
+            player.style.left = '365px';
+            player.style.top = '265px';
+            
+            // Update UI
+            updateUI();
+            updateWeaponDisplay();
+            setupUpgrades();
+            updateTurretButton();
+            
+            // Start new game with warning
+            const waveConfig = game.getWaveConfig(game.wave);
+            showNotification(waveConfig.message, 'blue');
+            showNotification('⚠️ HARD MODE: Wood is VERY scarce in early waves!', 'red');
+            showNotification('Strategy: Focus on survival until Wave 10!', 'orange');
+            startWave(game.wave);
+            
+            // Clear save
+            localStorage.removeItem('woodlandWarriorsBalanced');
+        }
+
+        function movePlayer(direction) {
+            if (game.isGameOver) return;
+            
+            switch(direction) {
+                case 'up':
+                    game.playerY = Math.max(35, game.playerY - game.speed);
+                    break;
+                case 'down':
+                    game.playerY = Math.min(565, game.playerY + game.speed);
+                    break;
+                case 'left':
+                    game.playerX = Math.max(35, game.playerX - game.speed);
+                    break;
+                case 'right':
+                    game.playerX = Math.min(765, game.playerX + game.speed);
+                    break;
+            }
+            
+            const player = document.getElementById('player');
+            player.style.left = (game.playerX - 35) + 'px';
+            player.style.top = (game.playerY - 35) + 'px';
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
