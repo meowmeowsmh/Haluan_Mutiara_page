@@ -649,12 +649,13 @@ footer .footer-contact i {
 </div>
 
 <script>
-// Load all images from Image1 to Image16 from local directory
+// Load all images from Image1 to Image16
 document.addEventListener('DOMContentLoaded', function() {
     const gallery = document.getElementById('imageGallery');
     
-    // Define the base path to your images
-    const imagePath = './Other_picture/';
+    // Use relative path for web deployment - adjust this based on your folder structure
+    const imagePath = './Other_picture/'; // Images in 'Other_picture' folder at root level
+    // OR if images are in same folder: const imagePath = './';
     
     // Supported image extensions to try
     const extensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
@@ -688,6 +689,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const img = document.createElement('img');
         
         // Try to load the image with different extensions
+        // Try with the most common extension first
         img.src = `${imagePath}Image${i}.jpg`;
         img.alt = `Wood Product ${i}`;
         img.loading = 'lazy';
@@ -769,7 +771,8 @@ function openModal(imageNumber) {
     const modal = document.getElementById('productModal');
     const modalImage = document.getElementById('modalImage');
     
-    const imagePath = 'D:/Project_Wood/Other_picture/';
+    // Use same path as above
+    const imagePath = './Other_picture/'; // Should match the path above
     
     modalImage.src = `${imagePath}Image${imageNumber}.jpg`;
     modalImage.alt = `Wood Product ${imageNumber}`;
@@ -831,4 +834,5 @@ document.addEventListener('keydown', function(event) {
 </body>
 
 </html>
+
 
