@@ -632,8 +632,8 @@
       </div>
       <div class="footer-newsletter">
         <h4>Get Updates</h4>
-        <input type="email" placeholder="Your email" class="newsletter-input">
-        <button class="btn btn-primary btn-small" id="subscribeBtn">Subscribe</button>
+        <input type="comment" placeholder="Your comment" class="newsletter-input">
+            <button class="btn btn-primary btn-small" id="CommentBtn">Comment</button>
       </div>
     </div>
     <div class="footer-copyright">
@@ -788,15 +788,15 @@ document.addEventListener('DOMContentLoaded', function() {
     observer.observe(video);
     
     // Newsletter subscription
-    const subscribeBtn = document.getElementById('subscribeBtn');
-    if (subscribeBtn) {
-        subscribeBtn.addEventListener('click', function() {
-            const emailInput = document.querySelector('.newsletter-input');
-            if (emailInput && emailInput.value) {
-                emailInput.value = '';
-                alert('Thanks for subscribing to Haluan Mutiara updates!');
+    const CommentBtn = document.getElementById('CommentBtn');
+    if (CommentBtn) {
+        CommentBtn.addEventListener('click', function() {
+            const commentInput = document.querySelector('.newsletter-input');
+            if (commentInput && commentInput.value) {
+                commentInput.value = '';
+                alert('Thank you for your updating us!');
             } else {
-                alert('Please enter your email address.');
+                alert('Please enter your comment and feeback so that we can make it stronger!');
             }
         });
     }
@@ -825,3 +825,4 @@ document.addEventListener('DOMContentLoaded', function() {
 </body>
 
 </html>
+
