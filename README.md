@@ -6,7 +6,7 @@ if one picture missing the whole thing the whole things collapse, nothing can be
 
 #Note: 
 -don't replicated our bot offline comment you can used it for your benefit and advantage for different purposes.
--We are encourage you not to steal all our coment.
+-We are encourage you not to steal all our hardworking worked.
 
 #Report:
 if the content one to one please report to the github community the user since user are easily abused without our authory or our concern.
