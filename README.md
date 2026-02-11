@@ -2,7 +2,7 @@
 
 This cannot be replicate and can be used as reference I get help with ai bot and through logic everyhting works and makes it better start from scratch is pain get some idea from other page. 
 
-if one picture missing the whole thing missing quicky nothing can be missed. If steal information and replicated similar webpage and put it yo your respitory must be terminated as in reporting the related content from our wood product regardless. 
+if one picture missing the whole thing the whole things collapse, nothing can be missed. If steal information and replicated similar webpage and put it yo your respitory must be terminated as in reporting the related content from our wood product regardless. 
 
 #Note: 
 -don't replicated our bot offline comment you can used it for your benefit and advantage for different purposes.
