@@ -608,7 +608,7 @@ footer .footer-contact i {
         </div>
         <div class="footer-newsletter">
             <h4>Get Updates</h4>
-            <input type="email" placeholder="Your email" class="newsletter-input">
+            <input type="comment" placeholder="Your comment" class="newsletter-input">
             <button class="btn btn-primary btn-small" id="subscribeBtn">Contact Us</button>
         </div>
     </div>
@@ -756,10 +756,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const subscribeBtn = document.getElementById('subscribeBtn');
     if (subscribeBtn) {
         subscribeBtn.addEventListener('click', function() {
-            const emailInput = document.querySelector('.newsletter-input');
-            if (emailInput && emailInput.value) {
+            const commentInput = document.querySelector('.newsletter-input');
+            if (commentInput && commentInput.value) {
                 alert('Thank you for your updating us!');
-                emailInput.value = '';
+                commentInput.value = '';
             } else {
                 alert('Please enter your comment and feeback so that we can make it stronger!');
             }
@@ -835,6 +835,7 @@ document.addEventListener('keydown', function(event) {
 </body>
 
 </html>
+
 
 
 
