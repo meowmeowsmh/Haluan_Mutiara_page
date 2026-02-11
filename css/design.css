@@ -235,16 +235,10 @@ a {
 }
 
 .logo {
-    font-size: var(--font-size-xl);
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    gap: var(--space-sm);
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
-
-    .logo i {
-        font-size: 1.2em;
-    }
 
 .nav-links {
     display: flex;
@@ -2903,4 +2897,15 @@ body {
 
 .product-modal:not(.active) {
     pointer-events: none;
+}
+.site-title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: white; /* Adjust color as needed */
+}
+
+.logo img {
+  height: 50px; /* Adjust based on your logo size */
+  width: auto;
 }
