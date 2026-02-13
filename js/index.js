@@ -1,3 +1,171 @@
+
+// ================================================================
+// FORCE INSTANT LOADING - ADD THIS AT THE VERY TOP
+// ================================================================
+
+// Preload JUST the first visible images (critical images)
+(function preloadCriticalImages() {
+    const criticalImages = [
+        'Images/timbereality-haluan-mutiara-ceiling-paneling.webp',
+        'Images/timbereality-haluan-mutiara-door-frame-lipping.webp',
+        'Images/timbereality-haluan-mutiara-handrail-type-1.webp'
+    ];
+    
+    criticalImages.forEach(src => {
+        // Check if .webp exists, if not use .jpg
+        const link = document.createElement('link');
+        link.rel = 'preload';
+        link.as = 'image';
+        link.href = src;
+        document.head.appendChild(link);
+    });
+})();
+
+// Store original functions
+const originalCreateProductCard = window.createProductCardHTML || function(p) { return ''; };
+const originalDisplayAll = window.displayAllProducts || function() {};
+
+// Override createProductCardHTML with optimized version
+window.createProductCardHTML = function(product) {
+    // For images NOT in first view, add extra lazy loading
+    const isFirstRow = product.id <= 6; // Products 1-6 are first row
+    
+    return `
+        <div class="product-card" onclick="openProductModal(${product.id})">
+            <div class="product-image">
+                <img 
+                    ${isFirstRow ? '' : 'loading="lazy"'} 
+                    src="${product.image}" 
+                    alt="${product.name}" 
+                    onerror="handleImageError(this)"
+                    ${!isFirstRow ? 'decoding="async"' : ''}
+                >
+                <div class="category-badge category-${product.category}" style="background: ${categoryColors[product.category]};">
+                    <i class="fas ${categoryIcons[product.category]}"></i>
+                </div>
+            </div>
+            <div class="product-info">
+                <h3 class="product-name">${product.name}</h3>
+                <p class="product-desc">${product.description}</p>
+                <div class="product-specs">
+                    <span class="wood-type"><i class="fas fa-tree"></i> ${product.woodType}</span>
+                </div>
+                <div class="product-footer">
+                    <div class="product-price">RM ${product.price}</div>
+                    <button class="view-details-btn" onclick="event.stopPropagation(); openProductModal(${product.id})">
+                        <i class="fas fa-eye"></i> View
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+};
+
+// Override displayAllProducts with optimized version (NO setTimeout delay)
+window.displayAllProducts = function() {
+    if (!productsGrid) return;
+    
+    productsGrid.innerHTML = '';
+    productsGrid.style.display = 'block';
+    
+    const sections = [
+        { key: 'skirting', name: 'Skirting' },
+        { key: 'windows', name: 'Windows & Doors' },
+        { key: 'handrails', name: 'Handrails' },
+        { key: 'flooring', name: 'Flooring' },
+        { key: 'mouldings', name: 'Mouldings' },
+        { key: 'ceiling', name: 'Ceiling' }
+    ];
+    
+    const productsByCategory = {};
+    PRODUCTS.forEach(product => {
+        if (!productsByCategory[product.category]) {
+            productsByCategory[product.category] = [];
+        }
+        productsByCategory[product.category].push(product);
+    });
+    
+    sections.forEach(section => {
+        const products = productsByCategory[section.key];
+        if (!products || products.length === 0) return;
+        
+        const icon = categoryIcons[section.key];
+        const color = categoryColors[section.key];
+        
+        const sectionDiv = document.createElement('div');
+        sectionDiv.style.marginBottom = '30px';
+        
+        sectionDiv.innerHTML = `
+            <div style="margin-bottom: 15px;">
+                <div style="display:flex; align-items:center; gap:8px; padding:8px 12px; background:${color}; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1);">
+                    <i class="fas ${icon}" style="font-size:1rem; color:white;"></i>
+                    <h2 style="color:white; margin:0; font-size:1rem; font-weight:600; flex:1;">
+                        ${section.name}
+                    </h2>
+                    <span style="background:rgba(255,255,255,0.25); padding:2px 8px; border-radius:12px; color:white; font-size:0.8rem;">
+                        ${products.length}
+                    </span>
+                </div>
+            </div>
+        `;
+        
+        const swiperId = `swiper-${section.key}`;
+        const swiperContainer = document.createElement('div');
+        swiperContainer.className = `swiper ${swiperId}`;
+        swiperContainer.style.cssText = 'padding: 5px 0 20px 0;';
+        
+        const swiperWrapper = document.createElement('div');
+        swiperWrapper.className = 'swiper-wrapper';
+        
+        products.forEach(p => {
+            const slide = document.createElement('div');
+            slide.className = 'swiper-slide';
+            slide.innerHTML = window.createProductCardHTML(p); // Use optimized version
+            swiperWrapper.appendChild(slide);
+        });
+        
+        swiperContainer.appendChild(swiperWrapper);
+        
+        const pagination = document.createElement('div');
+        pagination.className = 'swiper-pagination';
+        
+        const prevButton = document.createElement('div');
+        prevButton.className = 'swiper-button-prev';
+        
+        const nextButton = document.createElement('div');
+        nextButton.className = 'swiper-button-next';
+        
+        swiperContainer.appendChild(pagination);
+        swiperContainer.appendChild(prevButton);
+        swiperContainer.appendChild(nextButton);
+        
+        sectionDiv.appendChild(swiperContainer);
+        productsGrid.appendChild(sectionDiv);
+        
+        // Initialize Swiper IMMEDIATELY (NO setTimeout)
+        if (window.Swiper) {
+            swiperInstances[section.key] = new Swiper(`.${swiperId}`, {
+                slidesPerView: 'auto',
+                spaceBetween: 15,
+                slidesPerGroup: 1,
+                centeredSlides: false,
+                loop: false,
+                slideShadows: false,
+                observer: true,
+                observeParents: true,
+                navigation: {
+                    nextEl: `.${swiperId} .swiper-button-next`,
+                    prevEl: `.${swiperId} .swiper-button-prev`,
+                },
+                pagination: {
+                    el: `.${swiperId} .swiper-pagination`,
+                    clickable: true,
+                },
+            });
+        }
+    });
+};
+
 /* =====================================================================
    HALUAN MUTIARA - INDEX PAGE WITH SMART DISPLAY
    Swipeable carousels for all categories
@@ -1025,3 +1193,4 @@ window.addEventListener('resize', detectZoomAndAdjust);
 
 
 window.closeProductModal = closeProductModal;
+
