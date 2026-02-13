@@ -894,7 +894,7 @@ function createProductCardHTML(product) {
     return `
         <div class="product-card" onclick="openProductModal(${product.id})">
             <div class="product-image">
-                <img src="${product.image}" alt="${product.name}" onerror="handleImageError(this)">
+               <img loading="lazy" src="${product.image}" alt="${product.name}" onerror="handleImageError(this)">
                 <div class="category-badge category-${product.category}" style="background: ${categoryColors[product.category]};">
                     <i class="fas ${categoryIcons[product.category]}"></i>
                 </div>
@@ -929,6 +929,7 @@ window.openProductModal = function(productId) {
     // Update modal content with beautiful design
     document.getElementById('modal-product-name').textContent = product.name;
     document.getElementById('modal-description').textContent = product.description;
+    document.getElementById('modal-image').loading = 'lazy';
     document.getElementById('modal-image').src = product.image;
     document.getElementById('modal-image').alt = product.name;
     
@@ -1021,5 +1022,6 @@ function detectZoomAndAdjust() {
 
 // Add zoom detection on resize
 window.addEventListener('resize', detectZoomAndAdjust);
+
 
 window.closeProductModal = closeProductModal;
