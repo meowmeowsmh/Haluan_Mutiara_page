@@ -936,7 +936,7 @@ function displayAllProducts() {
 
 document.addEventListener('DOMContentLoaded', function() {
     // Add CSS styles first
-    //addStyles();
+    addStyles();
     
     productsGrid = document.getElementById('all-products-grid');
     modal = document.getElementById('product-modal');
@@ -1047,4 +1047,5 @@ function detectZoomAndAdjust() {
 
 window.addEventListener('resize', detectZoomAndAdjust);
 window.closeProductModal = closeProductModal;
+
 
