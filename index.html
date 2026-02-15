@@ -494,6 +494,31 @@ h4 {
     top: -9999px !important;
     left: -9999px !important;
 }
+
+/* Status message styles */
+#form-status {
+    margin-top: 10px;
+    padding: 8px 12px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    animation: fadeIn 0.3s ease;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+#form-status i {
+    margin-right: 8px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.fa-spinner {
+    animation: spin 1s linear infinite;
+}
 </style>
 </head>
 <body>
@@ -647,7 +672,7 @@ h4 {
       </div>
       <div class="footer-newsletter">
         <h4>Get Updates</h4>
-        <!-- FIXED: Working Netlify form with all required fields -->
+        <!-- WORKING NETLIFY FORM WITH AJAX -->
         <form name="updates" method="POST" data-netlify="true">
           <!-- Required hidden field for Netlify -->
           <input type="hidden" name="form-name" value="updates" />
@@ -666,8 +691,11 @@ h4 {
                  class="newsletter-input" 
                  required>
                  
-          <button type="submit" class="btn btn-primary btn-small">Comment</button>
+          <button type="submit" class="btn btn-primary btn-small">
+            <i class="fas fa-paper-plane"></i> Comment
+          </button>
         </form>
+        <!-- Status message will appear here -->
       </div>
     </div>
     <div class="footer-copyright">
@@ -742,7 +770,7 @@ h4 {
 <script src="js/index.js"></script>
 <script src="js/chat-bot.js"></script>
 
-<!-- Video Controls and Initialization - UPDATED: Removed CommentBtn code -->
+<!-- Video Controls and Initialization -->
 <script>
 // Video Controls and Initialization
 document.addEventListener('DOMContentLoaded', function() {
@@ -840,6 +868,81 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+</script>
+
+<!-- NETLIFY FORM HANDLER - Prevents 405 Error -->
+<script>
+// Netlify Form Handler - AJAX Submission
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form[name="updates"]');
+    
+    if (form) {
+        form.addEventListener('submit', handleFormSubmit);
+    }
+});
+
+async function handleFormSubmit(event) {
+    event.preventDefault();
+    
+    const form = event.target;
+    const formData = new FormData(form);
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    const statusDiv = document.getElementById('form-status') || createStatusDiv(form);
+    
+    // Disable button and show loading
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+    
+    try {
+        // Submit to Netlify
+        const response = await fetch('/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams(formData).toString()
+        });
+        
+        if (response.ok || response.status === 200) {
+            // Success
+            statusDiv.innerHTML = '<i class="fas fa-check-circle"></i> Thank you! Your comment was sent.';
+            statusDiv.style.color = '#4CAF50';
+            form.reset();
+            
+            // Clear success message after 5 seconds
+            setTimeout(() => {
+                statusDiv.innerHTML = '';
+            }, 5000);
+        } else {
+            throw new Error('Form submission failed');
+        }
+    } catch (error) {
+        console.error('Form error:', error);
+        statusDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> Error sending comment. Please try again.';
+        statusDiv.style.color = '#e74c3c';
+        
+        setTimeout(() => {
+            statusDiv.innerHTML = '';
+        }, 5000);
+    } finally {
+        // Re-enable button
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
+    }
+}
+
+function createStatusDiv(form) {
+    const div = document.createElement('div');
+    div.id = 'form-status';
+    div.style.marginTop = '10px';
+    div.style.padding = '10px';
+    div.style.borderRadius = '5px';
+    div.style.fontSize = '0.9rem';
+    div.style.background = 'rgba(255, 255, 255, 0.1)';
+    div.style.backdropFilter = 'blur(5px)';
+    div.style.border = '1px solid rgba(255, 255, 255, 0.2)';
+    form.parentNode.insertBefore(div, form.nextSibling);
+    return div;
+}
 </script>
 
 </body>
