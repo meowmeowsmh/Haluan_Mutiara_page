@@ -51,111 +51,6 @@ main {
     flex: 1;
 }
 
-/* Navigation Styles */
-.nav-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 50px;
-    background: white;
-    box-shadow: 0 2px 10px rgba(93, 64, 55, 0.1);
-    position: relative;
-    z-index: 1000;
-}
-
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.logo img {
-    height: 50px;
-    width: auto;
-}
-
-.site-title {
-    font-size: 1.5rem;
-    color: var(--primary-dark);
-    font-weight: 600;
-}
-
-.nav-links {
-    display: flex;
-    list-style: none;
-    gap: 30px;
-}
-
-.nav-links a {
-    text-decoration: none;
-    color: var(--text);
-    font-weight: 500;
-    font-size: 1.1rem;
-    transition: all 0.3s ease;
-    position: relative;
-    padding: 5px 0;
-}
-
-.nav-links a:hover {
-    color: var(--primary);
-}
-
-.nav-links a.active {
-    color: var(--primary);
-    font-weight: 600;
-}
-
-.nav-links a.active::after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background: var(--primary);
-}
-
-/* PERMANENT GLOW FOR CONTACT LINK ON ALL PAGES */
-.nav-links a[href="contact.html"] {
-    color: #f4e4c1 !important;
-    text-shadow: 0 0 10px #f4e4c1, 
-                 0 0 20px #ffaa00, 
-                 0 0 30px #8b4513 !important;
-    font-weight: 700;
-    position: relative;
-    animation: permanentContactGlow 1.5s ease-in-out infinite;
-}
-
-@keyframes permanentContactGlow {
-    0% { text-shadow: 0 0 10px #f4e4c1, 0 0 20px #8b4513; }
-    50% { text-shadow: 0 0 15px #ffd700, 0 0 30px #8b4513, 0 0 45px #ffaa00; }
-    100% { text-shadow: 0 0 10px #f4e4c1, 0 0 20px #8b4513; }
-}
-
-/* Make sure it doesn't get overwritten */
-.nav-links a[href="contact.html"]:hover,
-.nav-links a[href="contact.html"]:active,
-.nav-links a[href="contact.html"]:focus {
-    color: #f4e4c1 !important;
-    text-shadow: 0 0 15px #ffd700, 0 0 30px #8b4513, 0 0 45px #ffaa00 !important;
-}
-
-.hamburger {
-    display: none;
-    flex-direction: column;
-    cursor: pointer;
-    padding: 5px;
-}
-
-.hamburger span {
-    width: 25px;
-    height: 3px;
-    background: var(--primary-dark);
-    margin: 3px 0;
-    transition: 0.3s;
-    display: block;
-}
-
 /* Hero Section - Fixed Background */
 .wood-hero {
     padding: 120px 20px;
@@ -511,67 +406,11 @@ footer {
     font-size: 0.9rem;
 }
 
-/* Mobile Navigation Styles */
+
+
+
+/* Responsive */
 @media (max-width: 768px) {
-    .nav-bar {
-        padding: 15px 20px;
-    }
-    
-    .nav-links {
-        display: none;
-        position: absolute;
-        top: 80px;
-        left: 0;
-        width: 100%;
-        background: #5d4037;
-        flex-direction: column;
-        padding: 20px 0;
-        z-index: 1000;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    }
-    
-    .nav-links.show {
-        display: flex;
-    }
-    
-    .nav-links li {
-        margin: 10px 0;
-        text-align: center;
-    }
-    
-    .nav-links a {
-        color: white !important;
-        padding: 10px 20px;
-        display: block;
-        text-shadow: none !important;
-    }
-    
-    /* Contact link still glows on mobile */
-    .nav-links a[href="contact.html"] {
-        color: #f4e4c1 !important;
-        text-shadow: 0 0 10px #f4e4c1, 0 0 20px #8b4513 !important;
-    }
-    
-    .hamburger {
-        display: flex;
-    }
-    
-    .hamburger.active span {
-        background: #8b4513;
-    }
-    
-    .hamburger.active span:nth-child(1) {
-        transform: rotate(45deg) translate(6px, 6px);
-    }
-    
-    .hamburger.active span:nth-child(2) {
-        opacity: 0;
-    }
-    
-    .hamburger.active span:nth-child(3) {
-        transform: rotate(-45deg) translate(6px, -6px);
-    }
-    
     .wood-hero {
         padding: 80px 20px;
         min-height: 500px;
@@ -631,10 +470,10 @@ footer {
 <!-- Navigation -->
 <header>
     <nav class="nav-bar">
-        <div class="logo">
-            <img src="Other_picture/logo-main-page.png" alt="Haluan Mutiara Logo">
-            <h1 class="site-title">Haluan Mutiara</h1>
-        </div>
+<div class="logo">
+      <img src="Other_picture/logo-main-page.png" alt="Haluan Mutiara Logo">
+      <h1 class="site-title">Haluan Mutiara</h1> <!-- Add this line -->
+    </div>
         <ul class="nav-links">
             <li><a href="index.html">Home</a></li>
             <li><a href="about.html" class="active">About</a></li>
@@ -687,17 +526,16 @@ footer {
             </div>
 
             <div class="wood-card">
-                <div class="wood-type-image">
-                    <img src="Images/Craftman.jpg" alt="Timber tree viewed from below" 
-                         onerror="this.src='https://images.pexels.com/photos/8489860/pexels-photo-8489860.jpeg?auto=compress&cs=tinysrgb&w=800'">
-                </div>
-                <div class="wood-content">
-                    <h3><i class="fas fa-hands"></i> Craftsman's Touch</h3>
-                    <p>This is where wood becomes material. Every piece is hand-inspected, graded, and prepared for its intended purpose - whether it's structural timber for construction or select boards for fine furniture.</p>
-                    <p>We don't just sell wood; we provide solutions. Our expertise helps clients choose the right species, grade, and cut for their specific needs.</p>
-                </div>
-            </div>
-        </div>
+    <div class="wood-type-image">
+        <img src="Images/Craftman.jpg" alt="Timber tree viewed from below" 
+             onerror="this.src='https://images.pexels.com/photos/8489860/pexels-photo-8489860.jpeg?auto=compress&cs=tinysrgb&w=800'">
+    </div>
+    <div class="wood-content">
+        <h3><i class="fas fa-hands"></i> Craftsman's Touch</h3>
+        <p>This is where wood becomes material. Every piece is hand-inspected, graded, and prepared for its intended purpose - whether it's structural timber for construction or select boards for fine furniture.</p>
+        <p>We don't just sell wood; we provide solutions. Our expertise helps clients choose the right species, grade, and cut for their specific needs.</p>
+    </div>
+</div>
     </section>
 
     <!-- Wood Types -->
@@ -941,55 +779,24 @@ document.addEventListener('DOMContentLoaded', function() {
     
     tryBackgroundImage();
     
-    // Mobile menu toggle - IMPROVED
+    // Mobile menu toggle
     const hamburger = document.querySelector('.hamburger');
     const navLinks = document.querySelector('.nav-links');
     
-    if (hamburger && navLinks) {
-        hamburger.addEventListener('click', function(e) {
-            e.stopPropagation();
-            navLinks.classList.toggle('show');
+    if (hamburger) {
+        hamburger.addEventListener('click', function() {
+            navLinks.classList.toggle('active');
             hamburger.classList.toggle('active');
-            
-            // Animate hamburger to X
-            const spans = hamburger.querySelectorAll('span');
-            if (navLinks.classList.contains('show')) {
-                spans[0].style.transform = 'rotate(45deg) translate(6px, 6px)';
-                spans[1].style.opacity = '0';
-                spans[2].style.transform = 'rotate(-45deg) translate(6px, -6px)';
-            } else {
-                spans[0].style.transform = 'none';
-                spans[1].style.opacity = '1';
-                spans[2].style.transform = 'none';
-            }
-        });
-        
-        // Close menu when clicking links
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', () => {
-                navLinks.classList.remove('show');
-                hamburger.classList.remove('active');
-                const spans = hamburger.querySelectorAll('span');
-                spans.forEach(span => {
-                    span.style.transform = 'none';
-                    span.style.opacity = '1';
-                });
-            });
-        });
-        
-        // Close menu when clicking outside
-        document.addEventListener('click', function(event) {
-            if (!hamburger.contains(event.target) && !navLinks.contains(event.target)) {
-                navLinks.classList.remove('show');
-                hamburger.classList.remove('active');
-                const spans = hamburger.querySelectorAll('span');
-                spans.forEach(span => {
-                    span.style.transform = 'none';
-                    span.style.opacity = '1';
-                });
-            }
         });
     }
+    
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', function(event) {
+        if (!hamburger.contains(event.target) && !navLinks.contains(event.target)) {
+            navLinks.classList.remove('active');
+            hamburger.classList.remove('active');
+        }
+    });
 });
 </script>
 <script src="js/chat-bot.js"></script>
