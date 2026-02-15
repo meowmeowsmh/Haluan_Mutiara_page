@@ -491,7 +491,7 @@
   <nav class="nav-bar">
     <div class="logo">
       <img src="Other_picture/logo-main-page.png" alt="Haluan Mutiara Logo">
-      <h1 class="site-title">Haluan Mutiara</h1> <!-- Add this line -->
+      <h1 class="site-title">Haluan Mutiara</h1>
     </div>
     <ul class="nav-links">
       <li><a href="index.html" class="active">Home</a></li>
@@ -622,7 +622,8 @@
     </section>
 </main>
 
-  <footer>
+<!-- UPDATED FOOTER WITH NETLIFY FORM -->
+<footer>
     <div class="footer-content">
       <div class="footer-about">
         <div class="footer-logo"><i class="fas fa-tree"></i> Haluan Mutiara</div>
@@ -635,8 +636,11 @@
       </div>
       <div class="footer-newsletter">
         <h4>Get Updates</h4>
-        <input type="comment" placeholder="Your comment" class="newsletter-input">
-            <button class="btn btn-primary btn-small" id="CommentBtn">Comment</button>
+        <!-- NEW: Netlify form added here -->
+        <form data-netlify="true" name="updates" method="POST">
+          <input type="text" name="comment" placeholder="Your comment" class="newsletter-input" required>
+          <button type="submit" class="btn btn-primary btn-small">Comment</button>
+        </form>
       </div>
     </div>
     <div class="footer-copyright">
@@ -644,7 +648,7 @@
       <p>Background video by <a href="https://pixabay.com/users/duniadaw-22205818/?utm_source=link-attribution&utm_medium=referral&utm_campaign=video&utm_content=2149718842" target="_blank" rel="noopener">DuniaDaw</a> from <a href="https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=video&utm_content=2149718842" target="_blank" rel="noopener">Pixabay</a></p>
       <p>&copy; 2026 Haluan Mutiara. All rights reserved.</p>
     </div>
-  </footer>
+</footer>
 </div>
 
 <!-- WhatsApp Float Button -->
@@ -712,6 +716,7 @@
 <script src="js/index.js"></script>
 <script src="js/chat-bot.js"></script>
 
+<!-- UPDATED: Removed the newsletter JavaScript that used CommentBtn -->
 <script>
 // Video Controls and Initialization
 document.addEventListener('DOMContentLoaded', function() {
@@ -790,20 +795,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     observer.observe(video);
     
-    // Newsletter subscription
-    const CommentBtn = document.getElementById('CommentBtn');
-    if (CommentBtn) {
-        CommentBtn.addEventListener('click', function() {
-            const commentInput = document.querySelector('.newsletter-input');
-            if (commentInput && commentInput.value) {
-                commentInput.value = '';
-                alert('Thank you for your updating us!');
-            } else {
-                alert('Please enter your comment and feeback so that we can make it stronger!');
-            }
-        });
-    }
-    
     // Mobile navigation toggle
     const hamburger = document.querySelector('.hamburger');
     const navLinks = document.querySelector('.nav-links');
@@ -826,10 +817,4 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 </body>
-
 </html>
-
-
-
-
-
