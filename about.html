@@ -406,20 +406,27 @@ footer {
     font-size: 0.9rem;
 }
 
-/* ===== FIX: ADD GLOW EFFECT FOR ACTIVE LINK ===== */
-.nav-links a.active {
+/* ===== PERMANENT GLOW FOR ABOUT LINK - EXACTLY LIKE CONTACT PAGE ===== */
+.nav-links a[href="about.html"] {
     color: #f4e4c1 !important;
     text-shadow: 0 0 10px #f4e4c1, 
                  0 0 20px #ffaa00, 
                  0 0 30px #8b4513 !important;
     font-weight: 700;
-    animation: permanentGlow 1.5s ease-in-out infinite;
+    position: relative;
+    animation: permanentAboutGlow 1.5s ease-in-out infinite;
 }
 
-@keyframes permanentGlow {
+@keyframes permanentAboutGlow {
     0% { text-shadow: 0 0 10px #f4e4c1, 0 0 20px #8b4513; }
     50% { text-shadow: 0 0 15px #ffd700, 0 0 30px #8b4513, 0 0 45px #ffaa00; }
     100% { text-shadow: 0 0 10px #f4e4c1, 0 0 20px #8b4513; }
+}
+
+/* Make sure it doesn't get overwritten */
+.nav-links a[href="about.html"].active {
+    color: #f4e4c1 !important;
+    text-shadow: 0 0 10px #f4e4c1, 0 0 20px #8b4513, 0 0 30px #ffaa00 !important;
 }
 /* =============================================== */
 
