@@ -883,6 +883,28 @@
     color: rgba(255, 255, 255, 0.6);
   }
 
+  /* Permanent glow for Contact link on ALL pages */
+.nav-links a[href="contact.html"] {
+    color: #f4e4c1 !important;
+    text-shadow: 0 0 10px #f4e4c1, 
+                 0 0 20px #ffaa00, 
+                 0 0 30px #8b4513 !important;
+    font-weight: 700;
+    position: relative;
+    animation: permanentContactGlow 1.5s ease-in-out infinite;
+}
+
+@keyframes permanentContactGlow {
+    0% { text-shadow: 0 0 10px #f4e4c1, 0 0 20px #8b4513; }
+    50% { text-shadow: 0 0 15px #ffd700, 0 0 30px #8b4513, 0 0 45px #ffaa00; }
+    100% { text-shadow: 0 0 10px #f4e4c1, 0 0 20px #8b4513; }
+}
+
+/* Make sure it doesn't get overwritten */
+.nav-links a[href="contact.html"].active {
+    color: #f4e4c1 !important;
+    text-shadow: 0 0 10px #f4e4c1, 0 0 20px #8b4513, 0 0 30px #ffaa00 !important;
+}
 </style>
 </head>
 <body>
@@ -1313,20 +1335,29 @@ function initNavigation() {
     });
     
     // Set active nav link
-    const currentPage = window.location.pathname.split('/').pop();
-    const navLinksAll = document.querySelectorAll('.nav-links a');
-    
-    navLinksAll.forEach(link => {
+    // Set active nav link - BUT KEEP CONTACT GLOWING FOREVER
+const currentPage = window.location.pathname.split('/').pop();
+const navLinksAll = document.querySelectorAll('.nav-links a');
+
+navLinksAll.forEach(link => {
+    // Remove active class from all links EXCEPT Contact
+    if (!link.getAttribute('href').includes('contact')) {
         link.classList.remove('active');
-        const href = link.getAttribute('href');
-        
-        if (href === currentPage || 
-            (currentPage === '' && href === 'index.html') ||
-            (currentPage.includes('contact') && href === 'contact.html')) {
-            link.classList.add('active');
-        }
-    });
-}
+    }
+    
+    const href = link.getAttribute('href');
+    
+    // Add active class to current page (but Contact already has it)
+    if (href === currentPage || 
+        (currentPage === '' && href === 'index.html')) {
+        link.classList.add('active');
+    }
+    
+    // Make sure Contact ALWAYS has active class
+    if (link.getAttribute('href').includes('contact')) {
+        link.classList.add('active');
+    }
+});
 
 // ========== FORM HANDLING ==========
 function initFormHandling() {
@@ -1860,3 +1891,4 @@ document.addEventListener('keydown', function(e) {
 <script src="js/chat-bot.js"></script>
 </body>
 </html>
+
