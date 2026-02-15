@@ -480,9 +480,20 @@
         font-size: 1.8rem;
     }
 }
-    h4{
-        color:white;
-    }
+
+h4 {
+    color: white;
+}
+
+/* Hide honeypot field for Netlify forms */
+.hidden-field {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    position: absolute !important;
+    top: -9999px !important;
+    left: -9999px !important;
+}
 </style>
 </head>
 <body>
@@ -636,17 +647,25 @@
       </div>
       <div class="footer-newsletter">
         <h4>Get Updates</h4>
-        <!-- FIXED: Working Netlify form with action="/" -->
-        <form data-netlify="true" 
-              name="updates" 
-              method="POST" 
-              action="/">
-          <input type="hidden" name="form-name" value="updates">
+        <!-- FIXED: Working Netlify form with all required fields -->
+        <form name="updates" method="POST" data-netlify="true">
+          <!-- Required hidden field for Netlify -->
+          <input type="hidden" name="form-name" value="updates" />
+          
+          <!-- Honeypot field to prevent spam (hidden with CSS) -->
+          <p class="hidden-field">
+            <label>
+              Don't fill this out: <input type="text" name="bot-field" tabindex="-1" autocomplete="off" />
+            </label>
+          </p>
+          
+          <!-- Your actual form field -->
           <input type="text" 
                  name="comment" 
                  placeholder="Your comment" 
                  class="newsletter-input" 
                  required>
+                 
           <button type="submit" class="btn btn-primary btn-small">Comment</button>
         </form>
       </div>
@@ -657,7 +676,6 @@
       <p>&copy; 2026 Haluan Mutiara. All rights reserved.</p>
     </div>
 </footer>
-</div>
 
 <!-- WhatsApp Float Button -->
 <a href="https://wa.me/60122786182" class="whatsapp-float" target="_blank">
@@ -724,7 +742,7 @@
 <script src="js/index.js"></script>
 <script src="js/chat-bot.js"></script>
 
-<!-- UPDATED: Removed newsletter JavaScript that caused conflicts -->
+<!-- Video Controls and Initialization - UPDATED: Removed CommentBtn code -->
 <script>
 // Video Controls and Initialization
 document.addEventListener('DOMContentLoaded', function() {
