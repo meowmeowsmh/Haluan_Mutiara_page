@@ -51,6 +51,124 @@ main {
     flex: 1;
 }
 
+/* Navigation Styles */
+.nav-bar {
+    background: var(--primary-dark);
+    padding: 1rem 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo img {
+    height: 40px;
+    width: auto;
+}
+
+.site-title {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.nav-links a:hover {
+    background: var(--primary-light);
+}
+
+/* PERMANENT GLOW FOR ABOUT LINK - EXACT SAME AS CONTACT PAGE */
+.nav-links a[href="about.html"] {
+    color: #f4e4c1 !important;
+    text-shadow: 0 0 10px #f4e4c1, 
+                 0 0 20px #ffaa00, 
+                 0 0 30px #8b4513 !important;
+    font-weight: 700;
+    position: relative;
+    animation: permanentAboutGlow 1.5s ease-in-out infinite;
+}
+
+@keyframes permanentAboutGlow {
+    0% { text-shadow: 0 0 10px #f4e4c1, 0 0 20px #8b4513; }
+    50% { text-shadow: 0 0 15px #ffd700, 0 0 30px #8b4513, 0 0 45px #ffaa00; }
+    100% { text-shadow: 0 0 10px #f4e4c1, 0 0 20px #8b4513; }
+}
+
+/* Make sure it doesn't get overwritten */
+.nav-links a[href="about.html"].active {
+    color: #f4e4c1 !important;
+    text-shadow: 0 0 10px #f4e4c1, 0 0 20px #8b4513, 0 0 30px #ffaa00 !important;
+}
+
+.hamburger {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.hamburger span {
+    width: 25px;
+    height: 3px;
+    background: white;
+    margin: 2px 0;
+    transition: 0.3s;
+}
+
+/* Mobile Navigation */
+@media (max-width: 768px) {
+    .hamburger {
+        display: flex;
+    }
+    
+    .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: var(--primary-dark);
+        flex-direction: column;
+        padding: 1rem;
+        gap: 0;
+    }
+    
+    .nav-links.active {
+        display: flex;
+    }
+    
+    .nav-links li {
+        width: 100%;
+    }
+    
+    .nav-links a {
+        display: block;
+        padding: 1rem;
+    }
+}
+
 /* Hero Section - Fixed Background */
 .wood-hero {
     padding: 120px 20px;
@@ -340,6 +458,32 @@ main {
     font-size: 1.3rem;
 }
 
+/* WhatsApp Float */
+.whatsapp-float {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: #25D366;
+    color: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 30px;
+    box-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.whatsapp-float:hover {
+    background: #128C7E;
+    transform: scale(1.1);
+}
+
 /* Footer */
 footer {
     background: var(--primary-dark);
@@ -406,9 +550,6 @@ footer {
     font-size: 0.9rem;
 }
 
-
-
-
 /* Responsive */
 @media (max-width: 768px) {
     .wood-hero {
@@ -470,10 +611,10 @@ footer {
 <!-- Navigation -->
 <header>
     <nav class="nav-bar">
-<div class="logo">
-      <img src="Other_picture/logo-main-page.png" alt="Haluan Mutiara Logo">
-      <h1 class="site-title">Haluan Mutiara</h1> <!-- Add this line -->
-    </div>
+        <div class="logo">
+            <img src="Other_picture/logo-main-page.png" alt="Haluan Mutiara Logo">
+            <h1 class="site-title">Haluan Mutiara</h1>
+        </div>
         <ul class="nav-links">
             <li><a href="index.html">Home</a></li>
             <li><a href="about.html" class="active">About</a></li>
@@ -526,16 +667,17 @@ footer {
             </div>
 
             <div class="wood-card">
-    <div class="wood-type-image">
-        <img src="Images/Craftman.jpg" alt="Timber tree viewed from below" 
-             onerror="this.src='https://images.pexels.com/photos/8489860/pexels-photo-8489860.jpeg?auto=compress&cs=tinysrgb&w=800'">
-    </div>
-    <div class="wood-content">
-        <h3><i class="fas fa-hands"></i> Craftsman's Touch</h3>
-        <p>This is where wood becomes material. Every piece is hand-inspected, graded, and prepared for its intended purpose - whether it's structural timber for construction or select boards for fine furniture.</p>
-        <p>We don't just sell wood; we provide solutions. Our expertise helps clients choose the right species, grade, and cut for their specific needs.</p>
-    </div>
-</div>
+                <div class="wood-type-image">
+                    <img src="Images/Craftman.jpg" alt="Timber tree viewed from below" 
+                         onerror="this.src='https://images.pexels.com/photos/8489860/pexels-photo-8489860.jpeg?auto=compress&cs=tinysrgb&w=800'">
+                </div>
+                <div class="wood-content">
+                    <h3><i class="fas fa-hands"></i> Craftsman's Touch</h3>
+                    <p>This is where wood becomes material. Every piece is hand-inspected, graded, and prepared for its intended purpose - whether it's structural timber for construction or select boards for fine furniture.</p>
+                    <p>We don't just sell wood; we provide solutions. Our expertise helps clients choose the right species, grade, and cut for their specific needs.</p>
+                </div>
+            </div>
+        </div>
     </section>
 
     <!-- Wood Types -->
@@ -718,24 +860,17 @@ footer {
     <i class="fab fa-whatsapp"></i>
 </a>
 
-</div>
-
 <!-- Modern Oak Timber Chat Interface -->
 <div class="chat-helper">
-    <!-- Oak wood floating button -->
     <button class="chat-icon-btn" id="chatIconBtn" aria-label="Open timber chat">
         <i class="fas fa-tree"></i>
     </button>
-    
-    <!-- Oak-themed chat window -->
     <div class="chat-window" id="chatWindow">
         <div class="chat-header">
             <h4><i class="fas fa-seedling"></i> Timber Expert</h4>
             <button class="close-chat" id="closeChatBtn" aria-label="Close chat">×</button>
         </div>
-        <div class="chat-body" id="chatBody">
-            <!-- Chat messages will appear here -->
-        </div>
+        <div class="chat-body" id="chatBody"></div>
         <div class="chat-input">
             <input type="text" placeholder="Ask about wood, pricing, or MS 544..." id="chatInput" autocomplete="off">
             <button id="sendBtn" aria-label="Send message">
@@ -743,6 +878,8 @@ footer {
             </button>
         </div>
     </div>
+</div>
+
 </div>
 
 <script>
@@ -803,5 +940,4 @@ document.addEventListener('DOMContentLoaded', function() {
 <script src="js/Main.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 </body>
-
-</html> 
+</html>
