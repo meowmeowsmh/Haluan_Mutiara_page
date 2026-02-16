@@ -500,6 +500,12 @@ footer {
         right: 20px;
     }
 }
+    /* FORCE HAMBURGER ICON TO SHOW ON MOBILE */
+@media (max-width: 992px) {
+    .hamburger {
+        display: flex !important;
+    }
+}
 </style>
 </head>
 <body>
@@ -771,6 +777,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Mobile menu toggle
     const hamburger = document.querySelector('.hamburger');
     const navLinks = document.querySelector('.nav-links');
+
+    // Force hamburger to be visible
+    const hamburger = document.querySelector('.hamburger');
+    if (hamburger) {
+        hamburger.style.display = 'flex';
+    }
     
     if (hamburger && navLinks) {
         hamburger.addEventListener('click', function(e) {
@@ -813,3 +825,4 @@ document.addEventListener('DOMContentLoaded', function() {
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 </body>
 </html>
+
