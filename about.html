@@ -987,32 +987,67 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <!-- SIMPLE FIX FOR MOBILE MENU AND GLOW -->
+<!-- SINGLE SCRIPT - FIXED FOR ABOUT PAGE -->
 <script>
-// This simple script fixes both issues
 document.addEventListener('DOMContentLoaded', function() {
-    // === MOBILE MENU FIX ===
+    console.log('🚀 About Page - Mobile Menu Fix');
+    
+    // ===== 1. SET CURRENT YEAR =====
+    const yearElement = document.querySelector('.current-year');
+    if (yearElement) {
+        yearElement.textContent = new Date().getFullYear();
+    }
+    
+    // ===== 2. BACKGROUND IMAGE FALLBACK =====
+    const hero = document.querySelector('.wood-hero');
+    if (hero) {
+        const testImg = new Image();
+        const bgPaths = [
+            'Images/Main_stuff.png',
+            './Images/Main_stuff.png',
+            '../Images/Main_stuff.png',
+            'Main_stuff.png'
+        ];
+        
+        function tryBackgroundImage(index = 0) {
+            if (index >= bgPaths.length) return;
+            
+            testImg.src = bgPaths[index];
+            testImg.onload = function() {
+                hero.style.backgroundImage = `linear-gradient(rgba(93, 64, 55, 0.85), rgba(139, 69, 19, 0.9)), url('${bgPaths[index]}')`;
+            };
+            testImg.onerror = function() {
+                tryBackgroundImage(index + 1);
+            };
+        }
+        tryBackgroundImage();
+    }
+    
+    // ===== 3. MOBILE MENU TOGGLE (USING SHOW CLASS - MATCHES YOUR CSS) =====
     const hamburger = document.querySelector('.hamburger');
     const navLinks = document.querySelector('.nav-links');
     
     if (hamburger && navLinks) {
-        // Remove any old event listeners by cloning
+        // Remove any existing event listeners
         const newHamburger = hamburger.cloneNode(true);
         hamburger.parentNode.replaceChild(newHamburger, hamburger);
         
-        // Use the new hamburger
+        // Get fresh elements
         const freshHamburger = document.querySelector('.hamburger');
+        const freshNavLinks = document.querySelector('.nav-links');
         
+        // Toggle menu function
         freshHamburger.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
             
-            // Toggle menu
-            navLinks.classList.toggle('show');
+            // Toggle menu using 'show' class (your CSS uses .nav-links.show)
+            freshNavLinks.classList.toggle('show');
             this.classList.toggle('active');
             
             // Animate hamburger
             const spans = this.querySelectorAll('span');
-            if (navLinks.classList.contains('show')) {
+            if (freshNavLinks.classList.contains('show')) {
                 spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
                 spans[1].style.opacity = '0';
                 spans[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
@@ -1026,9 +1061,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         
         // Close menu when clicking links
-        navLinks.querySelectorAll('a').forEach(link => {
+        freshNavLinks.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', function() {
-                navLinks.classList.remove('show');
+                freshNavLinks.classList.remove('show');
                 freshHamburger.classList.remove('active');
                 document.body.style.overflow = '';
                 
@@ -1040,32 +1075,36 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
         
-        console.log('✅ Mobile menu fixed');
+        // Close menu when clicking outside
+        document.addEventListener('click', function(event) {
+            if (freshNavLinks.classList.contains('show') && 
+                !freshHamburger.contains(event.target) && 
+                !freshNavLinks.contains(event.target)) {
+                
+                freshNavLinks.classList.remove('show');
+                freshHamburger.classList.remove('active');
+                document.body.style.overflow = '';
+                
+                const spans = freshHamburger.querySelectorAll('span');
+                spans.forEach(span => {
+                    span.style.transform = '';
+                    span.style.opacity = '';
+                });
+            }
+        });
+        
+        console.log('✅ Mobile menu working with show class');
     }
     
-    // === GLOW FIX FOR MOBILE ===
-    const aboutLink = document.querySelector('.nav-links a[href="about.html"]');
-    if (aboutLink) {
-        // Force glow with inline styles (stronger than CSS)
-        aboutLink.style.cssText = `
-            color: #f4e4c1 !important;
-            text-shadow: 0 0 15px #f4e4c1, 0 0 25px #ffaa00, 0 0 35px #8b4513 !important;
-            font-weight: 700 !important;
-            position: relative;
-            animation: permanentAboutGlow 1.5s ease-in-out infinite;
-        `;
-        console.log('✅ About link glow fixed for mobile');
-    }
-    
-    // === SET CURRENT YEAR ===
-    const yearEl = document.querySelector('.current-year');
-    if (yearEl) yearEl.textContent = new Date().getFullYear();
+    // ===== 4. ENSURE ABOUT LINK GLOWS (ALREADY HAS ACTIVE CLASS) =====
+    // Your HTML already has class="active" on About link, so it glows automatically
+    console.log('✅ About link has active class - should glow');
 });
 </script>
-
 <!-- External Scripts -->
 <script src="js/chat-bot.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 </body>
 </html>
+
 
