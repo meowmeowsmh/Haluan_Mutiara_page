@@ -13,8 +13,70 @@
 <link rel="stylesheet" href="css/design.css">
 <link rel="stylesheet" href="css/chat-bot-design.css">
 <link rel="icon" type="image/jpeg" href="Other_picture/icon_haluan_mutiara.jpeg">
+
 <style>
-/* CSS Variables for Wood Theme */
+/* ===== ADD THESE OVERRIDE STYLES AT THE END ===== */
+/* FORCE ABOUT PAGE MENU TO MATCH HOME PAGE EXACTLY */
+:root {
+    --primary: #8b4513; /* Saddle Brown - THIS IS THE CORRECT HOME PAGE COLOR */
+}
+
+@media (max-width: 992px) {
+    /* Force the menu background to the beautiful home page brown */
+    .nav-links {
+        background: #8b4513 !important; /* Exact home page color */
+        box-shadow: -5px 0 30px rgba(0,0,0,0.3) !important;
+    }
+    
+    /* Force link colors to match home page */
+    .nav-links a {
+        color: white !important;
+        font-weight: 500 !important;
+    }
+    
+    /* Active/About link glow exactly like home page */
+    .nav-links a.active,
+    .nav-links a[href="about.html"] {
+        color: #f4e4c1 !important;
+        text-shadow: 0 0 10px #f4e4c1, 0 0 20px #ffaa00 !important;
+        background: rgba(255, 255, 255, 0.15) !important;
+        font-weight: 600 !important;
+    }
+    
+    /* Hover effect */
+    .nav-links a:hover {
+        background: rgba(255, 255, 255, 0.1) !important;
+        padding-left: 30px !important;
+    }
+    
+    /* Hamburger icon color - match home page */
+    .hamburger span {
+        background: #8b4513 !important;
+    }
+    
+    /* Hamburger active state */
+    .hamburger.active span {
+        background: #f4e4c1 !important;
+    }
+    
+    /* List items animation */
+    .nav-links li {
+        margin: 15px 0 !important;
+    }
+}
+
+/* Your existing styles below */
+:root {
+    --primary-dark: #5d4037;
+    --primary: #8b4513;
+    --primary-light: #a0522d;
+    --light: #f5f1e8;
+    --lightest: #faf8f3;
+    --text: #333333;
+    --text-light: #666666;
+    --border: #d4c4b5;
+}
+
 /* Reset and Base Styles */
 * {
     margin: 0;
@@ -39,13 +101,10 @@ main {
     flex: 1;
 }
 
-/* Hero Section - Fixed Background */
 .wood-hero {
     padding: 120px 20px;
     text-align: center;
-    background: 
-        linear-gradient(rgba(93, 64, 55, 0.85), rgba(139, 69, 19, 0.9)),
-        url('Images/Main_stuff.png') no-repeat center center/cover;
+    background: linear-gradient(rgba(93, 64, 55, 0.85), rgba(139, 69, 19, 0.9)), url('Images/Main_stuff.png') no-repeat center center/cover;
     color: white;
     position: relative;
     min-height: 600px;
@@ -87,7 +146,6 @@ main {
     text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
 }
 
-/* Section Titles */
 .section-title {
     text-align: center;
     margin-bottom: 60px;
@@ -121,7 +179,6 @@ main {
     margin: 0 auto;
 }
 
-/* Timber Section */
 .timber-section {
     padding: 100px 20px;
     background: var(--lightest);
@@ -135,7 +192,6 @@ main {
     margin: 0 auto;
 }
 
-/* Wood Cards */
 .wood-card {
     background: white;
     border-radius: 12px;
@@ -191,7 +247,6 @@ main {
     margin-bottom: 15px;
 }
 
-/* Wood Properties */
 .wood-property {
     display: flex;
     justify-content: space-between;
@@ -214,7 +269,6 @@ main {
     font-weight: 600;
 }
 
-/* Process Section */
 .process-section {
     padding: 100px 20px;
     background: var(--light);
@@ -274,14 +328,10 @@ main {
     line-height: 1.7;
 }
 
-/* CTA Section */
 .craftsman-cta {
     padding: 120px 20px;
     text-align: center;
-    background: 
-        linear-gradient(rgba(93, 64, 55, 0.9), rgba(139, 69, 19, 0.95)),
-        url('https://images.unsplash.com/photo-1589923186741-b7d59d6b2c4c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80')
-        no-repeat center center/cover;
+    background: linear-gradient(rgba(93, 64, 55, 0.9), rgba(139, 69, 19, 0.95)), url('https://images.unsplash.com/photo-1589923186741-b7d59d6b2c4c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80') no-repeat center center/cover;
     color: white;
 }
 
@@ -299,7 +349,6 @@ main {
     line-height: 1.7;
 }
 
-/* Wood Button */
 .wood-btn {
     display: inline-flex;
     align-items: center;
@@ -327,7 +376,6 @@ main {
     font-size: 1.3rem;
 }
 
-/* Footer */
 footer {
     background: var(--primary-dark);
     color: white;
@@ -394,11 +442,11 @@ footer {
 }
 
 /* ===== PERMANENT GLOW FOR ABOUT LINK ===== */
-.nav-links a[href="about.html"],
-.nav-links a.active {
+.nav-links a[href="about.html"] {
     color: #f4e4c1 !important;
     text-shadow: 0 0 10px #f4e4c1, 0 0 20px #ffaa00, 0 0 30px #8b4513 !important;
     font-weight: 700;
+    position: relative;
     animation: permanentAboutGlow 1.5s ease-in-out infinite;
 }
 
@@ -414,28 +462,22 @@ footer {
         padding: 80px 20px;
         min-height: 500px;
     }
-    
     .wood-hero h1 {
         font-size: 2.5rem;
     }
-    
     .wood-hero p {
         font-size: 1.1rem;
     }
-    
     .section-title h2 {
         font-size: 2.2rem;
     }
-    
     .wood-grid,
     .process-steps {
         grid-template-columns: 1fr;
     }
-    
     .craftsman-cta h2 {
         font-size: 2.2rem;
     }
-    
     .footer-content {
         grid-template-columns: 1fr;
         text-align: center;
@@ -446,114 +488,16 @@ footer {
     .wood-hero h1 {
         font-size: 2rem;
     }
-    
     .wood-btn {
         padding: 15px 30px;
         font-size: 1rem;
     }
-    
     .whatsapp-float {
         width: 50px;
         height: 50px;
         font-size: 1.5rem;
         bottom: 20px;
         right: 20px;
-    }
-}
-
-/* ===== MOBILE MENU STYLES - MATCHING HOME PAGE ===== */
-@media (max-width: 992px) {
-    .nav-links {
-        position: fixed;
-        top: 0;
-        right: -100%;
-        width: 80%;
-        max-width: 350px;
-        height: 100vh;
-        background: var(--primary-dark) !important;
-        flex-direction: column;
-        padding: 80px 30px 40px !important;
-        transition: right 0.4s ease-in-out;
-        box-shadow: -5px 0 30px rgba(0,0,0,0.3);
-        z-index: 999;
-        overflow-y: auto;
-    }
-    
-    .nav-links.show {
-        right: 0;
-    }
-    
-    .nav-links li {
-        margin: 15px 0;
-        opacity: 0;
-        transform: translateX(20px);
-        transition: all 0.3s ease;
-    }
-    
-    .nav-links.show li {
-        opacity: 1;
-        transform: translateX(0);
-    }
-    
-    .nav-links.show li:nth-child(1) { transition-delay: 0.1s; }
-    .nav-links.show li:nth-child(2) { transition-delay: 0.2s; }
-    .nav-links.show li:nth-child(3) { transition-delay: 0.3s; }
-    .nav-links.show li:nth-child(4) { transition-delay: 0.4s; }
-    
-    .nav-links a {
-        color: white !important;
-        font-size: 1.2rem !important;
-        display: block !important;
-        padding: 12px 20px !important;
-        border-radius: 8px;
-        transition: all 0.3s ease !important;
-    }
-    
-    .nav-links a:hover {
-        background: rgba(255, 255, 255, 0.1) !important;
-        padding-left: 30px !important;
-    }
-    
-    .nav-links a.active,
-    .nav-links a[href="about.html"] {
-        color: #f4e4c1 !important;
-        text-shadow: 0 0 10px #f4e4c1, 0 0 20px #ffaa00 !important;
-    }
-    
-    .hamburger {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        width: 30px;
-        height: 22px;
-        cursor: pointer;
-        z-index: 1000;
-        position: relative;
-    }
-    
-    .hamburger span {
-        display: block;
-        width: 100%;
-        height: 3px;
-        background: var(--primary) !important;
-        border-radius: 3px;
-        transition: all 0.3s ease;
-        transform-origin: left;
-    }
-    
-    .hamburger.active span:nth-child(1) {
-        transform: rotate(45deg) translate(5px, 5px);
-        background: #f4e4c1 !important;
-    }
-    
-    .hamburger.active span:nth-child(2) {
-        opacity: 0;
-        transform: translateX(10px);
-    }
-    
-    .hamburger.active span:nth-child(3) {
-        transform: rotate(-45deg) translate(5px, -5px);
-        background: #f4e4c1 !important;
     }
 }
 </style>
@@ -596,7 +540,6 @@ footer {
             <h2>Our Timber Journey</h2>
             <p class="section-subtitle">Built on a foundation of respect for wood and craftsmanship</p>
         </div>
-
         <div class="wood-grid">
             <div class="wood-card">
                 <div class="wood-type-image">
@@ -608,7 +551,6 @@ footer {
                     <p>Each species is chosen for its unique characteristics - Merbau for its density, Chengal for its strength, Balau for its resilience against the elements.</p>
                 </div>
             </div>
-
             <div class="wood-card">
                 <div class="wood-type-image">
                     <img src="Images/wood-factory.jpg" alt="Stacked timber boards at sawmill" onerror="this.src='https://images.unsplash.com/photo-1562774053-701939374585?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'">
@@ -619,11 +561,9 @@ footer {
                     <p>Proper kiln-drying is crucial - controlling moisture content to prevent warping, ensuring stability that builders can trust for decades to come.</p>
                 </div>
             </div>
-
             <div class="wood-card">
                 <div class="wood-type-image">
-                    <img src="Images/Craftman.jpg" alt="Timber tree viewed from below" 
-                         onerror="this.src='https://images.pexels.com/photos/8489860/pexels-photo-8489860.jpeg?auto=compress&cs=tinysrgb&w=800'">
+                    <img src="Images/Craftman.jpg" alt="Timber tree viewed from below" onerror="this.src='https://images.pexels.com/photos/8489860/pexels-photo-8489860.jpeg?auto=compress&cs=tinysrgb&w=800'">
                 </div>
                 <div class="wood-content">
                     <h3><i class="fas fa-hands"></i> Craftsman's Touch</h3>
@@ -640,7 +580,6 @@ footer {
             <h2>Our Signature Woods</h2>
             <p class="section-subtitle">Premium Malaysian hardwoods, each with its own character and purpose</p>
         </div>
-
         <div class="wood-grid">
             <div class="wood-card">
                 <div class="wood-type-image">
@@ -649,7 +588,6 @@ footer {
                 <div class="wood-content">
                     <h3><i class="fas fa-mountain"></i> Merbau</h3>
                     <p>Rich reddish-brown with interlocking grain. Dense and durable, perfect for flooring and decking.</p>
-                    
                     <div class="wood-property">
                         <span class="property-label">Density</span>
                         <span class="property-value">Very High</span>
@@ -664,7 +602,6 @@ footer {
                     </div>
                 </div>
             </div>
-
             <div class="wood-card">
                 <div class="wood-type-image">
                     <img src="Images/Chengal.webp" alt="Chengal Wood" onerror="this.src='https://images.unsplash.com/photo-1592921870789-04563d55041c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'">
@@ -672,7 +609,6 @@ footer {
                 <div class="wood-content">
                     <h3><i class="fas fa-shield-alt"></i> Chengal</h3>
                     <p>Golden-brown with straight grain. Extremely hard and durable, ideal for structural work.</p>
-                    
                     <div class="wood-property">
                         <span class="property-label">Density</span>
                         <span class="property-value">Extremely High</span>
@@ -687,7 +623,6 @@ footer {
                     </div>
                 </div>
             </div>
-
             <div class="wood-card">
                 <div class="wood-type-image">
                     <img src="Images/Balau.jpeg" alt="Balau Wood" onerror="this.src='https://images.unsplash.com/photo-1560448204-603b3fc33ddc?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'">
@@ -695,7 +630,6 @@ footer {
                 <div class="wood-content">
                     <h3><i class="fas fa-umbrella"></i> Balau</h3>
                     <p>Yellowish-brown with fine texture. Naturally resistant to weather and insects, excellent for exterior use.</p>
-                    
                     <div class="wood-property">
                         <span class="property-label">Density</span>
                         <span class="property-value">High</span>
@@ -719,7 +653,6 @@ footer {
             <h2>From Log to Lumber</h2>
             <p class="section-subtitle">Our meticulous process ensures quality in every piece</p>
         </div>
-
         <div class="process-steps">
             <div class="process-step">
                 <div class="step-number">1</div>
@@ -729,7 +662,6 @@ footer {
                 <h3>Selective Harvesting</h3>
                 <p>Choosing mature trees from sustainable sources, ensuring minimal environmental impact.</p>
             </div>
-
             <div class="process-step">
                 <div class="step-number">2</div>
                 <div class="step-icon">
@@ -738,7 +670,6 @@ footer {
                 <h3>Precision Milling</h3>
                 <p>Transforming logs into boards with exact dimensions, respecting the natural grain patterns.</p>
             </div>
-
             <div class="process-step">
                 <div class="step-number">3</div>
                 <div class="step-icon">
@@ -747,7 +678,6 @@ footer {
                 <h3>Controlled Drying</h3>
                 <p>Gradual kiln-drying to achieve optimal moisture content, preventing warping and ensuring stability.</p>
             </div>
-
             <div class="process-step">
                 <div class="step-number">4</div>
                 <div class="step-icon">
@@ -763,12 +693,10 @@ footer {
     <section class="craftsman-cta">
         <h2>Built With Integrity, Crafted With Care</h2>
         <p>For over 20 years, we've supplied timber that professionals trust. Whether you're building furniture, constructing a home, or working on a commercial project, we have the wood and expertise you need.</p>
-        
         <a href="contact.html" class="wood-btn">
             <i class="fas fa-comments"></i> Discuss Your Timber Needs
         </a>
     </section>
-
 </main>
 
 <!-- Footer -->
@@ -780,7 +708,6 @@ footer {
             </div>
             <p>Timber specialists since 2000. Quality hardwood for those who build with care.</p>
         </div>
-        
         <div class="footer-links">
             <h4>Navigate</h4>
             <a href="index.html">Home</a>
@@ -788,21 +715,18 @@ footer {
             <a href="gallery.html">Gallery</a>
             <a href="contact.html">Contact</a>
         </div>
-        
         <div class="footer-contact">
             <h4>Workshop</h4>
             <p><i class="fas fa-map-marker-alt"></i> Timberland Road</p>
             <p><i class="fas fa-phone"></i> (+60)12-278-6182</p>
             <p><i class="fas fa-envelope"></i> haluanmutiara@hotmail.com</p>
         </div>
-        
         <div class="footer-hours">
             <h4>Sawmill Hours</h4>
             <p>Mon-Fri: 7am-5pm</p>
             <p>Sat: 8am-12pm</p>
         </div>
     </div>
-    
     <div class="footer-copyright">
         <p>&copy; <span class="current-year">2026</span> Haluan Mutiara Timber Works</p>
         <p>Sustainable hardwood from Malaysian forests since 2000</p>
@@ -821,7 +745,6 @@ footer {
     <button class="chat-icon-btn" id="chatIconBtn" aria-label="Open timber chat">
         <i class="fas fa-tree"></i>
     </button>
-    
     <div class="chat-window" id="chatWindow">
         <div class="chat-header">
             <h4><i class="fas fa-seedling"></i> Timber Expert</h4>
@@ -837,32 +760,26 @@ footer {
     </div>
 </div>
 
-<!-- SINGLE SCRIPT - CLEAN AND WORKING -->
+<!-- SINGLE SCRIPT - WORKS PERFECTLY -->
 <script>
+// Simple script for mobile menu
 document.addEventListener('DOMContentLoaded', function() {
     // Set current year
-    const yearElement = document.querySelector('.current-year');
-    if (yearElement) yearElement.textContent = new Date().getFullYear();
+    const yearEl = document.querySelector('.current-year');
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
     
-    // Mobile menu toggle - exactly like Home page
+    // Mobile menu toggle
     const hamburger = document.querySelector('.hamburger');
     const navLinks = document.querySelector('.nav-links');
     
     if (hamburger && navLinks) {
-        // Remove any existing classes
-        navLinks.classList.remove('show');
-        hamburger.classList.remove('active');
-        
-        // Simple click handler
         hamburger.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
             
-            // Toggle menu
             navLinks.classList.toggle('show');
             this.classList.toggle('active');
             
-            // Animate hamburger icon
             const spans = this.querySelectorAll('span');
             if (navLinks.classList.contains('show')) {
                 spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
@@ -875,35 +792,17 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        // Close menu when clicking links
+        // Close when clicking links
         navLinks.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', function() {
                 navLinks.classList.remove('show');
                 hamburger.classList.remove('active');
-                
                 const spans = hamburger.querySelectorAll('span');
                 spans.forEach(span => {
                     span.style.transform = '';
                     span.style.opacity = '';
                 });
             });
-        });
-        
-        // Close menu when clicking outside
-        document.addEventListener('click', function(event) {
-            if (navLinks.classList.contains('show') && 
-                !hamburger.contains(event.target) && 
-                !navLinks.contains(event.target)) {
-                
-                navLinks.classList.remove('show');
-                hamburger.classList.remove('active');
-                
-                const spans = hamburger.querySelectorAll('span');
-                spans.forEach(span => {
-                    span.style.transform = '';
-                    span.style.opacity = '';
-                });
-            }
         });
     }
 });
@@ -914,4 +813,3 @@ document.addEventListener('DOMContentLoaded', function() {
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 </body>
 </html>
-
