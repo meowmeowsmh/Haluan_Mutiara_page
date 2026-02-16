@@ -986,8 +986,86 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
+<!-- SIMPLE FIX FOR MOBILE MENU AND GLOW -->
+<script>
+// This simple script fixes both issues
+document.addEventListener('DOMContentLoaded', function() {
+    // === MOBILE MENU FIX ===
+    const hamburger = document.querySelector('.hamburger');
+    const navLinks = document.querySelector('.nav-links');
+    
+    if (hamburger && navLinks) {
+        // Remove any old event listeners by cloning
+        const newHamburger = hamburger.cloneNode(true);
+        hamburger.parentNode.replaceChild(newHamburger, hamburger);
+        
+        // Use the new hamburger
+        const freshHamburger = document.querySelector('.hamburger');
+        
+        freshHamburger.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Toggle menu
+            navLinks.classList.toggle('show');
+            this.classList.toggle('active');
+            
+            // Animate hamburger
+            const spans = this.querySelectorAll('span');
+            if (navLinks.classList.contains('show')) {
+                spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+                spans[1].style.opacity = '0';
+                spans[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
+                document.body.style.overflow = 'hidden';
+            } else {
+                spans[0].style.transform = '';
+                spans[1].style.opacity = '';
+                spans[2].style.transform = '';
+                document.body.style.overflow = '';
+            }
+        });
+        
+        // Close menu when clicking links
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', function() {
+                navLinks.classList.remove('show');
+                freshHamburger.classList.remove('active');
+                document.body.style.overflow = '';
+                
+                const spans = freshHamburger.querySelectorAll('span');
+                spans.forEach(span => {
+                    span.style.transform = '';
+                    span.style.opacity = '';
+                });
+            });
+        });
+        
+        console.log('✅ Mobile menu fixed');
+    }
+    
+    // === GLOW FIX FOR MOBILE ===
+    const aboutLink = document.querySelector('.nav-links a[href="about.html"]');
+    if (aboutLink) {
+        // Force glow with inline styles (stronger than CSS)
+        aboutLink.style.cssText = `
+            color: #f4e4c1 !important;
+            text-shadow: 0 0 15px #f4e4c1, 0 0 25px #ffaa00, 0 0 35px #8b4513 !important;
+            font-weight: 700 !important;
+            position: relative;
+            animation: permanentAboutGlow 1.5s ease-in-out infinite;
+        `;
+        console.log('✅ About link glow fixed for mobile');
+    }
+    
+    // === SET CURRENT YEAR ===
+    const yearEl = document.querySelector('.current-year');
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
+});
+</script>
+
 <!-- External Scripts -->
 <script src="js/chat-bot.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 </body>
 </html>
+
