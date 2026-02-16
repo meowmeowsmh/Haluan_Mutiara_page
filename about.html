@@ -820,10 +820,85 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
+// Menu Toggle for Mobile - Clean & Efficient
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Get elements
+    const hamburger = document.querySelector('.hamburger');
+    const navLinks = document.querySelector('.nav-links');
+    const body = document.body;
+    
+    // Only proceed if elements exist
+    if (!hamburger || !navLinks) return;
+    
+    // Create overlay if it doesn't exist
+    let overlay = document.querySelector('.menu-overlay');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.className = 'menu-overlay';
+        body.appendChild(overlay);
+    }
+    
+    // Toggle menu function
+    function toggleMenu(open) {
+        const isOpen = open !== undefined ? open : !navLinks.classList.contains('active');
+        
+        if (isOpen) {
+            navLinks.classList.add('active');
+            hamburger.classList.add('active');
+            overlay.classList.add('active');
+            body.style.overflow = 'hidden';
+        } else {
+            navLinks.classList.remove('active');
+            hamburger.classList.remove('active');
+            overlay.classList.remove('active');
+            body.style.overflow = '';
+        }
+    }
+    
+    // Hamburger click
+    hamburger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        toggleMenu();
+    });
+    
+    // Overlay click
+    overlay.addEventListener('click', function() {
+        toggleMenu(false);
+    });
+    
+    // Close menu when clicking a link
+    navLinks.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', function() {
+            toggleMenu(false);
+        });
+    });
+    
+    // Close on escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && navLinks.classList.contains('active')) {
+            toggleMenu(false);
+        }
+    });
+    
+    // Handle window resize
+    let resizeTimer;
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function() {
+            if (window.innerWidth > 992 && navLinks.classList.contains('active')) {
+                toggleMenu(false);
+            }
+        }, 250);
+    });
+    
+    console.log('✅ Mobile menu initialized');
+});
+</script>
 <script src="js/chat-bot.js"></script>
-
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 </body>
 
 </html>
+
 
