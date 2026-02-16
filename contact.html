@@ -723,7 +723,7 @@
     animation: spin 1s linear infinite;
   }
 
-  /* ===== FIXED MOBILE NAVIGATION WITH VISIBLE HAMBURGER ===== */
+  /* ===== FIXED MOBILE NAVIGATION WITH PURE WHITE HAMBURGER (NO BOX) ===== */
   @media (max-width: 992px) {
     .nav-links {
       position: fixed;
@@ -785,51 +785,45 @@
       background: rgba(255, 255, 255, 0.15) !important;
     }
     
-    /* ===== VISIBLE HAMBURGER ICON WITH BROWN BACKGROUND ===== */
+    /* ===== PURE WHITE HAMBURGER - NO BACKGROUND, NO BOX ===== */
     .hamburger {
       display: flex !important;
       flex-direction: column !important;
-      justify-content: center !important;
-      align-items: center !important;
-      width: 44px !important;
-      height: 44px !important;
-      background: #8b4513 !important;
-      border-radius: 8px !important;
-      padding: 10px 8px !important;
+      justify-content: space-between !important;
+      width: 30px !important;
+      height: 24px !important;
       cursor: pointer !important;
       z-index: 1000 !important;
       position: relative !important;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.2) !important;
-      border: 1px solid rgba(255,255,255,0.2) !important;
+      background: transparent !important;
+      padding: 0 !important;
+      border: none !important;
     }
     
     .hamburger span {
       display: block !important;
-      width: 26px !important;
-      height: 4px !important;
+      width: 100% !important;
+      height: 3px !important;
       background: white !important;
-      margin: 3px 0 !important;
-      border-radius: 4px !important;
+      border-radius: 3px !important;
       transition: all 0.3s ease !important;
-      transform-origin: center !important;
-      border: none !important;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.3) !important;
+      transform-origin: left !important;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2) !important;
     }
     
     /* X animation when active */
     .hamburger.active span:nth-child(1) {
-      transform: translateY(7px) rotate(45deg) !important;
-      width: 26px !important;
+      transform: rotate(45deg) translate(4px, -4px) !important;
+      width: 28px !important;
     }
     
     .hamburger.active span:nth-child(2) {
       opacity: 0 !important;
-      transform: scale(0) !important;
     }
     
     .hamburger.active span:nth-child(3) {
-      transform: translateY(-7px) rotate(-45deg) !important;
-      width: 26px !important;
+      transform: rotate(-45deg) translate(4px, 4px) !important;
+      width: 28px !important;
     }
   }
 
@@ -1886,5 +1880,6 @@ document.addEventListener('keydown', function(e) {
 <script src="js/chat-bot.js"></script>
 </body>
 </html>
+
 
 
