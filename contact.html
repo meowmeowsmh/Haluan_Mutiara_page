@@ -723,116 +723,101 @@
     animation: spin 1s linear infinite;
   }
 
-  /* Mobile Navigation Styles */
-  @media (max-width: 768px) {
+  /* Mobile Navigation Styles - FIXED */
+  @media (max-width: 992px) {
     .nav-links {
-      display: none;
-      position: absolute;
-      top: 80px;
-      left: 0;
-      width: 100%;
-      background: #5d4037;
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 80%;
+      max-width: 350px;
+      height: 100vh;
+      background: #8b4513 !important;
       flex-direction: column;
-      padding: 20px 0;
-      z-index: 1000;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      padding: 80px 30px 40px !important;
+      transition: right 0.4s ease-in-out;
+      box-shadow: -5px 0 30px rgba(0,0,0,0.3);
+      z-index: 999;
+      overflow-y: auto;
+      display: flex !important;
     }
     
     .nav-links.show {
-      display: flex;
+      right: 0 !important;
     }
     
     .nav-links li {
-      margin: 10px 0;
-      text-align: center;
+      margin: 15px 0 !important;
+      opacity: 0;
+      transform: translateX(20px);
+      transition: all 0.3s ease;
     }
     
+    .nav-links.show li {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    
+    .nav-links.show li:nth-child(1) { transition-delay: 0.1s; }
+    .nav-links.show li:nth-child(2) { transition-delay: 0.2s; }
+    .nav-links.show li:nth-child(3) { transition-delay: 0.3s; }
+    .nav-links.show li:nth-child(4) { transition-delay: 0.4s; }
+    
     .nav-links a {
-      color: white;
-      padding: 10px 20px;
-      display: block;
+      color: white !important;
+      font-size: 1.2rem !important;
+      display: block !important;
+      padding: 12px 20px !important;
+      border-radius: 8px;
+      transition: all 0.3s ease !important;
     }
     
     .nav-links a:hover {
-      background: rgba(255,255,255,0.1);
+      background: rgba(255, 255, 255, 0.1) !important;
+      padding-left: 30px !important;
     }
     
+    /* Contact link glow */
+    .nav-links a[href="contact.html"],
+    .nav-links a.active {
+      color: #f4e4c1 !important;
+      text-shadow: 0 0 10px #f4e4c1, 0 0 20px #ffaa00 !important;
+      background: rgba(255, 255, 255, 0.15) !important;
+    }
+    
+    /* Hamburger icon - WHITE so it's visible */
     .hamburger {
-      display: flex;
+      display: flex !important;
       flex-direction: column;
+      justify-content: space-between;
+      width: 30px;
+      height: 22px;
       cursor: pointer;
-      padding: 5px;
+      z-index: 1000;
+      position: relative;
     }
     
     .hamburger span {
-      width: 25px;
-      height: 3px;
-      background: #5d4037;
-      margin: 3px 0;
-      transition: 0.3s;
       display: block;
-    }
-    
-    .hamburger.active span {
-      background: #8b4513;
-    }
-
-    .contact-hero h1 {
-      font-size: 2.2rem;
-    }
-    
-    .contact-hero p {
-      font-size: 1.1rem;
-    }
-    
-    .quote-card, .info-card {
-      padding: 30px 25px;
-    }
-    
-    .map-container {
-      height: 350px;
-    }
-    
-    .map-overlay {
-      left: 10px;
-      right: 10px;
-      max-width: none;
-      bottom: 10px;
-    }
-    
-    .hours-grid {
-      grid-template-columns: 1fr;
-    }
-    
-    .quick-buttons, .resource-cards {
-      grid-template-columns: 1fr;
-    }
-    
-    .status-info {
-      flex-direction: column;
-      gap: 5px;
-    }
-    
-    .live-status {
-      grid-template-columns: 1fr;
-    }
-    
-    .map-buttons {
-      flex-direction: column;
-    }
-    
-    .map-btn {
       width: 100%;
-      justify-content: center;
+      height: 3px;
+      background: white !important;
+      border-radius: 3px;
+      transition: all 0.3s ease;
+      transform-origin: left;
     }
-
-    .success-actions {
-      flex-direction: column;
+    
+    .hamburger.active span:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
     }
-
-    .download-btn, .email-btn {
-      width: 100%;
-      justify-content: center;
+    
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+      transform: translateX(10px);
+    }
+    
+    .hamburger.active span:nth-child(3) {
+      transform: rotate(-45deg) translate(5px, -5px);
     }
   }
 
@@ -1268,95 +1253,93 @@
     </div>
 </div>
 
+<!-- SIMPLE MENU TOGGLE SCRIPT - FIXED -->
 <script>
-// ========== MAIN JAVASCRIPT ==========
+// ========== SIMPLE MENU TOGGLE ==========
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Haluan Mutiara Contact Page Loaded');
+    console.log('Contact Page - Menu Toggle Initialized');
     
-    // Initialize mobile navigation
-    initNavigation();
+    // Set current year
+    const yearEl = document.querySelector('.current-year');
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
     
-    // Initialize form handling
-    initFormHandling();
-    
-    // Set current year in footer
-    document.querySelector('.current-year').textContent = new Date().getFullYear();
-});
-
-// ========== NAVIGATION ==========
-function initNavigation() {
+    // Mobile menu toggle
     const hamburger = document.querySelector('.hamburger');
     const navLinks = document.querySelector('.nav-links');
     
-    if (!hamburger || !navLinks) return;
-    
-    hamburger.addEventListener('click', function(e) {
-        e.stopPropagation();
-        navLinks.classList.toggle('show');
-        hamburger.classList.toggle('active');
+    if (hamburger && navLinks) {
+        // Remove any existing classes
+        navLinks.classList.remove('show');
+        hamburger.classList.remove('active');
         
-        // Animate hamburger to X
-        const spans = hamburger.querySelectorAll('span');
-        if (navLinks.classList.contains('show')) {
-            spans[0].style.transform = 'rotate(45deg) translate(6px, 6px)';
-            spans[1].style.opacity = '0';
-            spans[2].style.transform = 'rotate(-45deg) translate(6px, -6px)';
-        } else {
-            spans[0].style.transform = 'none';
-            spans[1].style.opacity = '1';
-            spans[2].style.transform = 'none';
-        }
-    });
-    
-    // Close menu when clicking links
-    document.querySelectorAll('.nav-links a').forEach(link => {
-        link.addEventListener('click', () => {
-            navLinks.classList.remove('show');
-            hamburger.classList.remove('active');
-            const spans = hamburger.querySelectorAll('span');
-            spans.forEach(span => {
-                span.style.transform = 'none';
-                span.style.opacity = '1';
+        // Click handler
+        hamburger.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            navLinks.classList.toggle('show');
+            this.classList.toggle('active');
+            
+            const spans = this.querySelectorAll('span');
+            if (navLinks.classList.contains('show')) {
+                spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+                spans[1].style.opacity = '0';
+                spans[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
+            } else {
+                spans[0].style.transform = '';
+                spans[1].style.opacity = '';
+                spans[2].style.transform = '';
+            }
+        });
+        
+        // Close when clicking links
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', function() {
+                navLinks.classList.remove('show');
+                hamburger.classList.remove('active');
+                
+                const spans = hamburger.querySelectorAll('span');
+                spans.forEach(span => {
+                    span.style.transform = '';
+                    span.style.opacity = '';
+                });
             });
         });
-    });
-    
-    // Close menu when clicking outside
-    document.addEventListener('click', function(event) {
-        if (!hamburger.contains(event.target) && !navLinks.contains(event.target)) {
-            navLinks.classList.remove('show');
-            hamburger.classList.remove('active');
-            const spans = hamburger.querySelectorAll('span');
-            spans.forEach(span => {
-                span.style.transform = 'none';
-                span.style.opacity = '1';
-            });
-        }
-    });
-    
-    // Set active nav link
-    // Set active nav link - BUT KEEP CONTACT GLOWING FOREVER
-const currentPage = window.location.pathname.split('/').pop();
-const navLinksAll = document.querySelectorAll('.nav-links a');
-
-navLinksAll.forEach(link => {
-    // Remove active class from all links EXCEPT Contact
-    if (!link.getAttribute('href').includes('contact')) {
-        link.classList.remove('active');
+        
+        // Close when clicking outside
+        document.addEventListener('click', function(event) {
+            if (navLinks.classList.contains('show') && 
+                !hamburger.contains(event.target) && 
+                !navLinks.contains(event.target)) {
+                
+                navLinks.classList.remove('show');
+                hamburger.classList.remove('active');
+                
+                const spans = hamburger.querySelectorAll('span');
+                spans.forEach(span => {
+                    span.style.transform = '';
+                    span.style.opacity = '';
+                });
+            }
+        });
+        
+        // Close on resize
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 992 && navLinks.classList.contains('show')) {
+                navLinks.classList.remove('show');
+                hamburger.classList.remove('active');
+                
+                const spans = hamburger.querySelectorAll('span');
+                spans.forEach(span => {
+                    span.style.transform = '';
+                    span.style.opacity = '';
+                });
+            }
+        });
     }
     
-    const href = link.getAttribute('href');
-    
-    // Add active class to current page (but Contact already has it)
-    if (href === currentPage || 
-        (currentPage === '' && href === 'index.html')) {
-        link.classList.add('active');
-    }
-    
-    // Make sure Contact ALWAYS has active class
-    if (link.getAttribute('href').includes('contact')) {
-        link.classList.add('active');
-    }
+    // ========== FORM HANDLING ==========
+    initFormHandling();
 });
 
 // ========== FORM HANDLING ==========
@@ -1891,4 +1874,3 @@ document.addEventListener('keydown', function(e) {
 <script src="js/chat-bot.js"></script>
 </body>
 </html>
-
