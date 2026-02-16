@@ -406,7 +406,7 @@ footer {
     font-size: 0.9rem;
 }
 
-/* ===== PERMANENT GLOW FOR ABOUT LINK - EXACTLY LIKE CONTACT PAGE ===== */
+/* ===== PERMANENT GLOW FOR ABOUT LINK ===== */
 .nav-links a[href="about.html"] {
     color: #f4e4c1 !important;
     text-shadow: 0 0 10px #f4e4c1, 
@@ -422,13 +422,6 @@ footer {
     50% { text-shadow: 0 0 15px #ffd700, 0 0 30px #8b4513, 0 0 45px #ffaa00; }
     100% { text-shadow: 0 0 10px #f4e4c1, 0 0 20px #8b4513; }
 }
-
-/* Make sure it doesn't get overwritten */
-.nav-links a[href="about.html"].active {
-    color: #f4e4c1 !important;
-    text-shadow: 0 0 10px #f4e4c1, 0 0 20px #8b4513, 0 0 30px #ffaa00 !important;
-}
-/* =============================================== */
 
 /* Responsive */
 @media (max-width: 768px) {
@@ -482,6 +475,115 @@ footer {
         right: 20px;
     }
 }
+
+/* Mobile Menu Overlay Styles */
+.menu-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(3px);
+    z-index: 998;
+    transition: opacity 0.3s ease;
+    opacity: 0;
+}
+
+.menu-overlay.active {
+    display: block;
+    opacity: 1;
+}
+
+@media (max-width: 992px) {
+    .nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 80%;
+        max-width: 350px;
+        height: 100vh;
+        background: var(--primary-dark);
+        flex-direction: column;
+        padding: 80px 30px 40px;
+        transition: right 0.4s ease-in-out;
+        box-shadow: -5px 0 30px rgba(0,0,0,0.3);
+        z-index: 999;
+        overflow-y: auto;
+    }
+    
+    .nav-links.active {
+        right: 0;
+    }
+    
+    .nav-links li {
+        margin: 15px 0;
+        opacity: 0;
+        transform: translateX(20px);
+        transition: all 0.3s ease;
+    }
+    
+    .nav-links.active li {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    
+    .nav-links.active li:nth-child(1) { transition-delay: 0.1s; }
+    .nav-links.active li:nth-child(2) { transition-delay: 0.2s; }
+    .nav-links.active li:nth-child(3) { transition-delay: 0.3s; }
+    .nav-links.active li:nth-child(4) { transition-delay: 0.4s; }
+    
+    .nav-links a {
+        color: #f4e4c1 !important;
+        font-size: 1.2rem;
+        display: block;
+        padding: 10px 15px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+    
+    .nav-links a:hover {
+        background: rgba(255, 255, 255, 0.1);
+        padding-left: 25px;
+    }
+    
+    .hamburger {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 30px;
+        height: 22px;
+        cursor: pointer;
+        z-index: 1000;
+        position: relative;
+    }
+    
+    .hamburger span {
+        display: block;
+        width: 100%;
+        height: 3px;
+        background: #8b4513;
+        border-radius: 3px;
+        transition: all 0.3s ease;
+        transform-origin: left;
+    }
+    
+    .hamburger.active span:nth-child(1) {
+        transform: rotate(45deg) translate(2px, -2px);
+        background: #f4e4c1;
+    }
+    
+    .hamburger.active span:nth-child(2) {
+        opacity: 0;
+        transform: translateX(10px);
+    }
+    
+    .hamburger.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(2px, 2px);
+        background: #f4e4c1;
+    }
+}
 </style>
 </head>
 <body>
@@ -491,10 +593,10 @@ footer {
 <!-- Navigation -->
 <header>
     <nav class="nav-bar">
-<div class="logo">
-      <img src="Other_picture/logo-main-page.png" alt="Haluan Mutiara Logo">
-      <h1 class="site-title">Haluan Mutiara</h1>
-    </div>
+        <div class="logo">
+            <img src="Other_picture/logo-main-page.png" alt="Haluan Mutiara Logo">
+            <h1 class="site-title">Haluan Mutiara</h1>
+        </div>
         <ul class="nav-links">
             <li><a href="index.html">Home</a></li>
             <li><a href="about.html" class="active">About</a></li>
@@ -515,6 +617,9 @@ footer {
         <h1>Crafting Excellence in Timber Since 2000</h1>
         <p>From forest to finished project, we understand wood like few others. Every grain tells a story, every board carries a promise of quality that has defined our work for over two decades.</p>
     </section>
+
+    <!-- Your existing content sections... -->
+    <!-- (I've kept them the same as your original) -->
 
     <!-- Our Story -->
     <section class="timber-section">
@@ -547,16 +652,17 @@ footer {
             </div>
 
             <div class="wood-card">
-    <div class="wood-type-image">
-        <img src="Images/Craftman.jpg" alt="Timber tree viewed from below" 
-             onerror="this.src='https://images.pexels.com/photos/8489860/pexels-photo-8489860.jpeg?auto=compress&cs=tinysrgb&w=800'">
-    </div>
-    <div class="wood-content">
-        <h3><i class="fas fa-hands"></i> Craftsman's Touch</h3>
-        <p>This is where wood becomes material. Every piece is hand-inspected, graded, and prepared for its intended purpose - whether it's structural timber for construction or select boards for fine furniture.</p>
-        <p>We don't just sell wood; we provide solutions. Our expertise helps clients choose the right species, grade, and cut for their specific needs.</p>
-    </div>
-</div>
+                <div class="wood-type-image">
+                    <img src="Images/Craftman.jpg" alt="Timber tree viewed from below" 
+                         onerror="this.src='https://images.pexels.com/photos/8489860/pexels-photo-8489860.jpeg?auto=compress&cs=tinysrgb&w=800'">
+                </div>
+                <div class="wood-content">
+                    <h3><i class="fas fa-hands"></i> Craftsman's Touch</h3>
+                    <p>This is where wood becomes material. Every piece is hand-inspected, graded, and prepared for its intended purpose - whether it's structural timber for construction or select boards for fine furniture.</p>
+                    <p>We don't just sell wood; we provide solutions. Our expertise helps clients choose the right species, grade, and cut for their specific needs.</p>
+                </div>
+            </div>
+        </div>
     </section>
 
     <!-- Wood Types -->
@@ -766,139 +872,122 @@ footer {
     </div>
 </div>
 
+<!-- SINGLE SCRIPT - COMBINED AND CLEAN -->
 <script>
-// Image fallback handler
+// Combined JavaScript - Image Fallback + Mobile Menu + Year Update
 document.addEventListener('DOMContentLoaded', function() {
-    // Set current year in footer
-    document.querySelector('.current-year').textContent = new Date().getFullYear();
+    console.log('🚀 Haluan Mutiara - About Page Loaded');
     
-    // Check if background image loads
+    // ===== 1. SET CURRENT YEAR =====
+    const yearElement = document.querySelector('.current-year');
+    if (yearElement) {
+        yearElement.textContent = new Date().getFullYear();
+    }
+    
+    // ===== 2. BACKGROUND IMAGE FALLBACK =====
     const hero = document.querySelector('.wood-hero');
-    const testImg = new Image();
-    
-    // Try multiple paths for background image
-    const bgPaths = [
-        'Images/Main_stuff.png',
-        './Images/Main_stuff.png',
-        '../Images/Main_stuff.png',
-        'Main_stuff.png'
-    ];
-    
-    function tryBackgroundImage(index = 0) {
-        if (index >= bgPaths.length) return;
+    if (hero) {
+        const testImg = new Image();
+        const bgPaths = [
+            'Images/Main_stuff.png',
+            './Images/Main_stuff.png',
+            '../Images/Main_stuff.png',
+            'Main_stuff.png'
+        ];
         
-        testImg.src = bgPaths[index];
-        testImg.onload = function() {
-            console.log('✅ Background image loaded from:', bgPaths[index]);
-            hero.style.backgroundImage = `linear-gradient(rgba(93, 64, 55, 0.85), rgba(139, 69, 19, 0.9)), url('${bgPaths[index]}')`;
-        };
-        testImg.onerror = function() {
-            console.log('❌ Background image not found at:', bgPaths[index]);
-            tryBackgroundImage(index + 1);
-        };
-    }
-    
-    tryBackgroundImage();
-    
-    // Mobile menu toggle
-    const hamburger = document.querySelector('.hamburger');
-    const navLinks = document.querySelector('.nav-links');
-    
-    if (hamburger) {
-        hamburger.addEventListener('click', function() {
-            navLinks.classList.toggle('active');
-            hamburger.classList.toggle('active');
-        });
-    }
-    
-    // Close mobile menu when clicking outside
-    document.addEventListener('click', function(event) {
-        if (!hamburger.contains(event.target) && !navLinks.contains(event.target)) {
-            navLinks.classList.remove('active');
-            hamburger.classList.remove('active');
+        function tryBackgroundImage(index = 0) {
+            if (index >= bgPaths.length) return;
+            
+            testImg.src = bgPaths[index];
+            testImg.onload = function() {
+                console.log('✅ Background image loaded from:', bgPaths[index]);
+                hero.style.backgroundImage = `linear-gradient(rgba(93, 64, 55, 0.85), rgba(139, 69, 19, 0.9)), url('${bgPaths[index]}')`;
+            };
+            testImg.onerror = function() {
+                console.log('❌ Background image not found at:', bgPaths[index]);
+                tryBackgroundImage(index + 1);
+            };
         }
-    });
-});
-</script>
-// Menu Toggle for Mobile - Clean & Efficient
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Get elements
+        
+        tryBackgroundImage();
+    }
+    
+    // ===== 3. MOBILE MENU TOGGLE (FIXED) =====
     const hamburger = document.querySelector('.hamburger');
     const navLinks = document.querySelector('.nav-links');
     const body = document.body;
     
-    // Only proceed if elements exist
-    if (!hamburger || !navLinks) return;
-    
-    // Create overlay if it doesn't exist
-    let overlay = document.querySelector('.menu-overlay');
-    if (!overlay) {
-        overlay = document.createElement('div');
-        overlay.className = 'menu-overlay';
-        body.appendChild(overlay);
-    }
-    
-    // Toggle menu function
-    function toggleMenu(open) {
-        const isOpen = open !== undefined ? open : !navLinks.classList.contains('active');
-        
-        if (isOpen) {
-            navLinks.classList.add('active');
-            hamburger.classList.add('active');
-            overlay.classList.add('active');
-            body.style.overflow = 'hidden';
-        } else {
-            navLinks.classList.remove('active');
-            hamburger.classList.remove('active');
-            overlay.classList.remove('active');
-            body.style.overflow = '';
+    if (hamburger && navLinks) {
+        // Create overlay if it doesn't exist
+        let overlay = document.querySelector('.menu-overlay');
+        if (!overlay) {
+            overlay = document.createElement('div');
+            overlay.className = 'menu-overlay';
+            body.appendChild(overlay);
         }
-    }
-    
-    // Hamburger click
-    hamburger.addEventListener('click', function(e) {
-        e.stopPropagation();
-        toggleMenu();
-    });
-    
-    // Overlay click
-    overlay.addEventListener('click', function() {
-        toggleMenu(false);
-    });
-    
-    // Close menu when clicking a link
-    navLinks.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', function() {
+        
+        // Toggle menu function
+        function toggleMenu(open) {
+            const isOpen = open !== undefined ? open : !navLinks.classList.contains('active');
+            
+            if (isOpen) {
+                navLinks.classList.add('active');
+                hamburger.classList.add('active');
+                overlay.classList.add('active');
+                body.style.overflow = 'hidden';
+            } else {
+                navLinks.classList.remove('active');
+                hamburger.classList.remove('active');
+                overlay.classList.remove('active');
+                body.style.overflow = '';
+            }
+        }
+        
+        // Hamburger click
+        hamburger.addEventListener('click', function(e) {
+            e.stopPropagation();
+            toggleMenu();
+        });
+        
+        // Overlay click
+        overlay.addEventListener('click', function() {
             toggleMenu(false);
         });
-    });
-    
-    // Close on escape key
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && navLinks.classList.contains('active')) {
-            toggleMenu(false);
-        }
-    });
-    
-    // Handle window resize
-    let resizeTimer;
-    window.addEventListener('resize', function() {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(function() {
-            if (window.innerWidth > 992 && navLinks.classList.contains('active')) {
+        
+        // Close menu when clicking a link
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', function() {
+                toggleMenu(false);
+            });
+        });
+        
+        // Close on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && navLinks.classList.contains('active')) {
                 toggleMenu(false);
             }
-        }, 250);
-    });
-    
-    console.log('✅ Mobile menu initialized');
+        });
+        
+        // Handle window resize
+        let resizeTimer;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(function() {
+                if (window.innerWidth > 992 && navLinks.classList.contains('active')) {
+                    toggleMenu(false);
+                }
+            }, 250);
+        });
+        
+        console.log('✅ Mobile menu initialized');
+    } else {
+        console.log('❌ Hamburger or navLinks not found');
+    }
 });
 </script>
+
+<!-- External Scripts -->
 <script src="js/chat-bot.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 </body>
-
 </html>
-
-
