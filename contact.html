@@ -723,7 +723,7 @@
     animation: spin 1s linear infinite;
   }
 
-  /* Mobile Navigation Styles - FIXED */
+  /* ===== FIXED MOBILE NAVIGATION WITH VISIBLE HAMBURGER ===== */
   @media (max-width: 992px) {
     .nav-links {
       position: fixed;
@@ -785,39 +785,51 @@
       background: rgba(255, 255, 255, 0.15) !important;
     }
     
-    /* Hamburger icon - WHITE so it's visible */
+    /* ===== VISIBLE HAMBURGER ICON WITH BROWN BACKGROUND ===== */
     .hamburger {
       display: flex !important;
-      flex-direction: column;
-      justify-content: space-between;
-      width: 30px;
-      height: 22px;
-      cursor: pointer;
-      z-index: 1000;
-      position: relative;
+      flex-direction: column !important;
+      justify-content: center !important;
+      align-items: center !important;
+      width: 44px !important;
+      height: 44px !important;
+      background: #8b4513 !important;
+      border-radius: 8px !important;
+      padding: 10px 8px !important;
+      cursor: pointer !important;
+      z-index: 1000 !important;
+      position: relative !important;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.2) !important;
+      border: 1px solid rgba(255,255,255,0.2) !important;
     }
     
     .hamburger span {
-      display: block;
-      width: 100%;
-      height: 3px;
+      display: block !important;
+      width: 26px !important;
+      height: 4px !important;
       background: white !important;
-      border-radius: 3px;
-      transition: all 0.3s ease;
-      transform-origin: left;
+      margin: 3px 0 !important;
+      border-radius: 4px !important;
+      transition: all 0.3s ease !important;
+      transform-origin: center !important;
+      border: none !important;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.3) !important;
     }
     
+    /* X animation when active */
     .hamburger.active span:nth-child(1) {
-      transform: rotate(45deg) translate(5px, 5px);
+      transform: translateY(7px) rotate(45deg) !important;
+      width: 26px !important;
     }
     
     .hamburger.active span:nth-child(2) {
-      opacity: 0;
-      transform: translateX(10px);
+      opacity: 0 !important;
+      transform: scale(0) !important;
     }
     
     .hamburger.active span:nth-child(3) {
-      transform: rotate(-45deg) translate(5px, -5px);
+      transform: translateY(-7px) rotate(-45deg) !important;
+      width: 26px !important;
     }
   }
 
@@ -889,13 +901,6 @@
 .nav-links a[href="contact.html"].active {
     color: #f4e4c1 !important;
     text-shadow: 0 0 10px #f4e4c1, 0 0 20px #8b4513, 0 0 30px #ffaa00 !important;
-}
-
-  /* SUPER FORCE WHITE HAMBURGER - ADD AT THE END */
-.hamburger span {
-  background: white !important;
-  border: none !important;
-  box-shadow: none !important;
 }
 </style>
 </head>
@@ -1881,4 +1886,5 @@ document.addEventListener('keydown', function(e) {
 <script src="js/chat-bot.js"></script>
 </body>
 </html>
+
 
