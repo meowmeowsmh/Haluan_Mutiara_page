@@ -49,9 +49,17 @@
         padding-left: 30px !important;
     }
     
+    /* Hamburger icon - FORCE IT TO SHOW */
+    .hamburger {
+        display: flex !important;
+    }
+    
     /* Hamburger icon color - match home page */
     .hamburger span {
         background: #8b4513 !important;
+        height: 3px !important;
+        width: 30px !important;
+        margin: 2px 0 !important;
     }
     
     /* Hamburger active state */
@@ -500,12 +508,6 @@ footer {
         right: 20px;
     }
 }
-    /* FORCE HAMBURGER ICON TO SHOW ON MOBILE */
-@media (max-width: 992px) {
-    .hamburger {
-        display: flex !important;
-    }
-}
 </style>
 </head>
 <body>
@@ -777,12 +779,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Mobile menu toggle
     const hamburger = document.querySelector('.hamburger');
     const navLinks = document.querySelector('.nav-links');
-
-    // Force hamburger to be visible
-    const hamburger = document.querySelector('.hamburger');
-    if (hamburger) {
-        hamburger.style.display = 'flex';
-    }
     
     if (hamburger && navLinks) {
         hamburger.addEventListener('click', function(e) {
@@ -825,4 +821,3 @@ document.addEventListener('DOMContentLoaded', function() {
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 </body>
 </html>
-
