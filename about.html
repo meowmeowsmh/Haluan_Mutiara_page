@@ -12,7 +12,6 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
 <link rel="stylesheet" href="css/design.css">
 <link rel="stylesheet" href="css/chat-bot-design.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="icon" type="image/jpeg" href="Other_picture/icon_haluan_mutiara.jpeg">
 <style>
 /* CSS Variables for Wood Theme */
@@ -67,7 +66,6 @@ main {
     align-items: center;
 }
 
-/* Fallback if image doesn't load */
 .wood-hero::before {
     content: '';
     position: absolute;
@@ -407,13 +405,11 @@ footer {
 }
 
 /* ===== PERMANENT GLOW FOR ABOUT LINK ===== */
-.nav-links a[href="about.html"] {
+.nav-links a[href="about.html"],
+.nav-links a.active {
     color: #f4e4c1 !important;
-    text-shadow: 0 0 10px #f4e4c1, 
-                 0 0 20px #ffaa00, 
-                 0 0 30px #8b4513 !important;
+    text-shadow: 0 0 10px #f4e4c1, 0 0 20px #ffaa00, 0 0 30px #8b4513 !important;
     font-weight: 700;
-    position: relative;
     animation: permanentAboutGlow 1.5s ease-in-out infinite;
 }
 
@@ -476,26 +472,7 @@ footer {
     }
 }
 
-/* Mobile Menu Overlay Styles */
-.menu-overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(3px);
-    z-index: 998;
-    transition: opacity 0.3s ease;
-    opacity: 0;
-}
-
-.menu-overlay.active {
-    display: block;
-    opacity: 1;
-}
-
+/* ===== MOBILE MENU STYLES - MATCHING HOME PAGE ===== */
 @media (max-width: 992px) {
     .nav-links {
         position: fixed;
@@ -504,16 +481,16 @@ footer {
         width: 80%;
         max-width: 350px;
         height: 100vh;
-        background: var(--primary-dark);
+        background: var(--primary-dark) !important;
         flex-direction: column;
-        padding: 80px 30px 40px;
+        padding: 80px 30px 40px !important;
         transition: right 0.4s ease-in-out;
         box-shadow: -5px 0 30px rgba(0,0,0,0.3);
         z-index: 999;
         overflow-y: auto;
     }
     
-    .nav-links.active {
+    .nav-links.show {
         right: 0;
     }
     
@@ -524,28 +501,34 @@ footer {
         transition: all 0.3s ease;
     }
     
-    .nav-links.active li {
+    .nav-links.show li {
         opacity: 1;
         transform: translateX(0);
     }
     
-    .nav-links.active li:nth-child(1) { transition-delay: 0.1s; }
-    .nav-links.active li:nth-child(2) { transition-delay: 0.2s; }
-    .nav-links.active li:nth-child(3) { transition-delay: 0.3s; }
-    .nav-links.active li:nth-child(4) { transition-delay: 0.4s; }
+    .nav-links.show li:nth-child(1) { transition-delay: 0.1s; }
+    .nav-links.show li:nth-child(2) { transition-delay: 0.2s; }
+    .nav-links.show li:nth-child(3) { transition-delay: 0.3s; }
+    .nav-links.show li:nth-child(4) { transition-delay: 0.4s; }
     
     .nav-links a {
-        color: #f4e4c1 !important;
-        font-size: 1.2rem;
-        display: block;
-        padding: 10px 15px;
+        color: white !important;
+        font-size: 1.2rem !important;
+        display: block !important;
+        padding: 12px 20px !important;
         border-radius: 8px;
-        transition: all 0.3s ease;
+        transition: all 0.3s ease !important;
     }
     
     .nav-links a:hover {
-        background: rgba(255, 255, 255, 0.1);
-        padding-left: 25px;
+        background: rgba(255, 255, 255, 0.1) !important;
+        padding-left: 30px !important;
+    }
+    
+    .nav-links a.active,
+    .nav-links a[href="about.html"] {
+        color: #f4e4c1 !important;
+        text-shadow: 0 0 10px #f4e4c1, 0 0 20px #ffaa00 !important;
     }
     
     .hamburger {
@@ -563,15 +546,15 @@ footer {
         display: block;
         width: 100%;
         height: 3px;
-        background: #8b4513;
+        background: var(--primary) !important;
         border-radius: 3px;
         transition: all 0.3s ease;
         transform-origin: left;
     }
     
     .hamburger.active span:nth-child(1) {
-        transform: rotate(45deg) translate(2px, -2px);
-        background: #f4e4c1;
+        transform: rotate(45deg) translate(5px, 5px);
+        background: #f4e4c1 !important;
     }
     
     .hamburger.active span:nth-child(2) {
@@ -580,8 +563,8 @@ footer {
     }
     
     .hamburger.active span:nth-child(3) {
-        transform: rotate(-45deg) translate(2px, 2px);
-        background: #f4e4c1;
+        transform: rotate(-45deg) translate(5px, -5px);
+        background: #f4e4c1 !important;
     }
 }
 </style>
@@ -617,9 +600,6 @@ footer {
         <h1>Crafting Excellence in Timber Since 2000</h1>
         <p>From forest to finished project, we understand wood like few others. Every grain tells a story, every board carries a promise of quality that has defined our work for over two decades.</p>
     </section>
-
-    <!-- Your existing content sections... -->
-    <!-- (I've kept them the same as your original) -->
 
     <!-- Our Story -->
     <section class="timber-section">
@@ -849,20 +829,16 @@ footer {
 
 <!-- Modern Oak Timber Chat Interface -->
 <div class="chat-helper">
-    <!-- Oak wood floating button -->
     <button class="chat-icon-btn" id="chatIconBtn" aria-label="Open timber chat">
         <i class="fas fa-tree"></i>
     </button>
     
-    <!-- Oak-themed chat window -->
     <div class="chat-window" id="chatWindow">
         <div class="chat-header">
             <h4><i class="fas fa-seedling"></i> Timber Expert</h4>
             <button class="close-chat" id="closeChatBtn" aria-label="Close chat">×</button>
         </div>
-        <div class="chat-body" id="chatBody">
-            <!-- Chat messages will appear here -->
-        </div>
+        <div class="chat-body" id="chatBody"></div>
         <div class="chat-input">
             <input type="text" placeholder="Ask about wood, pricing, or MS 544..." id="chatInput" autocomplete="off">
             <button id="sendBtn" aria-label="Send message">
@@ -872,202 +848,51 @@ footer {
     </div>
 </div>
 
-<!-- SINGLE SCRIPT - COMBINED AND CLEAN -->
+<!-- SINGLE SCRIPT - CLEAN AND WORKING -->
 <script>
-// Combined JavaScript - Image Fallback + Mobile Menu + Year Update
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🚀 Haluan Mutiara - About Page Loaded');
-    
-    // ===== 1. SET CURRENT YEAR =====
+    // Set current year
     const yearElement = document.querySelector('.current-year');
-    if (yearElement) {
-        yearElement.textContent = new Date().getFullYear();
-    }
+    if (yearElement) yearElement.textContent = new Date().getFullYear();
     
-    // ===== 2. BACKGROUND IMAGE FALLBACK =====
-    const hero = document.querySelector('.wood-hero');
-    if (hero) {
-        const testImg = new Image();
-        const bgPaths = [
-            'Images/Main_stuff.png',
-            './Images/Main_stuff.png',
-            '../Images/Main_stuff.png',
-            'Main_stuff.png'
-        ];
-        
-        function tryBackgroundImage(index = 0) {
-            if (index >= bgPaths.length) return;
-            
-            testImg.src = bgPaths[index];
-            testImg.onload = function() {
-                console.log('✅ Background image loaded from:', bgPaths[index]);
-                hero.style.backgroundImage = `linear-gradient(rgba(93, 64, 55, 0.85), rgba(139, 69, 19, 0.9)), url('${bgPaths[index]}')`;
-            };
-            testImg.onerror = function() {
-                console.log('❌ Background image not found at:', bgPaths[index]);
-                tryBackgroundImage(index + 1);
-            };
-        }
-        
-        tryBackgroundImage();
-    }
-    
-    // ===== 3. MOBILE MENU TOGGLE (FIXED) =====
+    // Mobile menu toggle - exactly like Home page
     const hamburger = document.querySelector('.hamburger');
     const navLinks = document.querySelector('.nav-links');
-    const body = document.body;
     
     if (hamburger && navLinks) {
-        // Create overlay if it doesn't exist
-        let overlay = document.querySelector('.menu-overlay');
-        if (!overlay) {
-            overlay = document.createElement('div');
-            overlay.className = 'menu-overlay';
-            body.appendChild(overlay);
-        }
+        // Remove any existing classes
+        navLinks.classList.remove('show');
+        hamburger.classList.remove('active');
         
-        // Toggle menu function
-        function toggleMenu(open) {
-            const isOpen = open !== undefined ? open : !navLinks.classList.contains('active');
-            
-            if (isOpen) {
-                navLinks.classList.add('active');
-                hamburger.classList.add('active');
-                overlay.classList.add('active');
-                body.style.overflow = 'hidden';
-            } else {
-                navLinks.classList.remove('active');
-                hamburger.classList.remove('active');
-                overlay.classList.remove('active');
-                body.style.overflow = '';
-            }
-        }
-        
-        // Hamburger click
+        // Simple click handler
         hamburger.addEventListener('click', function(e) {
-            e.stopPropagation();
-            toggleMenu();
-        });
-        
-        // Overlay click
-        overlay.addEventListener('click', function() {
-            toggleMenu(false);
-        });
-        
-        // Close menu when clicking a link
-        navLinks.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', function() {
-                toggleMenu(false);
-            });
-        });
-        
-        // Close on escape key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && navLinks.classList.contains('active')) {
-                toggleMenu(false);
-            }
-        });
-        
-        // Handle window resize
-        let resizeTimer;
-        window.addEventListener('resize', function() {
-            clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(function() {
-                if (window.innerWidth > 992 && navLinks.classList.contains('active')) {
-                    toggleMenu(false);
-                }
-            }, 250);
-        });
-        
-        console.log('✅ Mobile menu initialized');
-    } else {
-        console.log('❌ Hamburger or navLinks not found');
-    }
-});
-</script>
-
-<!-- SIMPLE FIX FOR MOBILE MENU AND GLOW -->
-<!-- SINGLE SCRIPT - FIXED FOR ABOUT PAGE -->
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('🚀 About Page - Mobile Menu Fix');
-    
-    // ===== 1. SET CURRENT YEAR =====
-    const yearElement = document.querySelector('.current-year');
-    if (yearElement) {
-        yearElement.textContent = new Date().getFullYear();
-    }
-    
-    // ===== 2. BACKGROUND IMAGE FALLBACK =====
-    const hero = document.querySelector('.wood-hero');
-    if (hero) {
-        const testImg = new Image();
-        const bgPaths = [
-            'Images/Main_stuff.png',
-            './Images/Main_stuff.png',
-            '../Images/Main_stuff.png',
-            'Main_stuff.png'
-        ];
-        
-        function tryBackgroundImage(index = 0) {
-            if (index >= bgPaths.length) return;
-            
-            testImg.src = bgPaths[index];
-            testImg.onload = function() {
-                hero.style.backgroundImage = `linear-gradient(rgba(93, 64, 55, 0.85), rgba(139, 69, 19, 0.9)), url('${bgPaths[index]}')`;
-            };
-            testImg.onerror = function() {
-                tryBackgroundImage(index + 1);
-            };
-        }
-        tryBackgroundImage();
-    }
-    
-    // ===== 3. MOBILE MENU TOGGLE (USING SHOW CLASS - MATCHES YOUR CSS) =====
-    const hamburger = document.querySelector('.hamburger');
-    const navLinks = document.querySelector('.nav-links');
-    
-    if (hamburger && navLinks) {
-        // Remove any existing event listeners
-        const newHamburger = hamburger.cloneNode(true);
-        hamburger.parentNode.replaceChild(newHamburger, hamburger);
-        
-        // Get fresh elements
-        const freshHamburger = document.querySelector('.hamburger');
-        const freshNavLinks = document.querySelector('.nav-links');
-        
-        // Toggle menu function
-        freshHamburger.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
             
-            // Toggle menu using 'show' class (your CSS uses .nav-links.show)
-            freshNavLinks.classList.toggle('show');
+            // Toggle menu
+            navLinks.classList.toggle('show');
             this.classList.toggle('active');
             
-            // Animate hamburger
+            // Animate hamburger icon
             const spans = this.querySelectorAll('span');
-            if (freshNavLinks.classList.contains('show')) {
+            if (navLinks.classList.contains('show')) {
                 spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
                 spans[1].style.opacity = '0';
                 spans[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
-                document.body.style.overflow = 'hidden';
             } else {
                 spans[0].style.transform = '';
                 spans[1].style.opacity = '';
                 spans[2].style.transform = '';
-                document.body.style.overflow = '';
             }
         });
         
         // Close menu when clicking links
-        freshNavLinks.querySelectorAll('a').forEach(link => {
+        navLinks.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', function() {
-                freshNavLinks.classList.remove('show');
-                freshHamburger.classList.remove('active');
-                document.body.style.overflow = '';
+                navLinks.classList.remove('show');
+                hamburger.classList.remove('active');
                 
-                const spans = freshHamburger.querySelectorAll('span');
+                const spans = hamburger.querySelectorAll('span');
                 spans.forEach(span => {
                     span.style.transform = '';
                     span.style.opacity = '';
@@ -1077,34 +902,26 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Close menu when clicking outside
         document.addEventListener('click', function(event) {
-            if (freshNavLinks.classList.contains('show') && 
-                !freshHamburger.contains(event.target) && 
-                !freshNavLinks.contains(event.target)) {
+            if (navLinks.classList.contains('show') && 
+                !hamburger.contains(event.target) && 
+                !navLinks.contains(event.target)) {
                 
-                freshNavLinks.classList.remove('show');
-                freshHamburger.classList.remove('active');
-                document.body.style.overflow = '';
+                navLinks.classList.remove('show');
+                hamburger.classList.remove('active');
                 
-                const spans = freshHamburger.querySelectorAll('span');
+                const spans = hamburger.querySelectorAll('span');
                 spans.forEach(span => {
                     span.style.transform = '';
                     span.style.opacity = '';
                 });
             }
         });
-        
-        console.log('✅ Mobile menu working with show class');
     }
-    
-    // ===== 4. ENSURE ABOUT LINK GLOWS (ALREADY HAS ACTIVE CLASS) =====
-    // Your HTML already has class="active" on About link, so it glows automatically
-    console.log('✅ About link has active class - should glow');
 });
 </script>
+
 <!-- External Scripts -->
 <script src="js/chat-bot.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 </body>
 </html>
-
-
