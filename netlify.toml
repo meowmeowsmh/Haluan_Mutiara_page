@@ -5,11 +5,3 @@
   from = "/success"
   to = "/"
   status = 200
-
-# Your existing content plus add this:
-
-[[redirects]]
-  from = "/*"
-  to = "/.netlify/functions/block-bots"
-  status = 200
-  force = true
