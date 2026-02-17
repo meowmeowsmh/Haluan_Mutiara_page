@@ -20,7 +20,7 @@ Disallow: /
 User-agent: Timpibot
 Disallow: /
 
-# Block SEO Crawlers (optional)
+# Block SEO Crawlers
 User-agent: SemrushBot
 Disallow: /
 
