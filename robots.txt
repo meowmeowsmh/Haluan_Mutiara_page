@@ -1,0 +1,29 @@
+# Block AI Crawlers
+User-agent: GPTBot
+Disallow: /
+
+User-agent: GoogleOther
+Disallow: /
+
+User-agent: PetalBot
+Disallow: /
+
+User-agent: Factset_spyderbot
+Disallow: /
+
+User-agent: LINER Bot
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: Timpibot
+Disallow: /
+
+# Block SEO Crawlers (optional)
+User-agent: SemrushBot
+Disallow: /
+
+# Block requests with no user agent
+User-agent: *
+Disallow: /
