@@ -24,7 +24,7 @@ body {
 
 /* ===== BROWN NAVIGATION MENU ===== */
 .nav-bar {
-    background: linear-gradient(135deg, #8b4513 0%, #a0522d 100%) !important; /* Brown gradient */
+    background: linear-gradient(135deg, #8b4513 0%, #a0522d 100%) !important;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
@@ -34,7 +34,7 @@ body {
 }
 
 .logo i {
-    color: #f4d4a0 !important; /* Light gold icon */
+    color: #f4d4a0 !important;
 }
 
 .nav-links li a {
@@ -303,7 +303,7 @@ body {
     font-style: italic;
     overflow: hidden;
     display: -webkit-box;
-    -webkit-line-clamp: 2; /* Limit to 2 lines */
+    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
 }
 
@@ -438,16 +438,89 @@ footer .footer-contact i {
     background: #151515 !important;
     border: 1px solid #333 !important;
     color: #fff !important;
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 30px;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+}
+
+.newsletter-input:focus {
+    outline: none;
+    border-color: #d4a574 !important;
+    box-shadow: 0 0 0 2px rgba(212, 165, 116, 0.2);
 }
 
 .btn-primary {
     background: #d4a574 !important;
     color: #000 !important;
     border: none !important;
+    padding: 12px 25px;
+    border-radius: 30px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
 .btn-primary:hover {
     background: #f4d4a0 !important;
+    transform: translateY(-2px);
+}
+
+.btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Form status message */
+.form-status {
+    margin-top: 10px;
+    padding: 8px 12px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    animation: fadeIn 0.3s ease;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    text-align: center;
+}
+
+.form-status.success {
+    color: #4CAF50;
+    border-color: rgba(76, 175, 80, 0.3);
+}
+
+.form-status.error {
+    color: #e74c3c;
+    border-color: rgba(231, 76, 60, 0.3);
+}
+
+.form-status i {
+    margin-right: 8px;
+}
+
+/* Hide honeypot field */
+.hidden-field {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    position: absolute !important;
+    top: -9999px !important;
+    left: -9999px !important;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.fa-spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 /* Responsive Design */
@@ -475,10 +548,9 @@ footer .footer-contact i {
     
     .overlay p {
         font-size: 0.75rem;
-        -webkit-line-clamp: 3; /* Show 3 lines on mobile */
+        -webkit-line-clamp: 3;
     }
     
-    /* Remove special heights on mobile */
     .product-card:nth-child(3n),
     .product-card:nth-child(7n) {
         height: 280px;
@@ -551,10 +623,10 @@ footer .footer-contact i {
 <!-- BROWN NAVIGATION MENU -->
 <header>
     <nav class="nav-bar">
-<div class="logo">
-      <img src="Other_picture/logo-main-page.png" alt="Haluan Mutiara Logo">
-      <h1 class="site-title">Haluan Mutiara</h1> <!-- Add this line -->
-    </div>
+        <div class="logo">
+            <img src="Other_picture/logo-main-page.png" alt="Haluan Mutiara Logo">
+            <h1 class="site-title">Haluan Mutiara</h1>
+        </div>
         <ul class="nav-links">
             <li><a href="index.html">Home</a></li>
             <li><a href="about.html">About</a></li>
@@ -594,7 +666,7 @@ footer .footer-contact i {
     </div>
 </div>
 
-<!-- Footer - Black Theme -->
+<!-- Footer - Black Theme with Netlify Form -->
 <footer>
     <div class="footer-content">
         <div class="footer-about">
@@ -608,8 +680,35 @@ footer .footer-contact i {
         </div>
         <div class="footer-newsletter">
             <h4>Get Updates</h4>
-            <input type="comment" placeholder="Your comment" class="newsletter-input">
-            <button class="btn btn-primary btn-small" id="CommentBtn">Contact Us</button>
+            
+            <!-- NETLIFY FORM - WORKING VERSION -->
+            <form id="updatesForm" name="updates" method="POST" data-netlify="true">
+                <!-- Required hidden field for Netlify -->
+                <input type="hidden" name="form-name" value="updates" />
+                
+                <!-- Honeypot field to prevent spam (hidden with CSS) -->
+                <p class="hidden-field">
+                    <label>
+                        Don't fill this out: 
+                        <input type="text" name="bot-field" tabindex="-1" autocomplete="off" />
+                    </label>
+                </p>
+                
+                <!-- Your actual form field -->
+                <input type="text" 
+                       name="comment" 
+                       id="commentInput"
+                       placeholder="Your comment or feedback" 
+                       class="newsletter-input" 
+                       required>
+                       
+                <button type="submit" class="btn btn-primary btn-small" id="submitBtn">
+                    <i class="fas fa-paper-plane"></i> Send Comment
+                </button>
+            </form>
+            
+            <!-- Status message will appear here -->
+            <div id="formStatus" class="form-status"></div>
         </div>
     </div>
     <div class="footer-copyright">
@@ -626,12 +725,10 @@ footer .footer-contact i {
 
 <!-- Modern Oak Timber Chat Interface -->
 <div class="chat-helper">
-    <!-- Oak wood floating button -->
     <button class="chat-icon-btn" id="chatIconBtn" aria-label="Open timber chat">
         <i class="fas fa-tree"></i>
     </button>
     
-    <!-- Oak-themed chat window -->
     <div class="chat-window" id="chatWindow">
         <div class="chat-header">
             <h4><i class="fas fa-seedling"></i> Timber Expert</h4>
@@ -649,14 +746,14 @@ footer .footer-contact i {
     </div>
 </div>
 
+<!-- Main JavaScript -->
 <script>
 // Load all images from Image1 to Image16
 document.addEventListener('DOMContentLoaded', function() {
     const gallery = document.getElementById('imageGallery');
     
-    // Use relative path for web deployment - adjust this based on your folder structure
-    const imagePath = './Other_picture/'; // Images in 'Other_picture' folder at root level
-    // OR if images are in same folder: const imagePath = './';
+    // Use relative path for web deployment
+    const imagePath = './Other_picture/';
     
     // Supported image extensions to try
     const extensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
@@ -689,18 +786,14 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const img = document.createElement('img');
         
-        // Try to load the image with different extensions
-        // Try with the most common extension first
         img.src = `${imagePath}Image${i}.jpg`;
         img.alt = `Wood Product ${i}`;
         img.loading = 'lazy';
         
-        // Add loaded class when image loads
         img.addEventListener('load', function() {
             this.classList.add('loaded');
         });
         
-        // Fallback handling for different extensions
         img.onerror = function() {
             let extensionIndex = 0;
             const tryNextExtension = () => {
@@ -708,7 +801,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     this.src = `${imagePath}Image${i}.${extensions[extensionIndex]}`;
                     extensionIndex++;
                 } else {
-                    // Mark card as error and show placeholder
                     card.classList.add('error');
                     this.src = `https://via.placeholder.com/400x300/1a1a1a/666666?text=Image+${i}`;
                     this.style.objectFit = 'contain';
@@ -721,7 +813,6 @@ document.addEventListener('DOMContentLoaded', function() {
             tryNextExtension();
         };
         
-        // Create overlay with story
         const overlay = document.createElement('div');
         overlay.className = 'overlay';
         const storyText = document.createElement('p');
@@ -743,26 +834,11 @@ document.addEventListener('DOMContentLoaded', function() {
             hamburger.classList.toggle('active');
         });
         
-        // Close menu when clicking links
         document.querySelectorAll('.nav-links a').forEach(link => {
             link.addEventListener('click', () => {
                 navLinks.classList.remove('show');
                 hamburger.classList.remove('active');
             });
-        });
-    }
-    
-    // Newsletter subscription
-    const CommentBtn = document.getElementById('CommentBtn');
-    if (CommentBtn) {
-        CommentBtn.addEventListener('click', function() {
-            const commentInput = document.querySelector('.newsletter-input');
-            if (commentInput && commentInput.value) {
-                alert('Thank you for your updating us!');
-                commentInput.value = '';
-            } else {
-                alert('Please enter your comment and feeback so that we can make it stronger!');
-            }
         });
     }
 });
@@ -772,13 +848,11 @@ function openModal(imageNumber) {
     const modal = document.getElementById('productModal');
     const modalImage = document.getElementById('modalImage');
     
-    // Use same path as above
-    const imagePath = './Other_picture/'; // Should match the path above
+    const imagePath = './Other_picture/';
     
     modalImage.src = `${imagePath}Image${imageNumber}.jpg`;
     modalImage.alt = `Wood Product ${imageNumber}`;
     
-    // Handle image load error in modal
     modalImage.onerror = function() {
         const extensions = ['jpeg', 'png', 'gif', 'webp'];
         let extIndex = 0;
@@ -787,7 +861,6 @@ function openModal(imageNumber) {
                 this.src = `${imagePath}Image${imageNumber}.${extensions[extIndex]}`;
                 extIndex++;
             } else {
-                // Dark theme placeholder
                 this.src = `https://via.placeholder.com/800x600/1a1a1a/d4a574?text=Image+${imageNumber}`;
                 this.style.objectFit = 'contain';
                 this.style.background = '#1a1a1a';
@@ -800,7 +873,6 @@ function openModal(imageNumber) {
     
     modal.style.display = 'flex';
     
-    // Prevent body scrolling when modal is open
     document.body.style.overflow = 'hidden';
     document.body.style.position = 'fixed';
     document.body.style.width = '100%';
@@ -810,12 +882,10 @@ function closeModal() {
     const modal = document.getElementById('productModal');
     modal.style.display = 'none';
     
-    // Restore body scrolling
     document.body.style.overflow = 'auto';
     document.body.style.position = 'static';
 }
 
-// Close modal when clicking outside
 window.onclick = function(event) {
     const modal = document.getElementById('productModal');
     if (event.target === modal) {
@@ -823,22 +893,82 @@ window.onclick = function(event) {
     }
 }
 
-// Close modal with Escape key
 document.addEventListener('keydown', function(event) {
     if (event.key === 'Escape') {
         closeModal();
     }
 });
 </script>
+
+<!-- NETLIFY FORM HANDLER - Prevents 405 Error -->
+<script>
+// Netlify Form Handler - AJAX Submission
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('updatesForm');
+    
+    if (form) {
+        form.addEventListener('submit', handleFormSubmit);
+    }
+});
+
+async function handleFormSubmit(event) {
+    event.preventDefault();
+    
+    const form = event.target;
+    const formData = new FormData(form);
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    const statusDiv = document.getElementById('formStatus');
+    const commentInput = document.getElementById('commentInput');
+    
+    // Disable button and show loading
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+    
+    // Clear previous status
+    statusDiv.className = 'form-status';
+    statusDiv.innerHTML = '';
+    
+    try {
+        // Submit to Netlify
+        const response = await fetch('/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams(formData).toString()
+        });
+        
+        if (response.ok || response.status === 200) {
+            // Success
+            statusDiv.className = 'form-status success';
+            statusDiv.innerHTML = '<i class="fas fa-check-circle"></i> Thank you! Your comment was sent.';
+            form.reset();
+            
+            // Clear success message after 5 seconds
+            setTimeout(() => {
+                statusDiv.innerHTML = '';
+                statusDiv.className = 'form-status';
+            }, 5000);
+        } else {
+            throw new Error('Form submission failed');
+        }
+    } catch (error) {
+        console.error('Form error:', error);
+        statusDiv.className = 'form-status error';
+        statusDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> Error sending comment. Please try again.';
+        
+        setTimeout(() => {
+            statusDiv.innerHTML = '';
+            statusDiv.className = 'form-status';
+        }, 5000);
+    } finally {
+        // Re-enable button
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
+    }
+}
+</script>
+
 <script src="js/chat-bot.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 </body>
-
 </html>
-
-
-
-
-
-
-
