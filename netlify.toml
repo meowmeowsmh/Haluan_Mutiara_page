@@ -1,6 +1,13 @@
 [build]
   publish = "."
 
+
+#header 
+[[headers]]
+for ="/*.db"
+[headers.value]
+Content-Type = "application/x-sqlite3"
+
 [[redirects]]
   from = "/success"
   to = "/"
