@@ -2394,9 +2394,8 @@ class HaluanMLocalExpert {
                 "amazon", "mystery", "secret", "easter egg", "hidden",
                 "reveal", "unlock", "jungle", "rainforest", "forest secret"
             ]
-        }
-    };
-}
+        };
+    }
 
 // ===== BRANCHING PATHS SYSTEM =====
 createBranchingPaths() {
@@ -3246,5 +3245,3 @@ console.log("🥚 Try: 'amazon mystery', 'forest secret', 'easter egg', 'unlock'
 console.log("✨ Complete: 80+ timber species | All strength groups | Products | Jokes | Easter Eggs");
 
 });
-
-
