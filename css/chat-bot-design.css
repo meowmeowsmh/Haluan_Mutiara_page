@@ -508,3 +508,156 @@
         display: none;
     }
 }
+
+/* ================================================ */
+/* QUICK REPLY BUTTONS - INTERACTIVE CHAT           */
+/* ================================================ */
+
+.chat-quick-replies {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 4px 0;
+    align-self: flex-start;
+    max-width: 95%;
+    animation: slideIn 0.3s ease;
+}
+
+.chat-quick-reply-btn {
+    background: white;
+    border: 1.5px solid var(--primary);
+    color: var(--primary);
+    padding: 6px 14px;
+    border-radius: var(--radius-round);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    font-family: var(--font-main);
+    font-weight: 500;
+    white-space: nowrap;
+    line-height: 1.4;
+}
+
+.chat-quick-reply-btn:hover {
+    background: var(--primary);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+
+.chat-quick-reply-btn:active {
+    transform: translateY(0);
+}
+
+/* ================================================ */
+/* CTA ACTION BUTTONS - CALL TO ACTION              */
+/* ================================================ */
+
+.chat-cta-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 6px 0;
+    align-self: flex-start;
+    max-width: 95%;
+    animation: slideIn 0.3s ease;
+}
+
+.chat-cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: var(--radius-round);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    font-family: var(--font-main);
+    text-decoration: none;
+    white-space: nowrap;
+    line-height: 1.4;
+}
+
+.chat-cta-btn i {
+    font-size: 14px;
+}
+
+.chat-cta-success {
+    background: #25D366;
+    color: white;
+    border: none;
+}
+
+.chat-cta-success:hover {
+    background: #1da851;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+}
+
+.chat-cta-primary {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    color: white;
+    border: none;
+}
+
+.chat-cta-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(139, 69, 19, 0.3);
+    color: white;
+}
+
+.chat-cta-secondary {
+    background: white;
+    color: var(--primary);
+    border: 1.5px solid var(--primary);
+}
+
+.chat-cta-secondary:hover {
+    background: var(--primary);
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* ================================================ */
+/* BOT MESSAGE ENHANCED STYLING                     */
+/* ================================================ */
+
+.bot-message strong {
+    color: var(--primary-dark);
+    font-weight: 600;
+}
+
+/* ================================================ */
+/* RESPONSIVE - QUICK REPLIES & CTA                 */
+/* ================================================ */
+
+@media (max-width: 768px) {
+    .chat-quick-reply-btn {
+        padding: 5px 11px;
+        font-size: 11px;
+    }
+
+    .chat-cta-btn {
+        padding: 7px 12px;
+        font-size: 11px;
+    }
+
+    .chat-quick-replies,
+    .chat-cta-container {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 576px) {
+    .chat-quick-reply-btn {
+        padding: 5px 10px;
+        font-size: 11px;
+    }
+
+    .chat-cta-btn {
+        padding: 6px 10px;
+        font-size: 11px;
+    }
+}

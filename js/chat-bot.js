@@ -23,7 +23,8 @@ class HaluanMLocalExpert {
                 projectType: null,
                 budget: null,
                 location: null,
-                timeline: null
+                timeline: null,
+                activeWorkflow: null
             },
             history: []
         };
@@ -57,7 +58,10 @@ class HaluanMLocalExpert {
         
         // Initialize branching paths
         this.branchingPaths = this.createBranchingPaths();
-        
+
+        // Initialize guided workflows
+        this.workflows = this.initWorkflows();
+
         // Initialize interactive choices
         this.availableChoices = [];
     }
@@ -2406,19 +2410,286 @@ createBranchingPaths() {
             response: () => this.getRandom(this.knowledgeBase.responseVariations.greeting),
             branches: ["get_name", "ask_project", "show_products"]
         },
-        
+
         "get_name": {
             triggers: ["name", "what's your name", "who are you"],
             response: () => {
                 if (!this.conversation.context.userName) {
                     return this.getRandom(this.knowledgeBase.responseVariations.askingName);
                 } else {
-                    return `I remember you, ${this.conversation.context.userName}! 😊 How can I help with timber today?`;
+                    return `I remember you, ${this.conversation.context.userName}! How can I help with timber today?`;
                 }
             },
             branches: ["remember_name", "continue_chat"]
         }
     };
+}
+
+// ===== GUIDED WORKFLOW SYSTEM =====
+initWorkflows() {
+    return {
+        quote: {
+            steps: [
+                { id: 'q_product', question: 'What product are you interested in?', options: ['Skirting Boards', 'Flooring', 'Windows & Doors', 'Handrails', 'Mouldings', 'Ceiling', 'Other'] },
+                { id: 'q_wood', question: 'Which wood type do you prefer?', options: ['Merbau (Popular)', 'Chengal (Premium)', 'Balau (Heavy-duty)', 'Keruing (Budget)', 'Not sure - help me choose'] },
+                { id: 'q_size', question: 'What size/quantity do you need?', options: ['Small (1-10 pieces)', 'Medium (10-50 pieces)', 'Large (50+ pieces)', 'Custom project'] },
+                { id: 'q_timeline', question: 'When do you need it?', options: ['This week', 'Within 2 weeks', '1 month', 'Just exploring'] }
+            ],
+            onComplete: (answers) => this.generateQuoteSummary(answers)
+        },
+        recommend: {
+            steps: [
+                { id: 'r_location', question: 'Where will the wood be used?', options: ['Indoor', 'Outdoor', 'Both indoor & outdoor', 'Marine/water contact'] },
+                { id: 'r_purpose', question: 'What is it for?', options: ['Flooring', 'Furniture', 'Structural/beams', 'Decorative/mouldings', 'Decking', 'Fencing'] },
+                { id: 'r_priority', question: 'What matters most to you?', options: ['Durability & longevity', 'Beautiful appearance', 'Budget-friendly', 'Low maintenance', 'Termite resistance'] },
+                { id: 'r_budget', question: 'What is your budget range?', options: ['Economy', 'Mid-range', 'Premium', 'Flexible'] }
+            ],
+            onComplete: (answers) => this.generateRecommendation(answers)
+        },
+        measure: {
+            steps: [
+                { id: 'm_type', question: 'What are you measuring for?', options: ['Skirting boards', 'Flooring area', 'Window frames', 'Handrails', 'Decking'] },
+                { id: 'm_unit', question: 'What measurement unit do you use?', options: ['Meters (m)', 'Feet (ft)', 'Inches (in)', 'Not sure'] }
+            ],
+            onComplete: (answers) => this.generateMeasurementGuide(answers)
+        }
+    };
+}
+
+startWorkflow(workflowName) {
+    const workflow = this.workflows[workflowName];
+    if (!workflow) return null;
+
+    this.conversation.context.activeWorkflow = {
+        name: workflowName,
+        currentStep: 0,
+        answers: {},
+        workflow: workflow
+    };
+
+    const step = workflow.steps[0];
+    return {
+        text: step.question,
+        quickReplies: step.options,
+        isWorkflow: true
+    };
+}
+
+advanceWorkflow(answer) {
+    const active = this.conversation.context.activeWorkflow;
+    if (!active) return null;
+
+    const step = active.workflow.steps[active.currentStep];
+    active.answers[step.id] = answer;
+    active.currentStep++;
+
+    if (active.currentStep >= active.workflow.steps.length) {
+        const result = active.workflow.onComplete(active.answers);
+        this.conversation.context.activeWorkflow = null;
+        return result;
+    }
+
+    const nextStep = active.workflow.steps[active.currentStep];
+    return {
+        text: nextStep.question,
+        quickReplies: nextStep.options,
+        isWorkflow: true
+    };
+}
+
+generateQuoteSummary(answers) {
+    const userName = this.conversation.context.userName;
+    const greeting = userName ? `${userName}, here's` : `Here's`;
+
+    let summary = `${greeting} your quote request summary:\n\n`;
+    summary += `Product: ${answers.q_product}\n`;
+    summary += `Wood Type: ${answers.q_wood}\n`;
+    summary += `Quantity: ${answers.q_size}\n`;
+    summary += `Timeline: ${answers.q_timeline}\n\n`;
+    summary += `To get an exact quotation, our team will need your specific dimensions.\n`;
+    summary += `All our products are custom-made to your requirements!`;
+
+    return {
+        text: summary,
+        quickReplies: ['WhatsApp for quote', 'Call now', 'Email us', 'Ask another question'],
+        ctaButtons: [
+            { label: 'WhatsApp Quote', icon: 'fab fa-whatsapp', url: `https://wa.me/60122786182?text=${encodeURIComponent(`Hi! I'd like a quote for: ${answers.q_product} (${answers.q_wood}), Qty: ${answers.q_size}`)}`, type: 'success' },
+            { label: 'Call Now', icon: 'fas fa-phone', url: 'tel:+60122786182', type: 'primary' }
+        ]
+    };
+}
+
+generateRecommendation(answers) {
+    const location = answers.r_location;
+    const purpose = answers.r_purpose;
+    const priority = answers.r_priority;
+    const budget = answers.r_budget;
+    const userName = this.conversation.context.userName;
+    const greeting = userName ? `${userName}, based` : `Based`;
+
+    let rec = '';
+    let topPick = '';
+    let altPick = '';
+
+    if (location === 'Outdoor' || location === 'Marine/water contact' || location === 'Both indoor & outdoor') {
+        if (priority === 'Budget-friendly' && budget !== 'Premium') {
+            topPick = 'Merbau';
+            altPick = 'Keruing (treated)';
+            rec = `${greeting} on your needs, I recommend **Merbau** as your top choice.\n\n`;
+            rec += `**Why Merbau?**\n`;
+            rec += `- Naturally durable (SG4) - no treatment needed\n`;
+            rec += `- Great for outdoor use and ${purpose.toLowerCase()}\n`;
+            rec += `- Beautiful reddish-brown color\n`;
+            rec += `- Good value for the quality\n\n`;
+            rec += `**Budget alternative:** Keruing (treated) - more affordable but requires preservative treatment.`;
+        } else {
+            topPick = 'Balau';
+            altPick = 'Chengal';
+            rec = `${greeting} on your needs, I recommend **Balau** for maximum durability.\n\n`;
+            rec += `**Why Balau?**\n`;
+            rec += `- Extremely dense (SG1) - the toughest option\n`;
+            rec += `- 25+ years ground contact durability\n`;
+            rec += `- Perfect for ${purpose.toLowerCase()} in exposed conditions\n`;
+            rec += `- Virtually maintenance-free\n\n`;
+            rec += `**Premium alternative:** Chengal - natural termite resistance with beautiful golden color.`;
+        }
+    } else {
+        if (priority === 'Beautiful appearance') {
+            topPick = 'Chengal';
+            altPick = 'Merbau';
+            rec = `${greeting} on your needs, I recommend **Chengal** for indoor beauty.\n\n`;
+            rec += `**Why Chengal?**\n`;
+            rec += `- Stunning golden-brown color that darkens with age\n`;
+            rec += `- Natural termite resistance\n`;
+            rec += `- Perfect for premium ${purpose.toLowerCase()}\n`;
+            rec += `- Heirloom quality that lasts generations\n\n`;
+            rec += `**Alternative:** Merbau - rich reddish-brown, excellent for ${purpose.toLowerCase()}.`;
+        } else if (priority === 'Budget-friendly') {
+            topPick = 'Keruing';
+            altPick = 'Merbau';
+            rec = `${greeting} on your needs, **Keruing** offers the best value.\n\n`;
+            rec += `**Why Keruing?**\n`;
+            rec += `- Most affordable Malaysian hardwood\n`;
+            rec += `- Good quality for indoor ${purpose.toLowerCase()}\n`;
+            rec += `- Easy to work with\n`;
+            rec += `- Requires treatment for long-term use\n\n`;
+            rec += `**Step-up option:** Merbau - costs more but naturally durable without treatment.`;
+        } else {
+            topPick = 'Merbau';
+            altPick = 'Chengal';
+            rec = `${greeting} on your needs, **Merbau** is the best all-rounder.\n\n`;
+            rec += `**Why Merbau?**\n`;
+            rec += `- Naturally durable (no treatment needed)\n`;
+            rec += `- Beautiful and ${priority === 'Low maintenance' ? 'low maintenance' : 'long-lasting'}\n`;
+            rec += `- Great for ${purpose.toLowerCase()}\n`;
+            rec += `- Popular choice among builders\n\n`;
+            rec += `**Premium upgrade:** Chengal - if you want the absolute best.`;
+        }
+    }
+
+    this.conversation.context.lastProduct = topPick.toLowerCase();
+
+    return {
+        text: rec,
+        quickReplies: [`Tell me more about ${topPick}`, `Compare ${topPick} vs ${altPick}`, 'Get a quote', 'View catalog', 'Talk to expert'],
+        ctaButtons: [
+            { label: `Get ${topPick} Quote`, icon: 'fab fa-whatsapp', url: `https://wa.me/60122786182?text=${encodeURIComponent(`Hi! I'm interested in ${topPick} for ${purpose}. Can I get a quote?`)}`, type: 'success' }
+        ]
+    };
+}
+
+generateMeasurementGuide(answers) {
+    const type = answers.m_type;
+    const unit = answers.m_unit;
+    let guide = '';
+
+    if (type === 'Skirting boards') {
+        guide = `**How to Measure for Skirting Boards:**\n\n`;
+        guide += `1. Measure the total wall length of each room\n`;
+        guide += `2. Subtract door openings (standard door = ~0.9m / 3ft)\n`;
+        guide += `3. Add 10% extra for cuts and joints\n\n`;
+        guide += `**Formula:** Total wall length - door openings + 10%\n\n`;
+        guide += `**Standard heights:** 75mm, 100mm, 125mm, 150mm\n`;
+        guide += `**Tip:** We customize all dimensions - just tell us what you need!`;
+    } else if (type === 'Flooring area') {
+        guide = `**How to Measure for Flooring:**\n\n`;
+        guide += `1. Measure room length and width\n`;
+        guide += `2. Multiply: Length x Width = Area\n`;
+        guide += `3. Add 10-15% wastage for cuts\n\n`;
+        guide += `**Formula:** (Length x Width) + 15% wastage\n\n`;
+        guide += `**Example:** Room 4m x 5m = 20m2 + 15% = 23m2 needed\n`;
+        guide += `**Tip:** Tongue & groove flooring minimizes waste!`;
+    } else if (type === 'Window frames') {
+        guide = `**How to Measure for Window Frames:**\n\n`;
+        guide += `1. Measure opening width (inside to inside)\n`;
+        guide += `2. Measure opening height (sill to head)\n`;
+        guide += `3. Note the wall thickness\n\n`;
+        guide += `**Include:** Frame depth, sill projection, and any moulding profiles\n\n`;
+        guide += `**Tip:** We offer 7 window types - all custom-made to your exact measurements!`;
+    } else if (type === 'Handrails') {
+        guide = `**How to Measure for Handrails:**\n\n`;
+        guide += `1. Measure staircase length (along the slope)\n`;
+        guide += `2. Count number of steps\n`;
+        guide += `3. Note the angle of your staircase\n\n`;
+        guide += `**Standard height:** 900mm from stair nosing\n`;
+        guide += `**Baluster spacing:** Maximum 100mm gap\n\n`;
+        guide += `**Tip:** We offer 4 handrail profiles - send us your staircase photo for best advice!`;
+    } else {
+        guide = `**How to Measure for Decking:**\n\n`;
+        guide += `1. Measure total deck area (length x width)\n`;
+        guide += `2. Add 10% for cuts and waste\n`;
+        guide += `3. Note any irregular shapes or curves\n\n`;
+        guide += `**Joist spacing:** Typically 400-600mm centers\n`;
+        guide += `**Board gap:** 5-8mm between boards for drainage\n\n`;
+        guide += `**Tip:** Balau or Merbau are ideal for decking!`;
+    }
+
+    return {
+        text: guide,
+        quickReplies: ['Send measurements via WhatsApp', 'Get a quote', 'Need more help', 'View products'],
+        ctaButtons: [
+            { label: 'Send Measurements', icon: 'fab fa-whatsapp', url: `https://wa.me/60122786182?text=${encodeURIComponent(`Hi! I need help with ${type} measurements. Can you assist?`)}`, type: 'success' },
+            { label: 'View Catalog', icon: 'fas fa-book-open', url: 'gallery.html', type: 'secondary' }
+        ]
+    };
+}
+
+// ===== FOLLOW-UP QUESTIONS SYSTEM =====
+getFollowUpForTopic(topic, response) {
+    const followUps = {
+        skirting: ['See all 9 skirting types', 'Which wood for skirting?', 'How to measure', 'Get a quote'],
+        flooring: ['Merbau flooring details', 'How to measure area', 'Compare flooring woods', 'Get a quote'],
+        windows: ['See all 7 window types', 'Which wood for windows?', 'Custom designs', 'Get a quote'],
+        handrails: ['See all 4 handrail types', 'Best wood for handrails', 'How to measure', 'Get a quote'],
+        mouldings: ['Crown moulding options', 'Custom profiles', 'Wood type options', 'Get a quote'],
+        ceiling: ['Ceiling panel options', 'Custom beam sizes', 'Wood recommendations', 'Get a quote'],
+        merbau: ['Merbau products', 'Compare with Chengal', 'Merbau pricing', 'Best uses for Merbau'],
+        chengal: ['Chengal products', 'Compare with Merbau', 'Why choose Chengal?', 'Chengal pricing'],
+        balau: ['Balau products', 'Compare with Chengal', 'Best uses for Balau', 'Balau pricing'],
+        keruing: ['Keruing products', 'Compare with Merbau', 'Best uses for Keruing', 'Is Keruing good?'],
+        structural: ['Strength Group overview', 'SG1 timbers', 'Which SG for my project?', 'Naturally durable options'],
+        mystery: ['Tell me a forest joke', 'Amazon wood facts', 'Malaysian vs Amazon timber', 'More secrets'],
+        default: ['View products', 'Get a recommendation', 'Get a quote', 'Talk to expert']
+    };
+
+    return followUps[topic] || followUps.default;
+}
+
+getContextualCTA() {
+    const ctx = this.conversation.context;
+    const ctas = [];
+
+    if (ctx.lastProduct || ctx.currentTopic) {
+        const topic = ctx.lastProduct || ctx.currentTopic;
+        ctas.push({
+            label: 'Get Quote',
+            icon: 'fab fa-whatsapp',
+            url: `https://wa.me/60122786182?text=${encodeURIComponent(`Hi! I'm interested in ${topic}. Can I get a quote?`)}`,
+            type: 'success'
+        });
+    }
+
+    return ctas;
 }
 
 // ===== NEW: EASTER EGG DETECTION =====
@@ -2450,14 +2721,14 @@ handleEasterEggRequest(input) {
     return "🤫 Ooooh, asking about mysteries?\n\nEvery forest has its secrets... even Malaysian ones! 🌴\nWant to know which local wood has the most interesting 'backstory'?";
 }
 
-// ===== MAIN RESPONSE FUNCTION (ENHANCED WITH EASTER EGGS) =====
+// ===== MAIN RESPONSE FUNCTION (ENHANCED WITH GUIDED WORKFLOWS) =====
 getResponse(userInput) {
     const input = userInput.toLowerCase().trim();
-    
+
     // Update stats
     this.stats.questionsAnswered++;
     this.stats.lastActive = new Date();
-    
+
     // Update conversation history
     const userMessage = {
         text: userInput,
@@ -2465,10 +2736,10 @@ getResponse(userInput) {
         type: 'user',
         sentiment: this.analyzeSentiment(input)
     };
-    
+
     this.conversation.messages.push(userMessage);
     this.conversation.history.push(userMessage);
-    
+
     // Keep history manageable
     if (this.conversation.messages.length > 20) {
         this.conversation.messages.shift();
@@ -2476,66 +2747,163 @@ getResponse(userInput) {
     if (this.conversation.history.length > 100) {
         this.conversation.history.shift();
     }
-    
+
     // Update sentiment in context
     this.updateSentiment(input);
-    
+
     // Check for name
-    this.extractUserName(input);
-    
+    const nameJustSet = this.extractUserName(input);
+
     // Update conversation context
     this.updateContext(input);
-    
+
+    // If a guided workflow is active, advance it
+    if (this.conversation.context.activeWorkflow) {
+        return this.advanceWorkflow(userInput);
+    }
+
+    // Check for workflow triggers
+    if (input.includes('get a quote') || input.includes('get quote') || input.includes('quote me') || input.includes('pricing') || input.includes('how much')) {
+        return this.startWorkflow('quote');
+    }
+    if (input.includes('recommend') && !input.includes('recommendation')) {
+        return this.startWorkflow('recommend');
+    }
+    if (input.includes('get a recommendation') || input.includes('help me choose') || input.includes('which wood') || input.includes('suggest')) {
+        return this.startWorkflow('recommend');
+    }
+    if (input.includes('how to measure') || input.includes('measurement help') || input.includes('measure for')) {
+        return this.startWorkflow('measure');
+    }
+
+    // CTA triggers
+    if (input.includes('whatsapp') || input.includes('whatsapp for quote') || input.includes('send measurements via whatsapp')) {
+        return {
+            text: 'Click below to chat with our timber experts on WhatsApp! They can help with quotes, measurements, and product advice.',
+            quickReplies: ['Ask another question', 'View products', 'Get a recommendation'],
+            ctaButtons: [
+                { label: 'Open WhatsApp', icon: 'fab fa-whatsapp', url: 'https://wa.me/60122786182?text=Hi!%20I%20need%20help%20with%20timber%20products.', type: 'success' }
+            ]
+        };
+    }
+    if (input.includes('call now') || input.includes('phone')) {
+        return {
+            text: 'You can reach our timber experts directly at (+60)12-278-6182. We are available during business hours.',
+            quickReplies: ['Ask another question', 'WhatsApp instead', 'Get a recommendation'],
+            ctaButtons: [
+                { label: 'Call Now', icon: 'fas fa-phone', url: 'tel:+60122786182', type: 'primary' }
+            ]
+        };
+    }
+    if (input.includes('view catalog') || input.includes('view products') || input.includes('see products') || input.includes('catalog')) {
+        return {
+            text: 'Browse our full range of 24+ premium hardwood products in the gallery!',
+            quickReplies: ['Skirting boards', 'Flooring', 'Windows & doors', 'Handrails', 'Get a recommendation'],
+            ctaButtons: [
+                { label: 'View Gallery', icon: 'fas fa-images', url: 'gallery.html', type: 'primary' },
+                { label: 'Products on this page', icon: 'fas fa-arrow-down', url: '#products', type: 'secondary' }
+            ]
+        };
+    }
+    if (input.includes('talk to expert') || input.includes('email us') || input.includes('contact')) {
+        return {
+            text: 'Our timber experts are ready to help! Choose your preferred way to connect:',
+            quickReplies: ['Ask another question', 'Get a recommendation', 'View products'],
+            ctaButtons: [
+                { label: 'WhatsApp', icon: 'fab fa-whatsapp', url: 'https://wa.me/60122786182', type: 'success' },
+                { label: 'Call', icon: 'fas fa-phone', url: 'tel:+60122786182', type: 'primary' },
+                { label: 'Email', icon: 'fas fa-envelope', url: 'mailto:haluanmutiara@hotmail.com', type: 'secondary' }
+            ]
+        };
+    }
+
+    // If name was just set, respond with personalized welcome
+    if (nameJustSet) {
+        const name = this.conversation.context.userName;
+        return {
+            text: `Nice to meet you, ${name}! I'll remember your name throughout our chat. How can I help you with timber today?`,
+            quickReplies: ['Get a recommendation', 'View products', 'Get a quote', 'I need measurement help', 'Tell me a joke']
+        };
+    }
+
     // NEW: Check for easter eggs BEFORE other checks
     if (this.isEasterEggRequest(input)) {
-        return this.formatResponseWithPersonality(this.handleEasterEggRequest(input));
+        const response = this.formatResponseWithPersonality(this.handleEasterEggRequest(input));
+        return this.wrapWithFollowUps(response, 'mystery');
     }
-    
+
     // Check for restart
     if (this.isRestartRequest(input)) {
-        return this.handleRestart();
+        const response = this.handleRestart();
+        return {
+            text: response,
+            quickReplies: ['Get a recommendation', 'View products', 'Get a quote', 'Tell me about your wood types']
+        };
     }
-    
+
     // Check for FAQ
     const faqResponse = this.checkFAQ(input);
     if (faqResponse) {
         this.stats.productsDiscussed++;
-        return this.formatResponseWithPersonality(faqResponse);
+        return this.wrapWithFollowUps(this.formatResponseWithPersonality(faqResponse), this.conversation.context.currentTopic);
     }
-    
+
     // Check for timber detail requests
     if (this.isTimberDetailRequest(input)) {
         const response = this.handleTimberDetailRequest(input);
         if (response) {
-            return this.formatResponseWithPersonality(response);
+            return this.wrapWithFollowUps(this.formatResponseWithPersonality(response), this.conversation.context.currentTopic);
         }
     }
-    
+
     // Check for specific product questions
     if (this.isSpecificProductQuestion(input)) {
         const response = this.handleSpecificProductQuery(input);
         this.stats.productsDiscussed++;
-        return this.formatResponseWithPersonality(response);
+        return this.wrapWithFollowUps(this.formatResponseWithPersonality(response), this.conversation.context.currentTopic);
     }
-    
+
     // Check for jokes (ENHANCED with Amazon jokes)
     if (this.isJokeRequest(input)) {
-        return this.formatResponseWithPersonality(this.handleJokeRequest(input));
+        const joke = this.formatResponseWithPersonality(this.handleJokeRequest(input));
+        return {
+            text: joke,
+            quickReplies: ['Another joke!', 'Enough jokes, help me choose wood', 'View products', 'Get a quote']
+        };
     }
-    
+
     // Handle Strength Group queries
     if (this.isStrengthGroupQuestion(input)) {
-        return this.handleStrengthGroupQuery(input);
+        const response = this.handleStrengthGroupQuery(input);
+        return this.wrapWithFollowUps(response, 'structural');
     }
-    
+
     // Handle based on sentiment
-    if (this.conversation.context.sentiment === 'frustrated' || 
+    if (this.conversation.context.sentiment === 'frustrated' ||
         this.conversation.context.sentiment === 'angry') {
-        return this.handleNegativeSentiment(input);
+        const response = this.handleNegativeSentiment(input);
+        return {
+            text: response,
+            quickReplies: ['Get budget-friendly options', 'Talk to expert', 'Get a recommendation', 'View products'],
+            ctaButtons: [
+                { label: 'Talk to Expert', icon: 'fab fa-whatsapp', url: 'https://wa.me/60122786182?text=Hi!%20I%20need%20expert%20advice%20on%20timber.', type: 'success' }
+            ]
+        };
     }
-    
+
     // Default to enhanced pattern matching
     return this.handleWithEnhancedPatterns(input);
+}
+
+// Wraps a plain text response with follow-up buttons and CTA
+wrapWithFollowUps(textResponse, topic) {
+    const followUps = this.getFollowUpForTopic(topic);
+    const ctas = this.getContextualCTA();
+    const result = { text: textResponse, quickReplies: followUps };
+    if (ctas.length > 0) {
+        result.ctaButtons = ctas;
+    }
+    return result;
 }
 
 // ===== ENHANCED JOKE HANDLER WITH AMAZON SUPPORT =====
@@ -2951,25 +3319,29 @@ handleRestart() {
             projectType: null,
             budget: null,
             location: null,
-            timeline: null
+            timeline: null,
+            activeWorkflow: null
         },
         history: this.conversation.history
     };
-    
-    return oldUserName ? 
-        `Conversation restarted, ${oldUserName}! 😊 What would you like to know about timber today?` :
-        `Conversation restarted! 🔄 What can I help you with today?`;
+
+    return oldUserName ?
+        `Conversation restarted, ${oldUserName}! What would you like to know about timber today?` :
+        `Conversation restarted! What can I help you with today?`;
 }
 
 handleWithEnhancedPatterns(input) {
     if (input.includes('your name') || input.includes('who are you')) {
-        return `I'm your Haluan Mutiara timber assistant! 🌲 I specialize in Malaysian hardwood and MS 544 timber classification.`;
+        return {
+            text: `I'm your Haluan Mutiara timber assistant! I specialize in Malaysian hardwood and MS 544 timber classification. How can I guide you today?`,
+            quickReplies: ['Get a recommendation', 'View products', 'Get a quote', 'Tell me a joke']
+        };
     }
-    
+
     if (input.includes('recommend') || input.includes('suggest')) {
-        return this.handleContextualRecommendation();
+        return this.startWorkflow('recommend');
     }
-    
+
     return this.getEnhancedDefaultResponse(input);
 }
 
@@ -3000,44 +3372,47 @@ getEnhancedDefaultResponse(input) {
     if (input.split(' ').length <= 2) {
         return this.handleShortResponse(input);
     }
-    
+
     if (input.includes('?')) {
-        const helpOptions = [
-            "I can help with:\n• Wood type selection\n• Product specifications\n• Strength Group classification\n• Pricing and quotes\n• Project recommendations",
-            "Try asking about:\n• Specific wood types (Merbau, Chengal, etc.)\n• Our product range\n• Technical specifications\n• Timber comparison"
-        ];
-        
-        return `${this.getRandom(helpOptions)}\n\n💡 Tip: Be specific for the best recommendations!`;
+        return {
+            text: `I can help with many timber topics! Here's what I'm best at:`,
+            quickReplies: ['Wood type selection', 'Product catalog', 'Get a recommendation', 'Strength Group info', 'Get a quote', 'Measurement help']
+        };
     }
-    
-    const friendlyResponses = [
-        "I'm here to help with all things timber! What specific question do you have about wood? 🌳",
-        "Let's talk timber! What would you like to know about Malaysian hardwood? 🪵",
-        "Ready to explore wood options? Tell me what you're working on! 🔨"
-    ];
-    
-    return this.getRandom(friendlyResponses);
+
+    return {
+        text: `I'd love to help! Let me guide you to the right information. What are you looking for?`,
+        quickReplies: ['Help me choose wood', 'View products', 'Get a quote', 'Measurement help', 'Tell me about wood types', 'Talk to expert']
+    };
 }
 
 handleShortResponse(input) {
     const shortResponses = {
-        'hi': ['Hello!', 'Hi there!', 'Hey!', 'Greetings!'],
-        'hello': ['Hello!', 'Hi!', 'Welcome!', 'Greetings!'],
+        'hi': ['Hello! Welcome to Haluan Mutiara!', 'Hi there! Ready to explore timber?', 'Hey! What brings you here today?'],
+        'hello': ['Hello! Welcome!', 'Hi! Great to have you here!', 'Welcome to Haluan Mutiara!'],
         'hey': ['Hey there!', 'Hello!', 'Hi!'],
         'thanks': this.knowledgeBase.responseVariations.thanks,
         'thank you': this.knowledgeBase.responseVariations.thanks,
-        'ok': ['Okay!', 'Alright!', 'Got it!', 'Understood!'],
-        'yes': ['Great!', 'Excellent!', 'Perfect!', 'Alright!'],
-        'no': ['No problem!', 'Okay!', 'Alright then!']
+        'ok': ['Alright! What would you like to do next?', 'Got it! How else can I help?'],
+        'yes': ['Great! What would you like to explore?', 'Excellent! Let me guide you.'],
+        'no': ['No problem! Is there something else I can help with?', 'Okay! Feel free to ask anything about timber.']
     };
-    
+
     for (const [key, responses] of Object.entries(shortResponses)) {
         if (input === key) {
-            return this.getRandom(responses);
+            const text = this.getRandom(responses);
+            // Greetings and short responses always get the main menu
+            return {
+                text: text,
+                quickReplies: ['Help me choose wood', 'View products', 'Get a quote', 'Measurement help', 'Wood types info', 'Tell me a joke']
+            };
         }
     }
-    
-    return "Could you tell me more about what you need? I'm here to help with timber selection and information!";
+
+    return {
+        text: "I'm here to help with timber! What would you like to know?",
+        quickReplies: ['Help me choose wood', 'View products', 'Get a quote', 'Wood types info', 'Measurement help', 'Talk to expert']
+    };
 }
 
 isJokeRequest(input) {
@@ -3145,10 +3520,10 @@ getRandom(array) {
 }
 }
 // ================================================
-// CHAT INTERFACE (EXACTLY AS IT WAS)
+// INTERACTIVE CHAT INTERFACE WITH GUIDED WORKFLOWS
 // ================================================
 document.addEventListener('DOMContentLoaded', function() {
-console.log("🌲 Haluan Mutiara Timber Chatbot Loading with Easter Eggs...");
+console.log("Haluan Mutiara Interactive Timber Chatbot Loading...");
 const chatIconBtn = document.getElementById('chatIconBtn');
 const chatWindow = document.getElementById('chatWindow');
 const closeChatBtn = document.getElementById('closeChatBtn');
@@ -3158,9 +3533,14 @@ const sendBtn = document.getElementById('sendBtn');
 
 const haluanExpert = new HaluanMLocalExpert();
 
+// Show welcome message with interactive quick replies
 setTimeout(() => {
-    const welcomeMessage = haluanExpert.getRandom(haluanExpert.knowledgeBase.responseVariations.greeting);
-    addBotMessage(welcomeMessage);
+    const userName = haluanExpert.conversation.context.userName;
+    const greeting = userName
+        ? `Welcome back, ${userName}! How can I help with timber today?`
+        : `Hello! I'm your Haluan Mutiara timber guide. I'll help you find the perfect wood for your project. What would you like to do?`;
+    addBotMessage(greeting);
+    addQuickReplies(['Help me choose wood', 'View products', 'Get a quote', 'Measurement help', 'Tell me about wood types', 'Tell me a joke']);
 }, 500);
 
 chatIconBtn.addEventListener('click', openChat);
@@ -3175,36 +3555,58 @@ chatInput.addEventListener('keypress', function(e) {
 function openChat() {
     chatWindow.classList.add('active');
     chatInput.focus();
-    console.log("💬 Chat opened");
 }
 
 function closeChat() {
     chatWindow.classList.remove('active');
-    console.log("❌ Chat closed");
 }
 
-function sendMessage() {
-    const userMessage = chatInput.value.trim();
+function sendMessage(overrideText) {
+    const userMessage = overrideText || chatInput.value.trim();
     if (!userMessage) return;
-    
-    console.log(`👤 User: ${userMessage}`);
-    
+
+    // Remove any existing quick reply buttons
+    removeQuickReplies();
+
     addUserMessage(userMessage);
-    chatInput.value = '';
-    
+    if (!overrideText) chatInput.value = '';
+
     showTyping();
-    
+
     setTimeout(() => {
         removeTyping();
-        
+
         try {
             const botResponse = haluanExpert.getResponse(userMessage);
-            addBotMessage(botResponse);
+            handleStructuredResponse(botResponse);
         } catch (error) {
             console.error("Response error:", error);
-            addBotMessage("Oops! I encountered an error. Please try again! 🔧");
+            addBotMessage("Oops! I encountered an error. Please try again!");
+            addQuickReplies(['Help me choose wood', 'View products', 'Get a quote']);
         }
-    }, 1000);
+    }, 800 + Math.random() * 400);
+}
+
+function handleStructuredResponse(response) {
+    if (typeof response === 'string') {
+        // Legacy plain text response - wrap with default follow-ups
+        addBotMessage(response);
+        addQuickReplies(['Help me choose wood', 'View products', 'Get a quote', 'Talk to expert']);
+        return;
+    }
+
+    if (response && typeof response === 'object') {
+        // Structured response with text, quickReplies, and ctaButtons
+        if (response.text) {
+            addBotMessage(response.text);
+        }
+        if (response.ctaButtons && response.ctaButtons.length > 0) {
+            addCTAButtons(response.ctaButtons);
+        }
+        if (response.quickReplies && response.quickReplies.length > 0) {
+            addQuickReplies(response.quickReplies);
+        }
+    }
 }
 
 function addUserMessage(text) {
@@ -3218,9 +3620,58 @@ function addUserMessage(text) {
 function addBotMessage(text) {
     const messageDiv = document.createElement('div');
     messageDiv.className = 'message bot-message';
-    messageDiv.innerHTML = text.replace(/\n/g, '<br>');
+    // Support markdown bold with **text**
+    let html = text.replace(/\n/g, '<br>');
+    html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    messageDiv.innerHTML = html;
     chatBody.appendChild(messageDiv);
     scrollToBottom();
+}
+
+function addQuickReplies(replies) {
+    // Remove any existing quick replies first
+    removeQuickReplies();
+
+    const container = document.createElement('div');
+    container.className = 'chat-quick-replies';
+
+    replies.forEach(function(reply) {
+        const btn = document.createElement('button');
+        btn.className = 'chat-quick-reply-btn';
+        btn.textContent = reply;
+        btn.addEventListener('click', function() {
+            sendMessage(reply);
+        });
+        container.appendChild(btn);
+    });
+
+    chatBody.appendChild(container);
+    scrollToBottom();
+}
+
+function addCTAButtons(buttons) {
+    const container = document.createElement('div');
+    container.className = 'chat-cta-container';
+
+    buttons.forEach(function(btn) {
+        const link = document.createElement('a');
+        link.className = 'chat-cta-btn chat-cta-' + (btn.type || 'primary');
+        link.href = btn.url;
+        if (btn.url.startsWith('http') || btn.url.startsWith('tel:') || btn.url.startsWith('mailto:')) {
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+        }
+        link.innerHTML = '<i class="' + btn.icon + '"></i> ' + btn.label;
+        container.appendChild(link);
+    });
+
+    chatBody.appendChild(container);
+    scrollToBottom();
+}
+
+function removeQuickReplies() {
+    const existing = chatBody.querySelectorAll('.chat-quick-replies');
+    existing.forEach(function(el) { el.remove(); });
 }
 
 function showTyping() {
@@ -3241,9 +3692,7 @@ function scrollToBottom() {
     chatBody.scrollTop = chatBody.scrollHeight;
 }
 
-console.log("✅ Haluan Mutiara Chatbot Ready with Easter Eggs!");
-console.log("🥚 Try: 'amazon mystery', 'forest secret', 'easter egg', 'unlock', 'reveal'");
-console.log("✨ Complete: 80+ timber species | All strength groups | Products | Jokes | Easter Eggs");
+console.log("Haluan Mutiara Interactive Chatbot Ready!");
 
 });
 
