@@ -2431,9 +2431,7 @@ initWorkflows() {
         quote: {
             steps: [
                 { id: 'q_product', question: 'What product are you interested in?', options: ['Skirting Boards', 'Flooring', 'Windows & Doors', 'Handrails', 'Mouldings', 'Ceiling', 'Other'] },
-                { id: 'q_wood', question: 'Which wood type do you prefer?', options: ['Merbau (Popular)', 'Chengal (Premium)', 'Balau (Heavy-duty)', 'Keruing (Budget)', 'Not sure - help me choose'] },
-                { id: 'q_size', question: 'What size/quantity do you need?', options: ['Small (1-10 pieces)', 'Medium (10-50 pieces)', 'Large (50+ pieces)', 'Custom project'] },
-                { id: 'q_timeline', question: 'When do you need it?', options: ['This week', 'Within 2 weeks', '1 month', 'Just exploring'] }
+                { id: 'q_wood', question: 'Which wood type do you prefer?', options: ['Merbau (Popular)', 'Chengal (Premium)', 'Balau (Heavy-duty)', 'Keruing (Budget)', 'Not sure - help me choose'] }
             ],
             onComplete: (answers) => this.generateQuoteSummary(answers)
         },
@@ -2446,13 +2444,6 @@ initWorkflows() {
             ],
             onComplete: (answers) => this.generateRecommendation(answers)
         },
-        measure: {
-            steps: [
-                { id: 'm_type', question: 'What are you measuring for?', options: ['Skirting boards', 'Flooring area', 'Window frames', 'Handrails', 'Decking'] },
-                { id: 'm_unit', question: 'What measurement unit do you use?', options: ['Meters (m)', 'Feet (ft)', 'Inches (in)', 'Not sure'] }
-            ],
-            onComplete: (answers) => this.generateMeasurementGuide(answers)
-        }
     };
 }
 
@@ -2499,21 +2490,18 @@ advanceWorkflow(answer) {
 
 generateQuoteSummary(answers) {
     const userName = this.conversation.context.userName;
-    const greeting = userName ? `${userName}, here's` : `Here's`;
+    const greeting = userName ? `${userName}, thanks` : `Thanks`;
 
-    let summary = `${greeting} your quote request summary:\n\n`;
+    let summary = `${greeting} for your interest!\n\n`;
     summary += `Product: ${answers.q_product}\n`;
-    summary += `Wood Type: ${answers.q_wood}\n`;
-    summary += `Quantity: ${answers.q_size}\n`;
-    summary += `Timeline: ${answers.q_timeline}\n\n`;
-    summary += `To get an exact quotation, our team will need your specific dimensions.\n`;
-    summary += `All our products are custom-made to your requirements!`;
+    summary += `Wood Type: ${answers.q_wood}\n\n`;
+    summary += `For pricing, measurements, and all details, please contact our team directly. We'll take care of everything for you!`;
 
     return {
         text: summary,
-        quickReplies: ['WhatsApp for quote', 'Call now', 'Email us', 'Ask another question'],
+        quickReplies: ['WhatsApp us', 'Call now', 'Email us', 'Ask another question'],
         ctaButtons: [
-            { label: 'WhatsApp Quote', icon: 'fab fa-whatsapp', url: `https://wa.me/60122786182?text=${encodeURIComponent(`Hi! I'd like a quote for: ${answers.q_product} (${answers.q_wood}), Qty: ${answers.q_size}`)}`, type: 'success' },
+            { label: 'WhatsApp Us', icon: 'fab fa-whatsapp', url: `https://wa.me/60122786182?text=${encodeURIComponent(`Hi! I'm interested in: ${answers.q_product} (${answers.q_wood}). Can you help?`)}`, type: 'success' },
             { label: 'Call Now', icon: 'fas fa-phone', url: 'tel:+60122786182', type: 'primary' }
         ]
     };
@@ -2598,74 +2586,18 @@ generateRecommendation(answers) {
     };
 }
 
-generateMeasurementGuide(answers) {
-    const type = answers.m_type;
-    const unit = answers.m_unit;
-    let guide = '';
-
-    if (type === 'Skirting boards') {
-        guide = `**How to Measure for Skirting Boards:**\n\n`;
-        guide += `1. Measure the total wall length of each room\n`;
-        guide += `2. Subtract door openings (standard door = ~0.9m / 3ft)\n`;
-        guide += `3. Add 10% extra for cuts and joints\n\n`;
-        guide += `**Formula:** Total wall length - door openings + 10%\n\n`;
-        guide += `**Standard heights:** 75mm, 100mm, 125mm, 150mm\n`;
-        guide += `**Tip:** We customize all dimensions - just tell us what you need!`;
-    } else if (type === 'Flooring area') {
-        guide = `**How to Measure for Flooring:**\n\n`;
-        guide += `1. Measure room length and width\n`;
-        guide += `2. Multiply: Length x Width = Area\n`;
-        guide += `3. Add 10-15% wastage for cuts\n\n`;
-        guide += `**Formula:** (Length x Width) + 15% wastage\n\n`;
-        guide += `**Example:** Room 4m x 5m = 20m2 + 15% = 23m2 needed\n`;
-        guide += `**Tip:** Tongue & groove flooring minimizes waste!`;
-    } else if (type === 'Window frames') {
-        guide = `**How to Measure for Window Frames:**\n\n`;
-        guide += `1. Measure opening width (inside to inside)\n`;
-        guide += `2. Measure opening height (sill to head)\n`;
-        guide += `3. Note the wall thickness\n\n`;
-        guide += `**Include:** Frame depth, sill projection, and any moulding profiles\n\n`;
-        guide += `**Tip:** We offer 7 window types - all custom-made to your exact measurements!`;
-    } else if (type === 'Handrails') {
-        guide = `**How to Measure for Handrails:**\n\n`;
-        guide += `1. Measure staircase length (along the slope)\n`;
-        guide += `2. Count number of steps\n`;
-        guide += `3. Note the angle of your staircase\n\n`;
-        guide += `**Standard height:** 900mm from stair nosing\n`;
-        guide += `**Baluster spacing:** Maximum 100mm gap\n\n`;
-        guide += `**Tip:** We offer 4 handrail profiles - send us your staircase photo for best advice!`;
-    } else {
-        guide = `**How to Measure for Decking:**\n\n`;
-        guide += `1. Measure total deck area (length x width)\n`;
-        guide += `2. Add 10% for cuts and waste\n`;
-        guide += `3. Note any irregular shapes or curves\n\n`;
-        guide += `**Joist spacing:** Typically 400-600mm centers\n`;
-        guide += `**Board gap:** 5-8mm between boards for drainage\n\n`;
-        guide += `**Tip:** Balau or Merbau are ideal for decking!`;
-    }
-
-    return {
-        text: guide,
-        quickReplies: ['Send measurements via WhatsApp', 'Get a quote', 'Need more help', 'View products'],
-        ctaButtons: [
-            { label: 'Send Measurements', icon: 'fab fa-whatsapp', url: `https://wa.me/60122786182?text=${encodeURIComponent(`Hi! I need help with ${type} measurements. Can you assist?`)}`, type: 'success' },
-            { label: 'View Catalog', icon: 'fas fa-book-open', url: 'gallery.html', type: 'secondary' }
-        ]
-    };
-}
-
 // ===== FOLLOW-UP QUESTIONS SYSTEM =====
 getFollowUpForTopic(topic, response) {
     const followUps = {
-        skirting: ['See all 9 skirting types', 'Which wood for skirting?', 'How to measure', 'Get a quote'],
-        flooring: ['Merbau flooring details', 'How to measure area', 'Compare flooring woods', 'Get a quote'],
+        skirting: ['See all 9 skirting types', 'Which wood for skirting?', 'Get a quote', 'Talk to expert'],
+        flooring: ['Merbau flooring details', 'Compare flooring woods', 'Get a quote', 'Talk to expert'],
         windows: ['See all 7 window types', 'Which wood for windows?', 'Custom designs', 'Get a quote'],
-        handrails: ['See all 4 handrail types', 'Best wood for handrails', 'How to measure', 'Get a quote'],
+        handrails: ['See all 4 handrail types', 'Best wood for handrails', 'Get a quote', 'Talk to expert'],
         mouldings: ['Crown moulding options', 'Custom profiles', 'Wood type options', 'Get a quote'],
         ceiling: ['Ceiling panel options', 'Custom beam sizes', 'Wood recommendations', 'Get a quote'],
-        merbau: ['Merbau products', 'Compare with Chengal', 'Merbau pricing', 'Best uses for Merbau'],
-        chengal: ['Chengal products', 'Compare with Merbau', 'Why choose Chengal?', 'Chengal pricing'],
-        balau: ['Balau products', 'Compare with Chengal', 'Best uses for Balau', 'Balau pricing'],
+        merbau: ['Merbau products', 'Compare with Chengal', 'Get a quote', 'Best uses for Merbau'],
+        chengal: ['Chengal products', 'Compare with Merbau', 'Why choose Chengal?', 'Get a quote'],
+        balau: ['Balau products', 'Compare with Chengal', 'Best uses for Balau', 'Get a quote'],
         keruing: ['Keruing products', 'Compare with Merbau', 'Best uses for Keruing', 'Is Keruing good?'],
         structural: ['Strength Group overview', 'SG1 timbers', 'Which SG for my project?', 'Naturally durable options'],
         mystery: ['Tell me a forest joke', 'Amazon wood facts', 'Malaysian vs Amazon timber', 'More secrets'],
@@ -2773,13 +2705,20 @@ getResponse(userInput) {
         return this.startWorkflow('recommend');
     }
     if (input.includes('how to measure') || input.includes('measurement help') || input.includes('measure for')) {
-        return this.startWorkflow('measure');
+        return {
+            text: 'For measurements and sizing, please contact our team directly. We will handle all measurements and details for you!',
+            quickReplies: ['WhatsApp us', 'Call now', 'View products', 'Talk to expert'],
+            ctaButtons: [
+                { label: 'WhatsApp Us', icon: 'fab fa-whatsapp', url: 'https://wa.me/60122786182?text=Hi!%20I%20need%20help%20with%20measurements.', type: 'success' },
+                { label: 'Call Now', icon: 'fas fa-phone', url: 'tel:+60122786182', type: 'primary' }
+            ]
+        };
     }
 
     // CTA triggers
-    if (input.includes('whatsapp') || input.includes('whatsapp for quote') || input.includes('send measurements via whatsapp')) {
+    if (input.includes('whatsapp') || input.includes('whatsapp for quote') || input.includes('whatsapp us')) {
         return {
-            text: 'Click below to chat with our timber experts on WhatsApp! They can help with quotes, measurements, and product advice.',
+            text: 'Click below to chat with our timber experts on WhatsApp! They can help with quotes, product advice, and more.',
             quickReplies: ['Ask another question', 'View products', 'Get a recommendation'],
             ctaButtons: [
                 { label: 'Open WhatsApp', icon: 'fab fa-whatsapp', url: 'https://wa.me/60122786182?text=Hi!%20I%20need%20help%20with%20timber%20products.', type: 'success' }
@@ -2822,7 +2761,7 @@ getResponse(userInput) {
         const name = this.conversation.context.userName;
         return {
             text: `Nice to meet you, ${name}! I'll remember your name throughout our chat. How can I help you with timber today?`,
-            quickReplies: ['Get a recommendation', 'View products', 'Get a quote', 'I need measurement help', 'Tell me a joke']
+            quickReplies: ['Get a recommendation', 'View products', 'Get a quote', 'Tell me about wood types', 'Tell me a joke']
         };
     }
 
@@ -3166,8 +3105,7 @@ formatProductDetails(product) {
     
     response += `💡 **IMPORTANT NOTES:**\n`;
     response += `• All sizes and lengths are customizable\n`;
-    response += `• Prices vary based on quantity, size, and wood type\n`;
-    response += `• Contact ${this.knowledgeBase.company.phone} for exact quotations\n`;
+    response += `• Contact ${this.knowledgeBase.company.phone} for pricing and details\n`;
     
     return response;
 }
@@ -3182,7 +3120,7 @@ getDefaultSpecificProductResponse(category = "", typeNumber = "") {
                    `💼 **All lengths are customizable**\n\n` +
                    `💡 **IMPORTANT:**\n` +
                    `• We offer custom sizing for all skirting boards\n` +
-                   `• Prices are customized based on wood type and quantity\n\n` +
+                   `• Contact us for pricing and details\n\n` +
                    `📞 For exact pricing, contact ${this.knowledgeBase.company.phone}`;
         }
         
@@ -3376,13 +3314,13 @@ getEnhancedDefaultResponse(input) {
     if (input.includes('?')) {
         return {
             text: `I can help with many timber topics! Here's what I'm best at:`,
-            quickReplies: ['Wood type selection', 'Product catalog', 'Get a recommendation', 'Strength Group info', 'Get a quote', 'Measurement help']
+            quickReplies: ['Wood type selection', 'Product catalog', 'Get a recommendation', 'Strength Group info', 'Get a quote', 'Talk to expert']
         };
     }
 
     return {
         text: `I'd love to help! Let me guide you to the right information. What are you looking for?`,
-        quickReplies: ['Help me choose wood', 'View products', 'Get a quote', 'Measurement help', 'Tell me about wood types', 'Talk to expert']
+        quickReplies: ['Help me choose wood', 'View products', 'Get a quote', 'Tell me about wood types', 'Talk to expert']
     };
 }
 
@@ -3404,14 +3342,14 @@ handleShortResponse(input) {
             // Greetings and short responses always get the main menu
             return {
                 text: text,
-                quickReplies: ['Help me choose wood', 'View products', 'Get a quote', 'Measurement help', 'Wood types info', 'Tell me a joke']
+                quickReplies: ['Help me choose wood', 'View products', 'Get a quote', 'Wood types info', 'Tell me a joke']
             };
         }
     }
 
     return {
         text: "I'm here to help with timber! What would you like to know?",
-        quickReplies: ['Help me choose wood', 'View products', 'Get a quote', 'Wood types info', 'Measurement help', 'Talk to expert']
+        quickReplies: ['Help me choose wood', 'View products', 'Get a quote', 'Wood types info', 'Talk to expert']
     };
 }
 
@@ -3540,7 +3478,7 @@ setTimeout(() => {
         ? `Welcome back, ${userName}! How can I help with timber today?`
         : `Hello! I'm your Haluan Mutiara timber guide. I'll help you find the perfect wood for your project. What would you like to do?`;
     addBotMessage(greeting);
-    addQuickReplies(['Help me choose wood', 'View products', 'Get a quote', 'Measurement help', 'Tell me about wood types', 'Tell me a joke']);
+    addQuickReplies(['Help me choose wood', 'View products', 'Get a quote', 'Tell me about wood types', 'Tell me a joke']);
 }, 500);
 
 chatIconBtn.addEventListener('click', openChat);
