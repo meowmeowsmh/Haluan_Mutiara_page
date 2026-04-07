@@ -24,6 +24,3 @@ Disallow: /
 User-agent: SemrushBot
 Disallow: /
 
-# Block requests with no user agent
-User-agent: *
-Disallow: /
