@@ -3458,40 +3458,114 @@ getRandom(array) {
 }
 }
 // ================================================
-// INTERACTIVE CHAT INTERFACE WITH GUIDED WORKFLOWS
+// LIVE INTERACTIVE CHAT — ENHANCED AI UI ENGINE
 // ================================================
 document.addEventListener('DOMContentLoaded', function() {
-console.log("Haluan Mutiara Interactive Timber Chatbot Loading...");
-const chatIconBtn = document.getElementById('chatIconBtn');
-const chatWindow = document.getElementById('chatWindow');
-const closeChatBtn = document.getElementById('closeChatBtn');
-const chatBody = document.getElementById('chatBody');
-const chatInput = document.getElementById('chatInput');
-const sendBtn = document.getElementById('sendBtn');
+console.log("Haluan Mutiara Live AI Chatbot Loading...");
 
-const haluanExpert = new HaluanMLocalExpert();
+var chatIconBtn = document.getElementById('chatIconBtn');
+var chatWindow = document.getElementById('chatWindow');
+var closeChatBtn = document.getElementById('closeChatBtn');
+var chatBody = document.getElementById('chatBody');
+var chatInput = document.getElementById('chatInput');
+var sendBtn = document.getElementById('sendBtn');
+var chatBadge = document.getElementById('chatBadge');
+var chatTooltip = document.getElementById('chatTooltip');
+var tooltipClose = document.getElementById('tooltipClose');
+var statusLabel = document.getElementById('chatStatusLabel');
+var guidedTipEl = document.getElementById('chatGuidedTip');
 
-// Show welcome message with interactive quick replies
-setTimeout(() => {
-    const userName = haluanExpert.conversation.context.userName;
-    const greeting = userName
-        ? `Welcome back, ${userName}! How can I help with timber today?`
-        : `Hello! I'm your Haluan Mutiara timber guide. I'll help you find the perfect wood for your project. What would you like to do?`;
-    addBotMessage(greeting);
-    addQuickReplies(['Help me choose wood', 'View products', 'Get a quote', 'Tell me about wood types', 'Tell me a joke']);
-}, 500);
+var haluanExpert = new HaluanMLocalExpert();
+var chatOpened = false;
+var isTypingActive = false;
+var messageCount = 0;
+var welcomeCardsShown = false;
 
+function getTimeString() {
+    var now = new Date();
+    var h = now.getHours();
+    var m = now.getMinutes();
+    var ampm = h >= 12 ? 'PM' : 'AM';
+    h = h % 12 || 12;
+    return h + ':' + (m < 10 ? '0' : '') + m + ' ' + ampm;
+}
+
+// --- Contextual guided tips that rotate ---
+var guidedTips = [
+    { text: 'Try asking: <strong>"Which wood is best for outdoor decking?"</strong>', action: 'Ask this', query: 'Which wood is best for outdoor decking?' },
+    { text: 'Need a quote? Just say <strong>"Get a quote"</strong> and follow the steps', action: 'Get quote', query: 'Get a quote' },
+    { text: 'Ask <strong>"Compare Merbau vs Chengal"</strong> to see wood comparisons', action: 'Compare', query: 'Compare Merbau vs Chengal' },
+    { text: 'Say <strong>"Help me choose"</strong> for a guided wood recommendation', action: 'Try it', query: 'Help me choose wood' },
+    { text: 'Ask about <strong>wood strength groups</strong> for MS 544 standards', action: 'Ask', query: 'Tell me about wood strength groups' },
+    { text: 'Want prices? Ask <strong>"What products do you have?"</strong>', action: 'Browse', query: 'View products' }
+];
+var currentTipIndex = 0;
+
+function showGuidedTip() {
+    if (!guidedTipEl) return;
+    var tip = guidedTips[currentTipIndex % guidedTips.length];
+    var tipText = guidedTipEl.querySelector('.tip-text');
+    var tipAction = guidedTipEl.querySelector('.tip-action');
+    if (tipText) tipText.innerHTML = tip.text;
+    if (tipAction) {
+        tipAction.textContent = tip.action;
+        tipAction.onclick = function() {
+            sendMessage(tip.query);
+            currentTipIndex++;
+            showGuidedTip();
+        };
+    }
+    guidedTipEl.style.display = 'flex';
+}
+
+function updateGuidedTip() {
+    currentTipIndex++;
+    if (messageCount < 6) {
+        showGuidedTip();
+    } else if (guidedTipEl) {
+        guidedTipEl.style.display = 'none';
+    }
+}
+
+function hideGuidedTip() {
+    if (guidedTipEl) guidedTipEl.style.display = 'none';
+}
+
+// --- Tooltip: show after 3s if chat not opened ---
+if (chatTooltip) {
+    setTimeout(function() {
+        if (!chatOpened) {
+            chatTooltip.classList.add('show');
+        }
+    }, 3000);
+}
+
+if (tooltipClose) {
+    tooltipClose.addEventListener('click', function(e) {
+        e.stopPropagation();
+        chatTooltip.classList.remove('show');
+    });
+}
+
+// --- Enable/disable send button based on input ---
+chatInput.addEventListener('input', function() {
+    sendBtn.disabled = !chatInput.value.trim();
+});
+
+// --- Open / Close ---
 chatIconBtn.addEventListener('click', openChat);
 closeChatBtn.addEventListener('click', closeChat);
-sendBtn.addEventListener('click', sendMessage);
+sendBtn.addEventListener('click', function() { sendMessage(); });
 chatInput.addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-        sendMessage();
-    }
+    if (e.key === 'Enter') sendMessage();
 });
 
 function openChat() {
+    chatOpened = true;
     chatWindow.classList.add('active');
+    if (chatTooltip) chatTooltip.classList.remove('show');
+    if (chatBadge) chatBadge.classList.add('hidden');
+    chatIconBtn.classList.remove('pulse');
     chatInput.focus();
 }
 
@@ -3499,82 +3573,250 @@ function closeChat() {
     chatWindow.classList.remove('active');
 }
 
+// --- Welcome cards ---
+function showWelcomeCards() {
+    if (welcomeCardsShown) return;
+    welcomeCardsShown = true;
+
+    var cards = document.createElement('div');
+    cards.className = 'chat-welcome-cards';
+    cards.id = 'welcomeCards';
+
+    var cardData = [
+        { icon: 'fas fa-search', iconClass: 'icon-wood', title: 'Choose wood', desc: 'Get a guided recommendation', query: 'Help me choose wood' },
+        { icon: 'fas fa-file-invoice-dollar', iconClass: 'icon-quote', title: 'Get a quote', desc: 'Quick pricing estimate', query: 'Get a quote' },
+        { icon: 'fas fa-th-large', iconClass: 'icon-products', title: 'View products', desc: 'Browse our timber range', query: 'View products' },
+        { icon: 'fas fa-question-circle', iconClass: 'icon-help', title: 'Wood types', desc: 'Learn about Malaysian hardwoods', query: 'Tell me about wood types' }
+    ];
+
+    cardData.forEach(function(data) {
+        var card = document.createElement('button');
+        card.className = 'chat-action-card';
+        card.innerHTML =
+            '<div class="card-icon ' + data.iconClass + '"><i class="' + data.icon + '"></i></div>' +
+            '<div class="card-title">' + data.title + '</div>' +
+            '<div class="card-desc">' + data.desc + '</div>';
+        card.addEventListener('click', function() {
+            removeWelcomeCards();
+            sendMessage(data.query);
+        });
+        cards.appendChild(card);
+    });
+
+    chatBody.appendChild(cards);
+    scrollToBottom();
+}
+
+function removeWelcomeCards() {
+    var existing = document.getElementById('welcomeCards');
+    if (existing) existing.remove();
+}
+
+// --- Welcome message with delay ---
+setTimeout(function() {
+    var userName = haluanExpert.conversation.context.userName;
+    var greeting = userName
+        ? 'Welcome back, ' + userName + '! How can I help with timber today?'
+        : "Hi there! I'm your AI timber guide. I can help you find the perfect wood, get quotes, and answer any timber questions. What would you like to do?";
+    addBotMessageAnimated(greeting, function() {
+        showWelcomeCards();
+        showGuidedTip();
+    });
+    chatIconBtn.classList.add('pulse');
+}, 600);
+
+// --- Date separator ---
+function addDateSeparator() {
+    var sep = document.createElement('div');
+    sep.className = 'chat-date-sep';
+    sep.textContent = 'Today';
+    chatBody.appendChild(sep);
+}
+addDateSeparator();
+
+// --- Send ---
 function sendMessage(overrideText) {
-    const userMessage = overrideText || chatInput.value.trim();
-    if (!userMessage) return;
+    var userMessage = overrideText || chatInput.value.trim();
+    if (!userMessage || isTypingActive) return;
 
-    // Remove any existing quick reply buttons
     removeQuickReplies();
-
+    removeWelcomeCards();
     addUserMessage(userMessage);
     if (!overrideText) chatInput.value = '';
+    sendBtn.disabled = true;
+    messageCount++;
 
+    setStatus('typing');
     showTyping();
 
-    setTimeout(() => {
+    var delay = 700 + Math.random() * 500;
+    setTimeout(function() {
         removeTyping();
 
         try {
-            const botResponse = haluanExpert.getResponse(userMessage);
+            var botResponse = haluanExpert.getResponse(userMessage);
             handleStructuredResponse(botResponse);
         } catch (error) {
             console.error("Response error:", error);
-            addBotMessage("Oops! I encountered an error. Please try again!");
-            addQuickReplies(['Help me choose wood', 'View products', 'Get a quote']);
+            setStatus('online');
+            addBotMessageAnimated("Oops! Something went wrong. Let me try that again.", function() {
+                addQuickReplies(['Help me choose wood', 'View products', 'Get a quote']);
+            });
         }
-    }, 800 + Math.random() * 400);
+
+        updateGuidedTip();
+    }, delay);
 }
 
 function handleStructuredResponse(response) {
     if (typeof response === 'string') {
-        // Legacy plain text response - wrap with default follow-ups
-        addBotMessage(response);
-        addQuickReplies(['Help me choose wood', 'View products', 'Get a quote', 'Talk to expert']);
+        addBotMessageAnimated(response, function() {
+            setStatus('online');
+            addQuickReplies(['Help me choose wood', 'View products', 'Get a quote', 'Talk to expert']);
+        });
         return;
     }
 
     if (response && typeof response === 'object') {
-        // Structured response with text, quickReplies, and ctaButtons
         if (response.text) {
-            addBotMessage(response.text);
-        }
-        if (response.ctaButtons && response.ctaButtons.length > 0) {
-            addCTAButtons(response.ctaButtons);
-        }
-        if (response.quickReplies && response.quickReplies.length > 0) {
-            addQuickReplies(response.quickReplies);
+            addBotMessageAnimated(response.text, function() {
+                setStatus('online');
+                if (response.ctaButtons && response.ctaButtons.length > 0) {
+                    addCTAButtons(response.ctaButtons);
+                }
+                if (response.quickReplies && response.quickReplies.length > 0) {
+                    addQuickReplies(response.quickReplies);
+                }
+            });
+        } else {
+            setStatus('online');
         }
     }
 }
 
+// --- Status label ---
+function setStatus(state) {
+    if (state === 'typing') {
+        statusLabel.textContent = 'Timber AI is typing...';
+        statusLabel.classList.add('typing-active');
+        isTypingActive = true;
+    } else {
+        statusLabel.textContent = 'Online — ready to help';
+        statusLabel.classList.remove('typing-active');
+        isTypingActive = false;
+    }
+}
+
+// --- User message with avatar + read receipt ---
 function addUserMessage(text) {
-    const messageDiv = document.createElement('div');
-    messageDiv.className = 'message user-message';
-    messageDiv.textContent = text;
-    chatBody.appendChild(messageDiv);
+    var group = document.createElement('div');
+    group.className = 'message-group user';
+
+    var avatar = document.createElement('div');
+    avatar.className = 'msg-avatar';
+    avatar.innerHTML = '<i class="fas fa-user"></i>';
+
+    var content = document.createElement('div');
+    content.className = 'msg-content';
+
+    var bubble = document.createElement('div');
+    bubble.className = 'message user-message';
+    bubble.textContent = text;
+
+    var time = document.createElement('div');
+    time.className = 'msg-time';
+    time.innerHTML = getTimeString() + ' <span class="msg-status">&#10003;</span>';
+
+    content.appendChild(bubble);
+    content.appendChild(time);
+    group.appendChild(avatar);
+    group.appendChild(content);
+    chatBody.appendChild(group);
     scrollToBottom();
+
+    setTimeout(function() {
+        var status = time.querySelector('.msg-status');
+        if (status) {
+            status.innerHTML = '&#10003;&#10003;';
+            status.classList.add('read');
+        }
+    }, 800);
 }
 
-function addBotMessage(text) {
-    const messageDiv = document.createElement('div');
-    messageDiv.className = 'message bot-message';
-    // Support markdown bold with **text**
-    let html = text.replace(/\n/g, '<br>');
-    html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-    messageDiv.innerHTML = html;
-    chatBody.appendChild(messageDiv);
-    scrollToBottom();
+// --- Bot message with avatar + word-by-word typing ---
+function addBotMessageAnimated(text, onDone) {
+    var group = document.createElement('div');
+    group.className = 'message-group bot';
+
+    var avatar = document.createElement('div');
+    avatar.className = 'msg-avatar';
+    avatar.innerHTML = '<i class="fas fa-tree"></i>';
+
+    var content = document.createElement('div');
+    content.className = 'msg-content';
+
+    var bubble = document.createElement('div');
+    bubble.className = 'message bot-message';
+
+    var time = document.createElement('div');
+    time.className = 'msg-time';
+    time.textContent = getTimeString();
+
+    content.appendChild(bubble);
+    content.appendChild(time);
+    group.appendChild(avatar);
+    group.appendChild(content);
+    chatBody.appendChild(group);
+
+    var fullHtml = text.replace(/\n/g, '<br>');
+    fullHtml = fullHtml.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+
+    var tokens = fullHtml.match(/<[^>]+>|[^\s<]+|\s+/g) || [fullHtml];
+    var displayed = '';
+    var idx = 0;
+    var cursor = document.createElement('span');
+    cursor.className = 'typing-cursor';
+
+    function typeNext() {
+        if (idx < tokens.length) {
+            displayed += tokens[idx];
+            idx++;
+            while (idx < tokens.length && tokens[idx].charAt(0) === '<') {
+                displayed += tokens[idx];
+                idx++;
+            }
+            bubble.innerHTML = displayed;
+            bubble.appendChild(cursor);
+            scrollToBottom();
+            var speed = 18 + Math.random() * 16;
+            setTimeout(typeNext, speed);
+        } else {
+            if (cursor.parentNode) cursor.remove();
+            bubble.innerHTML = displayed;
+            scrollToBottom();
+            if (onDone) onDone();
+        }
+    }
+
+    if (text.length < 60) {
+        bubble.innerHTML = fullHtml;
+        scrollToBottom();
+        if (onDone) onDone();
+        setStatus('online');
+    } else {
+        typeNext();
+    }
 }
 
+// --- Quick replies ---
 function addQuickReplies(replies) {
-    // Remove any existing quick replies first
     removeQuickReplies();
 
-    const container = document.createElement('div');
+    var container = document.createElement('div');
     container.className = 'chat-quick-replies';
 
     replies.forEach(function(reply) {
-        const btn = document.createElement('button');
+        var btn = document.createElement('button');
         btn.className = 'chat-quick-reply-btn';
         btn.textContent = reply;
         btn.addEventListener('click', function() {
@@ -3587,12 +3829,13 @@ function addQuickReplies(replies) {
     scrollToBottom();
 }
 
+// --- CTA Buttons ---
 function addCTAButtons(buttons) {
-    const container = document.createElement('div');
+    var container = document.createElement('div');
     container.className = 'chat-cta-container';
 
     buttons.forEach(function(btn) {
-        const link = document.createElement('a');
+        var link = document.createElement('a');
         link.className = 'chat-cta-btn chat-cta-' + (btn.type || 'primary');
         link.href = btn.url;
         if (btn.url.startsWith('http') || btn.url.startsWith('tel:') || btn.url.startsWith('mailto:')) {
@@ -3608,21 +3851,32 @@ function addCTAButtons(buttons) {
 }
 
 function removeQuickReplies() {
-    const existing = chatBody.querySelectorAll('.chat-quick-replies');
+    var existing = chatBody.querySelectorAll('.chat-quick-replies');
     existing.forEach(function(el) { el.remove(); });
 }
 
+// --- Typing indicator with avatar ---
 function showTyping() {
-    const typingDiv = document.createElement('div');
-    typingDiv.className = 'typing';
-    typingDiv.id = 'typingIndicator';
-    typingDiv.innerHTML = '<span></span><span></span><span></span>';
-    chatBody.appendChild(typingDiv);
+    var typingGroup = document.createElement('div');
+    typingGroup.className = 'typing-group';
+    typingGroup.id = 'typingIndicator';
+
+    var avatar = document.createElement('div');
+    avatar.className = 'msg-avatar';
+    avatar.innerHTML = '<i class="fas fa-tree"></i>';
+
+    var dots = document.createElement('div');
+    dots.className = 'typing';
+    dots.innerHTML = '<span></span><span></span><span></span>';
+
+    typingGroup.appendChild(avatar);
+    typingGroup.appendChild(dots);
+    chatBody.appendChild(typingGroup);
     scrollToBottom();
 }
 
 function removeTyping() {
-    const typingIndicator = document.getElementById('typingIndicator');
+    var typingIndicator = document.getElementById('typingIndicator');
     if (typingIndicator) typingIndicator.remove();
 }
 
@@ -3630,7 +3884,6 @@ function scrollToBottom() {
     chatBody.scrollTop = chatBody.scrollHeight;
 }
 
-console.log("Haluan Mutiara Interactive Chatbot Ready!");
-
+console.log("Haluan Mutiara Live AI Chatbot Ready!");
 });
 
