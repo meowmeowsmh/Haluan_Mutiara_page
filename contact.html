@@ -1289,23 +1289,46 @@
 <!-- Modern Oak Timber Chat Interface -->
 <div class="chat-helper">
     <button class="chat-icon-btn" id="chatIconBtn" aria-label="Open timber chat">
-        <i class="fas fa-tree"></i>
+        <span class="chat-icon-main">
+            <i class="fas fa-comments"></i>
+            <span class="chat-icon-sparkle">&#10024;</span>
+        </span>
     </button>
-    
+    <div class="chat-tooltip" id="chatTooltip" style="opacity:0;pointer-events:none;">
+        <span>Ask our AI timber expert anything</span>
+        <button class="chat-tooltip-close" id="tooltipClose" aria-label="Dismiss">&times;</button>
+    </div>
     <div class="chat-window" id="chatWindow">
         <div class="chat-header">
-            <h4><i class="fas fa-seedling"></i> Timber Expert</h4>
-            <button class="close-chat" id="closeChatBtn" aria-label="Close chat">×</button>
+            <div class="chat-header-info">
+                <div class="chat-avatar">
+                    <i class="fas fa-tree"></i>
+                    <span class="ai-badge">AI</span>
+                </div>
+                <div class="chat-header-text">
+                    <h4>Timber AI Expert</h4>
+                    <span class="chat-status-label" id="chatStatusLabel">Online — ready to help</span>
+                </div>
+            </div>
+            <button class="close-chat" id="closeChatBtn" aria-label="Close chat">
+                <i class="fas fa-chevron-down"></i>
+            </button>
         </div>
         <div class="chat-body" id="chatBody">
             <!-- Chat messages will appear here -->
         </div>
+        <div class="chat-guided-tip" id="chatGuidedTip" style="display:none;">
+            <div class="tip-icon"><i class="fas fa-lightbulb"></i></div>
+            <div class="tip-text"></div>
+            <button class="tip-action"></button>
+        </div>
         <div class="chat-input">
-            <input type="text" placeholder="Ask about wood, pricing, or MS 544..." id="chatInput" autocomplete="off">
-            <button id="sendBtn" aria-label="Send message">
+            <input type="text" placeholder="Ask about wood, pricing, or projects..." id="chatInput" autocomplete="off">
+            <button id="sendBtn" aria-label="Send message" disabled>
                 <i class="fas fa-paper-plane"></i>
             </button>
         </div>
+        <div class="chat-powered-by"><span>Haluan Mutiara Timber AI</span></div>
     </div>
 </div>
 
