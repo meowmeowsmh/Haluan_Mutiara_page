@@ -6,6 +6,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Haluan Mutiara | Premium Malaysian Hardwood Supplier</title>
 
+<!-- Performance: preconnect to third-party origins -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+
 <!-- External Resources -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -40,7 +46,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    filter: brightness(0.7);
+    filter: brightness(1) contrast(1.05) saturate(1.05);
 }
 
 .video-overlay {
@@ -49,7 +55,12 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(rgba(93, 64, 55, 0.85), rgba(139, 69, 19, 0.75));
+    background: linear-gradient(
+        180deg,
+        rgba(93, 64, 55, 0.55) 0%,
+        rgba(74, 45, 30, 0.6) 50%,
+        rgba(139, 69, 19, 0.5) 100%
+    );
     z-index: -1;
 }
 
@@ -65,15 +76,16 @@
     font-weight: 700;
     margin-bottom: 20px;
     color: white;
-    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.75), 0 1px 3px rgba(0, 0, 0, 0.85);
     animation: fadeInDown 1s ease;
 }
 
 .hero-subtitle {
     font-size: 1.3rem;
-    color: rgba(255, 255, 255, 0.95);
+    color: #fff;
     margin-bottom: 40px;
     line-height: 1.6;
+    text-shadow: 0 1px 10px rgba(0, 0, 0, 0.8);
     animation: fadeInUp 1s ease 0.3s both;
 }
 
@@ -83,6 +95,25 @@
     justify-content: center;
     flex-wrap: wrap;
     animation: fadeInUp 1s ease 0.6s both;
+}
+
+/* Keep hero buttons readable over the video background */
+.hero-buttons .btn {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+}
+
+.hero-buttons .btn-secondary {
+    background-color: rgba(255, 255, 255, 0.16);
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.85);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+}
+
+.hero-buttons .btn-secondary:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    border-color: #fff;
+    color: #fff;
 }
 
 .hero-stats {
@@ -105,13 +136,15 @@
     font-weight: 700;
     color: #f4e4c1;
     margin-bottom: 5px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
 }
 
 .hero-stat-label {
     font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(255, 255, 255, 0.95);
     text-transform: uppercase;
     letter-spacing: 1px;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.85);
 }
 
 .video-control {
@@ -206,7 +239,7 @@
     width: 100%;
     height: 100%;
     background: linear-gradient(rgba(93, 64, 55, 0.9), rgba(139, 69, 19, 0.85)), 
-                url('https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80');
+                url('Images/Forest.jpg');
     background-size: cover;
     background-position: center;
     z-index: -2;
@@ -527,7 +560,7 @@ h4 {
 <header>
   <nav class="nav-bar">
     <div class="logo">
-      <img src="Other_picture/logo-main-page.png" alt="Haluan Mutiara Logo">
+      <img src="Other_picture/logo-main-page.webp" alt="Haluan Mutiara Logo" width="50" height="50">
       <h1 class="site-title">Haluan Mutiara</h1>
     </div>
     <ul class="nav-links">
@@ -544,14 +577,8 @@ h4 {
     <!-- Video Hero Section -->
     <section class="video-hero">
         <div class="video-container">
-            <video id="heroVideo" autoplay muted loop playsinline poster="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80">
-                <!-- YOUR PIXABAY VIDEO: Main source -->
+            <video id="heroVideo" autoplay muted loop playsinline preload="auto" poster="Images/Forest.jpg">
                 <source src="video/cut_wood.mp4" type="video/mp4">
-                
-                <!-- Backup videos -->
-                <source src="https://assets.mixkit.co/videos/preview/mixkit-saw-cutting-wood-in-a-sawmill-39731-large.mp4" type="video/mp4">
-                <source src="https://assets.mixkit.co/videos/preview/mixkit-man-planing-a-wooden-board-39729-large.mp4" type="video/mp4">
-                <source src="https://assets.mixkit.co/videos/preview/mixkit-carpenter-sanding-a-wooden-board-39730-large.mp4" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
         </div>
@@ -792,9 +819,9 @@ h4 {
 </div>
 
 <!-- External Scripts -->
-<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-<script src="js/index.js"></script>
-<script src="js/chat-bot.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
+<script src="js/index.js" defer></script>
+<script src="js/chat-bot.js" defer></script>
 
 <!-- Video Controls and Initialization -->
 <script>
@@ -814,31 +841,11 @@ document.addEventListener('DOMContentLoaded', function() {
         videoFallback.style.display = 'none';
     });
     
-    // Handle video loading errors
+    // Handle video loading errors — show the fallback image
     video.addEventListener('error', function(e) {
-        console.log('Video loading error, trying next source...');
-        
-        // Try to load next available video source
-        const sources = video.querySelectorAll('source');
-        let currentSrc = video.currentSrc || video.src;
-        let nextSource = null;
-        
-        for (let i = 0; i < sources.length; i++) {
-            if (sources[i].src === currentSrc && i < sources.length - 1) {
-                nextSource = sources[i + 1];
-                break;
-            }
-        }
-        
-        if (nextSource) {
-            video.src = nextSource.src;
-            video.load();
-            video.play();
-        } else {
-            console.log('All video sources failed, showing fallback image');
-            videoFallback.style.display = 'block';
-            video.style.display = 'none';
-        }
+        console.log('Video failed to load (code ' + (video.error ? video.error.code : 'unknown') + '), showing fallback image');
+        videoFallback.style.display = 'block';
+        video.style.display = 'none';
     });
     
     // Mute/Unmute toggle button
@@ -880,17 +887,42 @@ document.addEventListener('DOMContentLoaded', function() {
     const navLinks = document.querySelector('.nav-links');
     
     if (hamburger && navLinks) {
-        hamburger.addEventListener('click', function() {
-            navLinks.classList.toggle('show');
-            hamburger.classList.toggle('active');
+        function closeMenu() {
+            navLinks.classList.remove('show');
+            hamburger.classList.remove('active');
+            document.body.classList.remove('nav-open');
+        }
+
+        hamburger.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const open = navLinks.classList.toggle('show');
+            hamburger.classList.toggle('active', open);
+            document.body.classList.toggle('nav-open', open);
         });
-        
-        // Close menu when clicking outside
+
+        // Close when a nav link is tapped
+        navLinks.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close when tapping outside the menu
         document.addEventListener('click', function(event) {
-            if (!hamburger.contains(event.target) && !navLinks.contains(event.target)) {
-                navLinks.classList.remove('show');
-                hamburger.classList.remove('active');
+            if (navLinks.classList.contains('show') &&
+                !hamburger.contains(event.target) &&
+                !navLinks.contains(event.target)) {
+                closeMenu();
             }
+        });
+
+        // Close on Escape
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') closeMenu();
+        });
+
+        // Reset when resizing up to desktop
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 992) closeMenu();
         });
     }
 });

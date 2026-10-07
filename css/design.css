@@ -290,6 +290,19 @@ a {
         transition: var(--transition-base);
     }
 
+    /* Hamburger morphs into an X when the menu is open */
+    .hamburger.active span:nth-child(1) {
+        transform: translateY(7px) rotate(45deg);
+    }
+
+    .hamburger.active span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .hamburger.active span:nth-child(3) {
+        transform: translateY(-7px) rotate(-45deg);
+    }
+
 /* === HERO SECTIONS === */
 .hero {
     text-align: center;
@@ -464,6 +477,7 @@ section {
     overflow: hidden;
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     line-height: 1.4;
 }
@@ -477,6 +491,7 @@ section {
     overflow: hidden;
     display: -webkit-box;
     -webkit-line-clamp: 3;
+    line-clamp: 3;
     -webkit-box-orient: vertical;
     line-height: 1.4;
 }
@@ -1430,14 +1445,16 @@ footer a {
         position: fixed;
         top: 0;
         right: -100%;
-        width: 280px;
+        width: min(85vw, 320px);
         height: 100vh;
         background: var(--primary);
         flex-direction: column;
         gap: 0;
         padding-top: 80px;
         transition: right var(--transition-base);
-        z-index: 999;
+        box-shadow: -8px 0 32px rgba(0, 0, 0, 0.35);
+        z-index: 9999;
+        overflow-y: auto;
     }
 
         .nav-links.show {
@@ -1455,12 +1472,11 @@ footer a {
                 border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             }
 
-            /* MOBILE ACTIVE STATE FIX */
+            /* MOBILE ACTIVE STATE */
             .nav-links li a.active {
                 background-color: rgba(255, 255, 255, 0.25);
                 font-weight: 600;
                 border-left: 4px solid white;
-                box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.2);
             }
 
     .hamburger {
@@ -2459,6 +2475,7 @@ footer a {
     overflow: hidden;
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
 }
 
@@ -2472,6 +2489,7 @@ footer a {
     overflow: hidden;
     display: -webkit-box;
     -webkit-line-clamp: 3;
+    line-clamp: 3;
     -webkit-box-orient: vertical;
 }
 
@@ -2697,6 +2715,7 @@ footer a {
     overflow: hidden;
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
 }
 
@@ -2705,6 +2724,7 @@ footer a {
     overflow: hidden;
     display: -webkit-box;
     -webkit-line-clamp: 3;
+    line-clamp: 3;
     -webkit-box-orient: vertical;
 }
 
@@ -2769,6 +2789,7 @@ footer a {
     overflow: hidden !important;
     display: -webkit-box !important;
     -webkit-line-clamp: 2 !important;
+    line-clamp: 2 !important;
     -webkit-box-orient: vertical !important;
     line-height: 1.3 !important;
 }
@@ -2779,6 +2800,7 @@ footer a {
     overflow: hidden !important;
     display: -webkit-box !important;
     -webkit-line-clamp: 3 !important;
+    line-clamp: 3 !important;
     -webkit-box-orient: vertical !important;
     line-height: 1.4 !important;
 }
@@ -2828,9 +2850,9 @@ footer a {
     z-index: 10002 !important; /* Above modal */
 }
 
-/* Ensure nav-bar is below modal but above chat */
+/* Keep the nav bar (logo + hamburger) above the slide-in mobile menu */
 .nav-bar {
-    z-index: 9990 !important; /* Below modal, above chat when not active */
+    z-index: 10000 !important; /* Below modal (10001), above mobile menu (9999) and chat */
 }
 
 /* Fix for Swiper navigation buttons */
@@ -2927,4 +2949,9 @@ body {
 .logo img {
   height: 50px; /* Adjust based on your logo size */
   width: auto;
+}
+
+/* Lock page scroll while the mobile menu is open */
+body.nav-open {
+    overflow: hidden;
 }

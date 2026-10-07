@@ -5,74 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>About | Haluan Mutiara - Timber Craft Since 2000</title>
 
+<!-- Performance: preconnect to third-party origins -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com">
+
 <!-- External Resources -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<!-- Swiper CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
 <link rel="stylesheet" href="css/design.css">
 <link rel="stylesheet" href="css/chat-bot-design.css">
 <link rel="icon" type="image/jpeg" href="Other_picture/icon_haluan_mutiara.jpeg">
 
 <style>
-/* ===== ADD THESE OVERRIDE STYLES AT THE END ===== */
-/* FORCE ABOUT PAGE MENU TO MATCH HOME PAGE EXACTLY */
-:root {
-    --primary: #8b4513; /* Saddle Brown - THIS IS THE CORRECT HOME PAGE COLOR */
-}
-
-@media (max-width: 992px) {
-    /* Force the menu background to the beautiful home page brown */
-    .nav-links {
-        background: #8b4513 !important; /* Exact home page color */
-        box-shadow: -5px 0 30px rgba(0,0,0,0.3) !important;
-    }
-    
-    /* Force link colors to match home page */
-    .nav-links a {
-        color: white !important;
-        font-weight: 500 !important;
-    }
-    
-    /* Active/About link glow exactly like home page */
-    .nav-links a.active,
-    .nav-links a[href="about.html"] {
-        color: #f4e4c1 !important;
-        text-shadow: 0 0 10px #f4e4c1, 0 0 20px #ffaa00 !important;
-        background: rgba(255, 255, 255, 0.15) !important;
-        font-weight: 600 !important;
-    }
-    
-    /* Hover effect */
-    .nav-links a:hover {
-        background: rgba(255, 255, 255, 0.1) !important;
-        padding-left: 30px !important;
-    }
-    
-    /* Hamburger icon - FORCE IT TO SHOW */
-    .hamburger {
-        display: flex !important;
-    }
-    
-    /* Hamburger icon color - match home page */
-    .hamburger span {
-        background: white !important;
-        height: 3px !important;
-        width: 30px !important;
-        margin: 2px 0 !important;
-    }
-    
-    /* Hamburger active state */
-    .hamburger.active span {
-        background: #f4e4c1 !important;
-    }
-    
-    /* List items animation */
-    .nav-links li {
-        margin: 15px 0 !important;
-    }
-}
-
 /* Your existing styles below */
 :root {
     --primary-dark: #5d4037;
@@ -112,7 +57,7 @@ main {
 .wood-hero {
     padding: 120px 20px;
     text-align: center;
-    background: linear-gradient(rgba(93, 64, 55, 0.85), rgba(139, 69, 19, 0.9)), url('Images/Main_stuff.png') no-repeat center center/cover;
+    background: linear-gradient(rgba(93, 64, 55, 0.85), rgba(139, 69, 19, 0.9)), url('Images/Main_stuff.webp') no-repeat center center/cover;
     color: white;
     position: relative;
     min-height: 600px;
@@ -518,7 +463,7 @@ footer {
 <header>
     <nav class="nav-bar">
         <div class="logo">
-            <img src="Other_picture/logo-main-page.png" alt="Haluan Mutiara Logo">
+            <img src="Other_picture/logo-main-page.webp" alt="Haluan Mutiara Logo" width="50" height="50">
             <h1 class="site-title">Haluan Mutiara</h1>
         </div>
         <ul class="nav-links">
@@ -551,7 +496,7 @@ footer {
         <div class="wood-grid">
             <div class="wood-card">
                 <div class="wood-type-image">
-                    <img src="Images/Forest.jpg" alt="Mature tree in Malaysian forest" onerror="this.src='https://images.unsplash.com/photo-1448375240586-882707db888b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'">
+                    <img src="Images/Forest.jpg" alt="Mature tree in Malaysian forest" width="1600" height="837" loading="lazy" decoding="async" onerror="this.src='https://images.unsplash.com/photo-1448375240586-882707db888b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'">
                 </div>
                 <div class="wood-content">
                     <h3><i class="fas fa-seedling"></i> From the Forest</h3>
@@ -561,7 +506,7 @@ footer {
             </div>
             <div class="wood-card">
                 <div class="wood-type-image">
-                    <img src="Images/wood-factory.jpg" alt="Stacked timber boards at sawmill" onerror="this.src='https://images.unsplash.com/photo-1562774053-701939374585?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'">
+                    <img src="Images/wood-factory.jpg" alt="Stacked timber boards at sawmill" width="900" height="1125" loading="lazy" decoding="async" onerror="this.src='https://images.unsplash.com/photo-1562774053-701939374585?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'">
                 </div>
                 <div class="wood-content">
                     <h3><i class="fas fa-tools"></i> The Art of Processing</h3>
@@ -571,7 +516,7 @@ footer {
             </div>
             <div class="wood-card">
                 <div class="wood-type-image">
-                    <img src="Images/Craftman.jpg" alt="Timber tree viewed from below" onerror="this.src='https://images.pexels.com/photos/8489860/pexels-photo-8489860.jpeg?auto=compress&cs=tinysrgb&w=800'">
+                    <img src="Images/Craftman.jpg" alt="Timber tree viewed from below" width="800" height="1200" loading="lazy" decoding="async" onerror="this.src='https://images.pexels.com/photos/8489860/pexels-photo-8489860.jpeg?auto=compress&cs=tinysrgb&w=800'">
                 </div>
                 <div class="wood-content">
                     <h3><i class="fas fa-hands"></i> Craftsman's Touch</h3>
@@ -591,7 +536,7 @@ footer {
         <div class="wood-grid">
             <div class="wood-card">
                 <div class="wood-type-image">
-                    <img src="Images/Merbau.jpg" alt="Merbau Wood" onerror="this.src='https://images.unsplash.com/photo-1567496898669-ee935f003f30?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'">
+                    <img src="Images/Merbau.jpg" alt="Merbau Wood" width="900" height="599" loading="lazy" decoding="async" onerror="this.src='https://images.unsplash.com/photo-1567496898669-ee935f003f30?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'">
                 </div>
                 <div class="wood-content">
                     <h3><i class="fas fa-mountain"></i> Merbau</h3>
@@ -612,7 +557,7 @@ footer {
             </div>
             <div class="wood-card">
                 <div class="wood-type-image">
-                    <img src="Images/Chengal.webp" alt="Chengal Wood" onerror="this.src='https://images.unsplash.com/photo-1592921870789-04563d55041c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'">
+                    <img src="Images/Chengal.webp" alt="Chengal Wood" width="1000" height="667" loading="lazy" decoding="async" onerror="this.src='https://images.unsplash.com/photo-1592921870789-04563d55041c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'">
                 </div>
                 <div class="wood-content">
                     <h3><i class="fas fa-shield-alt"></i> Chengal</h3>
@@ -633,7 +578,7 @@ footer {
             </div>
             <div class="wood-card">
                 <div class="wood-type-image">
-                    <img src="Images/Balau.jpeg" alt="Balau Wood" onerror="this.src='https://images.unsplash.com/photo-1560448204-603b3fc33ddc?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'">
+                    <img src="Images/Balau.jpeg" alt="Balau Wood" width="800" height="534" loading="lazy" decoding="async" onerror="this.src='https://images.unsplash.com/photo-1560448204-603b3fc33ddc?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'">
                 </div>
                 <div class="wood-content">
                     <h3><i class="fas fa-umbrella"></i> Balau</h3>
@@ -805,44 +750,49 @@ document.addEventListener('DOMContentLoaded', function() {
     const navLinks = document.querySelector('.nav-links');
     
     if (hamburger && navLinks) {
+        function closeMenu() {
+            navLinks.classList.remove('show');
+            hamburger.classList.remove('active');
+            document.body.classList.remove('nav-open');
+        }
+
         hamburger.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
-            
-            navLinks.classList.toggle('show');
-            this.classList.toggle('active');
-            
-            const spans = this.querySelectorAll('span');
-            if (navLinks.classList.contains('show')) {
-                spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
-                spans[1].style.opacity = '0';
-                spans[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
-            } else {
-                spans[0].style.transform = '';
-                spans[1].style.opacity = '';
-                spans[2].style.transform = '';
+            const open = navLinks.classList.toggle('show');
+            hamburger.classList.toggle('active', open);
+            document.body.classList.toggle('nav-open', open);
+        });
+
+        // Close when a nav link is tapped
+        navLinks.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close when tapping outside the menu
+        document.addEventListener('click', function(event) {
+            if (navLinks.classList.contains('show') &&
+                !hamburger.contains(event.target) &&
+                !navLinks.contains(event.target)) {
+                closeMenu();
             }
         });
-        
-        // Close when clicking links
-        navLinks.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', function() {
-                navLinks.classList.remove('show');
-                hamburger.classList.remove('active');
-                const spans = hamburger.querySelectorAll('span');
-                spans.forEach(span => {
-                    span.style.transform = '';
-                    span.style.opacity = '';
-                });
-            });
+
+        // Close on Escape
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') closeMenu();
+        });
+
+        // Reset when resizing up to desktop
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 992) closeMenu();
         });
     }
 });
 </script>
 
 <!-- External Scripts -->
-<script src="js/chat-bot.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="js/chat-bot.js" defer></script>
 </body>
 </html>
 

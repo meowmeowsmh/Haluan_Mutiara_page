@@ -4,11 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Contact | Haluan Mutiara</title>
+<!-- Performance: preconnect to third-party origins -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com">
+
 <!-- External Resources -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<!-- Swiper CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
 <link rel="stylesheet" href="css/design.css">
 <link rel="stylesheet" href="css/chat-bot-design.css">
 <link rel="icon" type="image/jpeg" href="Other_picture/icon_haluan_mutiara.jpeg">
@@ -761,108 +764,7 @@
     animation: spin 1s linear infinite;
   }
 
-  /* ===== FIXED MOBILE NAVIGATION ===== */
-  @media (max-width: 992px) {
-    .nav-links {
-      position: fixed;
-      top: 0;
-      right: -100%;
-      width: 80%;
-      max-width: 350px;
-      height: 100vh;
-      background: #8b4513 !important;
-      flex-direction: column;
-      padding: 80px 30px 40px !important;
-      transition: right 0.4s ease-in-out;
-      box-shadow: -5px 0 30px rgba(0,0,0,0.3);
-      z-index: 999;
-      overflow-y: auto;
-      display: flex !important;
-    }
-    
-    .nav-links.show {
-      right: 0 !important;
-    }
-    
-    .nav-links li {
-      margin: 15px 0 !important;
-      opacity: 0;
-      transform: translateX(20px);
-      transition: all 0.3s ease;
-    }
-    
-    .nav-links.show li {
-      opacity: 1;
-      transform: translateX(0);
-    }
-    
-    .nav-links.show li:nth-child(1) { transition-delay: 0.1s; }
-    .nav-links.show li:nth-child(2) { transition-delay: 0.2s; }
-    .nav-links.show li:nth-child(3) { transition-delay: 0.3s; }
-    .nav-links.show li:nth-child(4) { transition-delay: 0.4s; }
-    
-    .nav-links a {
-      color: white !important;
-      font-size: 1.2rem !important;
-      display: block !important;
-      padding: 12px 20px !important;
-      border-radius: 8px;
-      transition: all 0.3s ease !important;
-    }
-    
-    .nav-links a:hover {
-      background: rgba(255, 255, 255, 0.1) !important;
-      padding-left: 30px !important;
-    }
-    
-    /* Contact link glow */
-    .nav-links a[href="contact.html"],
-    .nav-links a.active {
-      color: #f4e4c1 !important;
-      text-shadow: 0 0 10px #f4e4c1, 0 0 20px #ffaa00 !important;
-      background: rgba(255, 255, 255, 0.15) !important;
-    }
-    
-    /* Pure white hamburger */
-    .hamburger {
-      display: flex !important;
-      flex-direction: column !important;
-      justify-content: space-between !important;
-      width: 30px !important;
-      height: 24px !important;
-      cursor: pointer !important;
-      z-index: 1000 !important;
-      position: relative !important;
-      background: transparent !important;
-      padding: 0 !important;
-      border: none !important;
-    }
-    
-    .hamburger span {
-      display: block !important;
-      width: 100% !important;
-      height: 3px !important;
-      background: white !important;
-      border-radius: 3px !important;
-      transition: all 0.3s ease !important;
-      transform-origin: left !important;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.2) !important;
-    }
-    
-    .hamburger.active span:nth-child(1) {
-      transform: rotate(45deg) translate(4px, -4px) !important;
-      width: 28px !important;
-    }
-    
-    .hamburger.active span:nth-child(2) {
-      opacity: 0 !important;
-    }
-    
-    .hamburger.active span:nth-child(3) {
-      transform: rotate(-45deg) translate(4px, 4px) !important;
-      width: 28px !important;
-    }
-  }
+  /* ===== FIXED MOBILE NAVIGATION (handled by design.css) ===== */
 
   /* Footer fix */
   .site-footer {
@@ -940,7 +842,7 @@
 <header>
     <nav class="nav-bar">
         <div class="logo">
-            <img src="Other_picture/logo-main-page.png" alt="Haluan Mutiara Logo">
+            <img src="Other_picture/logo-main-page.webp" alt="Haluan Mutiara Logo" width="50" height="50">
             <h1 class="site-title">Haluan Mutiara</h1>
         </div>
         <ul class="nav-links">
@@ -1347,68 +1249,42 @@ document.addEventListener('DOMContentLoaded', function() {
     const navLinks = document.querySelector('.nav-links');
     
     if (hamburger && navLinks) {
-        navLinks.classList.remove('show');
-        hamburger.classList.remove('active');
-        
+        function closeMenu() {
+            navLinks.classList.remove('show');
+            hamburger.classList.remove('active');
+            document.body.classList.remove('nav-open');
+        }
+
         hamburger.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
-            
-            navLinks.classList.toggle('show');
-            this.classList.toggle('active');
-            
-            const spans = this.querySelectorAll('span');
-            if (navLinks.classList.contains('show')) {
-                spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
-                spans[1].style.opacity = '0';
-                spans[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
-            } else {
-                spans[0].style.transform = '';
-                spans[1].style.opacity = '';
-                spans[2].style.transform = '';
-            }
+            const open = navLinks.classList.toggle('show');
+            hamburger.classList.toggle('active', open);
+            document.body.classList.toggle('nav-open', open);
         });
-        
-        navLinks.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', function() {
-                navLinks.classList.remove('show');
-                hamburger.classList.remove('active');
-                
-                const spans = hamburger.querySelectorAll('span');
-                spans.forEach(span => {
-                    span.style.transform = '';
-                    span.style.opacity = '';
-                });
-            });
+
+        // Close when a nav link is tapped
+        navLinks.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
         });
-        
+
+        // Close when tapping outside the menu
         document.addEventListener('click', function(event) {
-            if (navLinks.classList.contains('show') && 
-                !hamburger.contains(event.target) && 
+            if (navLinks.classList.contains('show') &&
+                !hamburger.contains(event.target) &&
                 !navLinks.contains(event.target)) {
-                
-                navLinks.classList.remove('show');
-                hamburger.classList.remove('active');
-                
-                const spans = hamburger.querySelectorAll('span');
-                spans.forEach(span => {
-                    span.style.transform = '';
-                    span.style.opacity = '';
-                });
+                closeMenu();
             }
         });
-        
+
+        // Close on Escape
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') closeMenu();
+        });
+
+        // Reset when resizing up to desktop
         window.addEventListener('resize', function() {
-            if (window.innerWidth > 992 && navLinks.classList.contains('show')) {
-                navLinks.classList.remove('show');
-                hamburger.classList.remove('active');
-                
-                const spans = hamburger.querySelectorAll('span');
-                spans.forEach(span => {
-                    span.style.transform = '';
-                    span.style.opacity = '';
-                });
-            }
+            if (window.innerWidth > 992) closeMenu();
         });
     }
     
@@ -1964,8 +1840,6 @@ document.addEventListener('keydown', function(e) {
     }
 });
 </script>
-<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-<script src="js/index.js"></script>
-<script src="js/chat-bot.js"></script>
+<script src="js/chat-bot.js" defer></script>
 </body>
 </html>
