@@ -12,8 +12,9 @@
 <link rel="preload" href="fonts/poppins-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/poppins-600.woff2" as="font" type="font/woff2" crossorigin>
 
-<!-- External Resources -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- External Resources (Font Awesome loads async so it never blocks paint) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
 <link rel="stylesheet" href="css/design.css">
 <link rel="stylesheet" href="css/chat-bot-design.css">
 <link rel="icon" type="image/jpeg" href="Other_picture/icon_haluan_mutiara.jpeg">
