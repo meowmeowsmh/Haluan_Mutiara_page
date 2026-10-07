@@ -7,14 +7,15 @@
 <title>Haluan Mutiara | Premium Malaysian Hardwood Supplier</title>
 
 <!-- Performance: preconnect to third-party origins -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdnjs.cloudflare.com">
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
 
+<!-- Self-hosted fonts, preloaded so text paints with the correct font -->
+<link rel="preload" href="fonts/poppins-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/poppins-600.woff2" as="font" type="font/woff2" crossorigin>
+
 <!-- External Resources -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
 <link rel="stylesheet" href="css/design.css">
 <link rel="stylesheet" href="css/chat-bot-design.css">
@@ -577,7 +578,7 @@ h4 {
     <!-- Video Hero Section -->
     <section class="video-hero">
         <div class="video-container">
-            <video id="heroVideo" autoplay muted loop playsinline preload="auto" poster="Images/Forest.jpg">
+            <video id="heroVideo" muted loop playsinline preload="none" poster="Images/Forest.jpg">
                 <source src="video/cut_wood.mp4" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
@@ -831,6 +832,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const playBtn = document.getElementById('videoPlayBtn');
     const videoIcon = document.getElementById('videoIcon');
     const videoFallback = document.getElementById('videoFallback');
+
+    // The hero video is ~5 MB. Only load it on larger screens (and when the
+    // visitor has not requested reduced motion). Phones keep the poster image
+    // only, so LCP stays fast with no video download at all.
+    const wantsVideo = window.matchMedia('(min-width: 768px) and (prefers-reduced-motion: no-preference)').matches;
+    if (wantsVideo) {
+        video.preload = 'auto';
+        video.autoplay = true;
+        video.play().catch(function () {});
+    } else if (playBtn) {
+        playBtn.style.display = 'none';
+    }
     
     // Optimize video playback
     video.playbackRate = 0.9;
@@ -871,6 +884,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Pause video when not visible to save resources
     const observer = new IntersectionObserver((entries) => {
+        if (!wantsVideo) return;
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 video.play();

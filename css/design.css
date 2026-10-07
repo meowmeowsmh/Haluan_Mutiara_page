@@ -3,6 +3,47 @@
    Version: 3.1 | Fixed Card Heights | Consistent Design | FIXED ACTIVE NAV
 ===================================================================== */
 
+/* === SELF-HOSTED FONTS (no third-party request, faster first paint) === */
+@font-face {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 300;
+    font-display: swap;
+    src: url('../fonts/poppins-300.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('../fonts/poppins-400.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url('../fonts/poppins-500.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url('../fonts/poppins-600.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('../fonts/poppins-700.woff2') format('woff2');
+}
+
 /* === GLOBAL RESET & BASE === */
 :root {
     /* Color Palette */
@@ -527,7 +568,7 @@ section {
 
 /* === CONTACT PAGE === */
 .contact-hero {
-    background: linear-gradient(rgba(93, 64, 55, 0.85), rgba(139, 69, 19, 0.9)), url('https://images.unsplash.com/photo-1528164344705-47542687000d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80');
+    background: linear-gradient(rgba(93, 64, 55, 0.85), rgba(139, 69, 19, 0.9)), url('../Images/wood-factory.jpg');
     background-size: cover;
     background-position: center;
     text-align: center;
@@ -790,7 +831,7 @@ section {
 
 /* === GALLERY PAGE === */
 .gallery-hero {
-    background: linear-gradient(rgba(93, 64, 55, 0.85), rgba(139, 69, 19, 0.9)), url('https://images.unsplash.com/photo-1528164344705-47542687000d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80');
+    background: linear-gradient(rgba(93, 64, 55, 0.85), rgba(139, 69, 19, 0.9)), url('../Images/Forest.jpg');
     background-size: cover;
     background-position: center;
     text-align: center;

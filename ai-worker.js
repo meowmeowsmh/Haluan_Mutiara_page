@@ -24,14 +24,11 @@ Strict rules:
 4. Recommend a wood type based on their use case (decking -> Balau or Merbau; flooring -> Merbau; structural/frames -> Chengal).
 5. If unsure about anything, say so honestly and offer to connect them on WhatsApp.`;
 
-// Candidates, tried in order. Anything not on the Workers Free plan will error and be skipped.
+// Tried in order. The first is confirmed working on the Workers Free plan.
 const MODELS = [
-  '@cf/openai/gpt-oss-20b',
   '@cf/mistralai/mistral-small-3.1-24b-instruct',
-  '@cf/qwen/qwen3-30b-a3b-fp8',
   '@cf/meta/llama-3.2-3b-instruct',
-  '@cf/ibm-granite/granite-4.0-h-micro',
-  '@cf/meta/llama-3.2-1b-instruct'
+  '@cf/ibm-granite/granite-4.0-h-micro'
 ];
 
 const CORS_HEADERS = {

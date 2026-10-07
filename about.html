@@ -6,13 +6,14 @@
 <title>About | Haluan Mutiara - Timber Craft Since 2000</title>
 
 <!-- Performance: preconnect to third-party origins -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+
+<!-- Self-hosted fonts, preloaded so text paints with the correct font -->
+<link rel="preload" href="fonts/poppins-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/poppins-600.woff2" as="font" type="font/woff2" crossorigin>
 
 <!-- External Resources -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/design.css">
 <link rel="stylesheet" href="css/chat-bot-design.css">
 <link rel="icon" type="image/jpeg" href="Other_picture/icon_haluan_mutiara.jpeg">
@@ -284,7 +285,7 @@ main {
 .craftsman-cta {
     padding: 120px 20px;
     text-align: center;
-    background: linear-gradient(rgba(93, 64, 55, 0.9), rgba(139, 69, 19, 0.95)), url('https://images.unsplash.com/photo-1589923186741-b7d59d6b2c4c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80') no-repeat center center/cover;
+    background: linear-gradient(rgba(93, 64, 55, 0.9), rgba(139, 69, 19, 0.95)), url('Images/Craftman.jpg') no-repeat center center/cover;
     color: white;
 }
 
