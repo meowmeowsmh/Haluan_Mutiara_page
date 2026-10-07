@@ -15,7 +15,7 @@
 <link rel="preload" href="fonts/poppins-600.woff2" as="font" type="font/woff2" crossorigin>
 
 <!-- Hero poster: preload so LCP is discovered early -->
-<link rel="preload" as="image" href="Images/Forest.jpg" fetchpriority="high">
+<link rel="preload" as="image" href="Images/hero-poster.jpg" fetchpriority="high">
 
 <!-- External Resources (Font Awesome + Swiper load async so they never block paint) -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
@@ -244,7 +244,7 @@
     width: 100%;
     height: 100%;
     background: linear-gradient(rgba(93, 64, 55, 0.9), rgba(139, 69, 19, 0.85)), 
-                url('Images/Forest.jpg');
+                url('Images/hero-poster.jpg');
     background-size: cover;
     background-position: center;
     z-index: -2;
@@ -582,7 +582,7 @@ h4 {
     <!-- Video Hero Section -->
     <section class="video-hero">
         <div class="video-container">
-            <video id="heroVideo" muted loop playsinline preload="none" poster="Images/Forest.jpg">
+            <video id="heroVideo" muted loop playsinline preload="none" poster="Images/hero-poster.jpg">
                 <source src="video/cut_wood.mp4" type="video/mp4">
                 Your browser does not support the video tag.
             </video>

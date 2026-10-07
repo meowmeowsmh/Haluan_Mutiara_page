@@ -1,0 +1,20 @@
+# Netlify cache headers — long-lived caching for static assets.
+# (Filenames are stable, so this is safe; HTML is left uncached for instant updates.)
+
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/Images/*
+  Cache-Control: public, max-age=2592000
+
+/Other_picture/*
+  Cache-Control: public, max-age=2592000
+
+/video/*
+  Cache-Control: public, max-age=2592000
+
+/js/*
+  Cache-Control: public, max-age=604800
+
+/css/*
+  Cache-Control: public, max-age=604800

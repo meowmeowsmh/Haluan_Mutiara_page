@@ -568,7 +568,7 @@ section {
 
 /* === CONTACT PAGE === */
 .contact-hero {
-    background: linear-gradient(rgba(93, 64, 55, 0.85), rgba(139, 69, 19, 0.9)), url('../Images/wood-factory.jpg');
+    background: linear-gradient(rgba(93, 64, 55, 0.85), rgba(139, 69, 19, 0.9)), url('../Images/hero-contact.jpg');
     background-size: cover;
     background-position: center;
     text-align: center;
