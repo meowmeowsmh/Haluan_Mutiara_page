@@ -2611,17 +2611,57 @@ getContextualCTA() {
     const ctx = this.conversation.context;
     const ctas = [];
 
-    if (ctx.lastProduct || ctx.currentTopic) {
-        const topic = ctx.lastProduct || ctx.currentTopic;
-        ctas.push({
-            label: 'Get Quote',
-            icon: 'fab fa-whatsapp',
-            url: `https://wa.me/60122786182?text=${encodeURIComponent(`Hi! I'm interested in ${topic}. Can I get a quote?`)}`,
-            type: 'success'
-        });
-    }
+    // Always offer a WhatsApp quote — lead generation is the goal
+    const topic = ctx.lastProduct || ctx.currentTopic || 'your timber products';
+    ctas.push({
+        label: 'Get a Free Quote',
+        icon: 'fab fa-whatsapp',
+        url: `https://wa.me/60122786182?text=${encodeURIComponent(`Hi! I'm interested in ${topic}. Can I get a quote?`)}`,
+        type: 'success'
+    });
 
     return ctas;
+}
+
+// ===== INTENT MATCHING HELPERS =====
+// True if the input contains ANY of the given keywords/phrases
+hasAny(input, keywords) {
+    return keywords.some(k => input.includes(k));
+}
+
+// Normalize text: lowercase, strip punctuation/emoji, collapse whitespace
+normalizeInput(raw) {
+    return String(raw || '')
+        .toLowerCase()
+        .replace(/[^a-z0-9\s]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
+// Edit distance (Levenshtein) for typo tolerance
+levenshtein(a, b) {
+    const m = a.length, n = b.length;
+    if (!m) return n;
+    if (!n) return m;
+    const dp = [];
+    for (let i = 0; i <= m; i++) {
+        dp[i] = [i];
+        for (let j = 1; j <= n; j++) {
+            dp[i][j] = i === 0
+                ? j
+                : Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1, dp[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+        }
+    }
+    return dp[m][n];
+}
+
+// Typo-tolerant keyword match (single words within `maxDist` edits)
+fuzzyMatch(input, keywords, maxDist = 1) {
+    const words = input.split(' ');
+    return keywords.some(kw => {
+        if (kw.includes(' ')) return input.includes(kw);
+        return words.some(w => w.length >= 4 && this.levenshtein(w, kw) <= maxDist);
+    });
 }
 
 // ===== NEW: EASTER EGG DETECTION =====
@@ -2694,17 +2734,16 @@ getResponse(userInput) {
         return this.advanceWorkflow(userInput);
     }
 
-    // Check for workflow triggers
-    if (input.includes('get a quote') || input.includes('get quote') || input.includes('quote me') || input.includes('pricing') || input.includes('how much')) {
+    const norm = this.normalizeInput(userInput);
+
+    // Check for workflow triggers (broad synonym coverage)
+    if (this.hasAny(norm, ['price', 'prices', 'pricing', 'cost', 'costs', 'how much', 'expensive', 'cheap', 'budget', 'affordable', 'quote', 'quotation', 'rate', 'rates', 'charge', 'fee', 'fees', 'ringgit', 'get a quote', 'quote me', 'cost of'])) {
         return this.startWorkflow('quote');
     }
-    if (input.includes('recommend') && !input.includes('recommendation')) {
+    if (this.hasAny(norm, ['recommend', 'suggest', 'suggestion', 'which wood', 'what wood', 'should i use', 'should i choose', 'best wood', 'help me choose', 'help me pick', 'advice', 'advise', 'which is best', 'whats best', 'what is best', 'get a recommendation'])) {
         return this.startWorkflow('recommend');
     }
-    if (input.includes('get a recommendation') || input.includes('help me choose') || input.includes('which wood') || input.includes('suggest')) {
-        return this.startWorkflow('recommend');
-    }
-    if (input.includes('how to measure') || input.includes('measurement help') || input.includes('measure for')) {
+    if (this.hasAny(norm, ['measure', 'measurement', 'sizing', 'dimension', 'how long', 'how wide', 'how thick'])) {
         return {
             text: 'For measurements and sizing, please contact our team directly. We will handle all measurements and details for you!',
             quickReplies: ['WhatsApp us', 'Call now', 'View products', 'Talk to expert'],
@@ -2716,7 +2755,7 @@ getResponse(userInput) {
     }
 
     // CTA triggers
-    if (input.includes('whatsapp') || input.includes('whatsapp for quote') || input.includes('whatsapp us')) {
+    if (this.hasAny(norm, ['whatsapp', 'whatsapp for quote', 'whatsapp us'])) {
         return {
             text: 'Click below to chat with our timber experts on WhatsApp! They can help with quotes, product advice, and more.',
             quickReplies: ['Ask another question', 'View products', 'Get a recommendation'],
@@ -2725,7 +2764,7 @@ getResponse(userInput) {
             ]
         };
     }
-    if (input.includes('call now') || input.includes('phone')) {
+    if (this.hasAny(norm, ['call now', 'call us', 'phone', 'telephone', 'ring us'])) {
         return {
             text: 'You can reach our timber experts directly at (+60)12-278-6182. We are available during business hours.',
             quickReplies: ['Ask another question', 'WhatsApp instead', 'Get a recommendation'],
@@ -2734,7 +2773,7 @@ getResponse(userInput) {
             ]
         };
     }
-    if (input.includes('view catalog') || input.includes('view products') || input.includes('see products') || input.includes('catalog')) {
+    if (this.hasAny(norm, ['view catalog', 'view products', 'see products', 'catalog', 'catalogue', 'gallery', 'show me', 'browse', 'product range', 'collection', 'what do you sell', 'what do you have'])) {
         return {
             text: 'Browse our full range of 24+ premium hardwood products in the gallery!',
             quickReplies: ['Skirting boards', 'Flooring', 'Windows & doors', 'Handrails', 'Get a recommendation'],
@@ -2744,7 +2783,7 @@ getResponse(userInput) {
             ]
         };
     }
-    if (input.includes('talk to expert') || input.includes('email us') || input.includes('contact')) {
+    if (this.hasAny(norm, ['talk to expert', 'talk to a human', 'speak to', 'real person', 'email us', 'contact', 'email', 'reach', 'location', 'address', 'visit'])) {
         return {
             text: 'Our timber experts are ready to help! Choose your preferred way to connect:',
             quickReplies: ['Ask another question', 'Get a recommendation', 'View products'],
@@ -3307,20 +3346,19 @@ handleContextualRecommendation() {
 }
 
 getEnhancedDefaultResponse(input) {
-    if (input.split(' ').length <= 2) {
-        return this.handleShortResponse(input);
-    }
+    const norm = this.normalizeInput(input);
 
-    if (input.includes('?')) {
-        return {
-            text: `I can help with many timber topics! Here's what I'm best at:`,
-            quickReplies: ['Wood type selection', 'Product catalog', 'Get a recommendation', 'Strength Group info', 'Get a quote', 'Talk to expert']
-        };
+    if (norm.split(' ').length <= 2) {
+        return this.handleShortResponse(norm);
     }
 
     return {
-        text: `I'd love to help! Let me guide you to the right information. What are you looking for?`,
-        quickReplies: ['Help me choose wood', 'View products', 'Get a quote', 'Tell me about wood types', 'Talk to expert']
+        text: `I can help you pick the right wood, estimate pricing, or explain our products.\n\n🌳 Popular right now: Merbau flooring, Chengal door frames, Balau decking.\n\nTell me about your project and I'll point you to the right product.`,
+        quickReplies: ['Help me choose wood', 'View products', 'Get a quote', 'Tell me about wood types', 'Talk to expert'],
+        ctaButtons: [
+            { label: 'Get a Free Quote', icon: 'fab fa-whatsapp', url: 'https://wa.me/60122786182?text=Hi!%20I%20need%20help%20choosing%20timber%20products.', type: 'success' },
+            { label: 'View Products', icon: 'fas fa-images', url: 'gallery.html', type: 'primary' }
+        ]
     };
 }
 
@@ -3480,6 +3518,47 @@ var chatOpened = false;
 var isTypingActive = false;
 var messageCount = 0;
 var welcomeCardsShown = false;
+
+// ===== CLOUDFLARE WORKERS AI INTEGRATION =====
+// Paste your Worker URL here. Until you do, the bot keeps using the built-in rule-based replies.
+var AI_WORKER_URL = 'https://haluan-ai.limcherng1.workers.dev';
+var AI_ENABLED = AI_WORKER_URL.indexOf('YOUR-WORKER') === -1;
+var aiHistory = []; // [{ role: 'user' | 'assistant', content }]
+
+function askAI(userMessage) {
+    return new Promise(function(resolve, reject) {
+        if (!AI_ENABLED) { reject(new Error('AI not configured')); return; }
+
+        aiHistory.push({ role: 'user', content: userMessage });
+        if (aiHistory.length > 12) aiHistory = aiHistory.slice(-12);
+
+        var controller = new AbortController();
+        var timer = setTimeout(function() { controller.abort(); }, 15000);
+
+        fetch(AI_WORKER_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ messages: aiHistory }),
+            signal: controller.signal
+        })
+        .then(function(r) {
+            if (!r.ok) throw new Error('HTTP ' + r.status);
+            return r.json();
+        })
+        .then(function(data) {
+            clearTimeout(timer);
+            var reply = data && data.reply ? data.reply : null;
+            if (!reply) throw new Error('Empty reply');
+            aiHistory.push({ role: 'assistant', content: reply });
+            resolve(reply);
+        })
+        .catch(function(err) {
+            clearTimeout(timer);
+            aiHistory.pop(); // remove the unanswered user message
+            reject(err);
+        });
+    });
+}
 
 function getTimeString() {
     var now = new Date();
@@ -3649,23 +3728,42 @@ function sendMessage(overrideText) {
     setStatus('typing');
     showTyping();
 
-    var delay = 700 + Math.random() * 500;
-    setTimeout(function() {
-        removeTyping();
-
-        try {
-            var botResponse = haluanExpert.getResponse(userMessage);
-            handleStructuredResponse(botResponse);
-        } catch (error) {
-            console.error("Response error:", error);
-            setStatus('online');
-            addBotMessageAnimated("Oops! Something went wrong. Let me try that again.", function() {
-                addQuickReplies(['Help me choose wood', 'View products', 'Get a quote']);
+    // If the Cloudflare AI worker is configured, use it — with instant fallback to the rule-based bot.
+    if (AI_ENABLED) {
+        askAI(userMessage).then(function(aiReply) {
+            removeTyping();
+            handleStructuredResponse({
+                text: aiReply,
+                quickReplies: ['Get a quote', 'View products', 'Talk to expert'],
+                ctaButtons: [
+                    { label: 'WhatsApp for a Quote', icon: 'fab fa-whatsapp', url: 'https://wa.me/60122786182?text=' + encodeURIComponent('Hi! I would like a quote for timber products.'), type: 'success' }
+                ]
             });
-        }
+            updateGuidedTip();
+        }).catch(function() {
+            respondWithRules(userMessage);
+        });
+        return;
+    }
 
-        updateGuidedTip();
-    }, delay);
+    // No AI configured: use the local rule-based bot
+    var delay = 700 + Math.random() * 500;
+    setTimeout(function() { respondWithRules(userMessage); }, delay);
+}
+
+function respondWithRules(userMessage) {
+    removeTyping();
+    try {
+        var botResponse = haluanExpert.getResponse(userMessage);
+        handleStructuredResponse(botResponse);
+    } catch (error) {
+        console.error('Response error:', error);
+        setStatus('online');
+        addBotMessageAnimated("Oops! Something went wrong. Let me try that again.", function() {
+            addQuickReplies(['Help me choose wood', 'View products', 'Get a quote']);
+        });
+    }
+    updateGuidedTip();
 }
 
 function handleStructuredResponse(response) {
