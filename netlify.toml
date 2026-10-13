@@ -1,6 +1,14 @@
 [build]
   publish = "."
 
+# Force the non-www host, so www and non-www don't compete as duplicate sites.
+# (Matches the canonical URLs and sitemap entries.)
+[[redirects]]
+  from = "https://www.haluan-mutiara.com/*"
+  to = "https://haluan-mutiara.com/:splat"
+  status = 301
+  force = true
+
 [[redirects]]
   from = "/success"
   to = "/"
