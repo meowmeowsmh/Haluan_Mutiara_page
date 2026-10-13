@@ -1,4 +1,8 @@
-# Block AI Crawlers
+# Allow search engines (Google, Bing, etc.) to crawl and index the whole site
+User-agent: *
+Allow: /
+
+# Block AI training crawlers
 User-agent: GPTBot
 Disallow: /
 
@@ -24,3 +28,4 @@ Disallow: /
 User-agent: SemrushBot
 Disallow: /
 
+Sitemap: https://haluan-mutiara.com/sitemap.xml
